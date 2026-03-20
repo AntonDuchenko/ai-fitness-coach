@@ -1,12 +1,12 @@
 {
-  "task": "Task 0.3",
-  "taskTitle": "NestJS (Backend) Setup",
+  "task": "Task 0.4",
+  "taskTitle": "Database Setup (Prisma + PostgreSQL)",
   "phase": "summary",
   "status": "completed",
-  "iterations": { "review": 1, "test": 1 },
+  "iterations": { "review": 0, "test": 0 },
   "maxIterations": { "review": 3, "test": 3 },
   "startedAt": "2026-03-20T00:00:00.000Z",
-  "completedAt": "2026-03-20T00:15:00.000Z",
+  "completedAt": "2026-03-20T00:20:00.000Z",
   "projectInitialized": true,
   "phases": {
     "init": { "status": "completed" },

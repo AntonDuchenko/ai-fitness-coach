@@ -11,6 +11,7 @@ import { NutritionModule } from "./modules/nutrition/nutrition.module";
 import { PaymentsModule } from "./modules/payments/payments.module";
 import { UsersModule } from "./modules/users/users.module";
 import { WorkoutsModule } from "./modules/workouts/workouts.module";
+import { PrismaModule } from "./prisma/prisma.module";
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { WorkoutsModule } from "./modules/workouts/workouts.module";
       validate,
       load: [appConfig, jwtConfig, databaseConfig],
     }),
+    PrismaModule,
     AuthModule,
     UsersModule,
     ChatModule,

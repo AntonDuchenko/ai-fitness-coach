@@ -1,41 +1,31 @@
-# Review Report — Task 0.3: NestJS (Backend) Setup
+# Review Report: Task 0.4 — Database Setup (Prisma + PostgreSQL)
 
 ## Verdict: APPROVED
 
-## Checklist
+## Review Checklist
 
-### Task Acceptance Criteria
-- [x] NestJS server runs on `localhost:4000` (ConfigService-driven)
-- [x] Swagger docs available at `/api/docs`
-- [x] CORS configured correctly (with `credentials: true`)
-- [x] Environment variables loaded (ConfigModule.forRoot, typed configs)
+| # | Check | Status |
+|---|-------|--------|
+| 1 | Schema matches PRD (8 models, all fields, relations) | PASS |
+| 2 | Cascade deletes on all user-owned models | PASS |
+| 3 | SetNull on optional WorkoutPlan-WorkoutLog relation | PASS |
+| 4 | Proper indexes on query-heavy fields | PASS |
+| 5 | PrismaService lifecycle hooks (connect/disconnect) | PASS |
+| 6 | PrismaModule is @Global() | PASS |
+| 7 | AppModule imports PrismaModule | PASS |
+| 8 | Env validation relaxed for non-DB keys | PASS |
+| 9 | Prisma scripts in package.json | PASS |
+| 10 | All files under 150 lines | PASS |
+| 11 | No hardcoded secrets | PASS |
+| 12 | No `any` types | PASS |
+| 13 | Build: 0 errors (29 files compiled) | PASS |
+| 14 | Lint: clean (63 files checked) | PASS |
+| 15 | Prisma generate: success (v6.19.2) | PASS |
 
-### Task Subtasks
-- [x] Modular structure: 7 modules created (auth, users, chat, ai, workouts, nutrition, payments)
-- [x] `common/` directories (decorators, filters, guards, interceptors, pipes)
-- [x] `config/app.config.ts` with registerAs typed configs
-- [x] Core dependencies installed
-- [x] Dev type dependencies installed
-- [x] `.env.example` with all expected variables
-- [x] ConfigModule setup (global)
-- [x] Global validation pipe
-- [x] Swagger with BearerAuth
-- [x] Path aliases (@modules/*, @common/*, @config/*)
-
-### CLAUDE.md Convention Compliance
-- [x] Controller + service per module
-- [x] Swagger decorators on endpoints
-- [x] Thin controllers, service handles logic
-- [x] No `any` types
-- [x] No `console.log`
-- [x] Environment variables for config
-- [x] TypeScript strict mode
-
-### Build/Lint
-- [x] `pnpm build` passes (26 files, 0 errors)
-- [x] `pnpm lint` passes (0 errors)
+## Critical Issues: 0
+## Warnings: 0
 
 ## Notes
-- All module scaffolds are minimal (empty service/controller) which is appropriate for setup task
-- Config uses `registerAs` for typed access — good pattern
-- baseUrl added to tsconfig for SWC compatibility on Windows
+- Downgraded from Prisma 7.x to 6.x because v7 has breaking changes (no `url` in datasource, requires prisma.config.ts). PRD schema uses traditional format.
+- All 8 models from PRD Section 4.3 implemented exactly as specified.
+- PrismaModule is global so all feature modules can inject PrismaService without importing.

@@ -1,0 +1,257 @@
+// prisma/schema.prisma
+
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ============================================
+// USER & AUTH
+// ============================================
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  name         String?
+  avatarUrl    String?
+
+  // Subscription
+  isPremium          Boolean   @default(false)
+  stripeCustomerId   String?   @unique
+  subscriptionId     String?
+  subscriptionStatus String? // 'active', 'canceled', 'past_due'
+  subscriptionEndsAt DateTime?
+
+  // Usage tracking (for free tier)
+  messagesToday   Int      @default(0)
+  messagesResetAt DateTime @default(now())
+
+  // Metadata
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  lastLoginAt DateTime?
+
+  // Relations
+  profile        UserProfile?
+  chatMessages   ChatMessage[]
+  workoutPlans   WorkoutPlan[]
+  workoutLogs    WorkoutLog[]
+  nutritionPlans NutritionPlan[]
+  weightLogs     WeightLog[]
+
+  @@index([email])
+  @@index([stripeCustomerId])
+}
+
+// ============================================
+// USER PROFILE
+// ============================================
+
+model UserProfile {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Basic Info
+  age          Int
+  gender       String // 'male', 'female', 'other', 'not_specified'
+  height       Float // cm
+  weight       Float // kg (current)
+  targetWeight Float? // kg
+
+  // Goals
+  primaryGoal    String // 'weight_loss', 'muscle_gain', 'recomp', 'health', 'performance'
+  secondaryGoals Json // ['strength', 'endurance', etc.]
+
+  // Experience
+  fitnessLevel       String // 'complete_beginner', 'beginner', 'intermediate', 'advanced'
+  nutritionKnowledge String // 'none', 'basic', 'intermediate', 'advanced'
+
+  // Schedule
+  trainingDaysPerWeek Int // 1-7
+  sessionDuration     Int // minutes
+  preferredTime       String // 'morning', 'midday', 'afternoon', 'evening', 'flexible'
+
+  // Equipment & Location
+  trainingLocation String // 'home_none', 'home_basic', 'home_gym', 'commercial_gym', 'outdoor'
+  equipment        Json // ['dumbbells', 'barbell', etc.]
+
+  // Health & Limitations
+  injuries          String?
+  medicalConditions String?
+  medications       String?
+  dietaryRestrictions Json // ['vegetarian', 'gluten_free', etc.]
+
+  // Nutrition Preferences
+  mealsPerDay        Int // 2-6
+  cookingLevel       String // 'regular', 'sometimes', 'rarely', 'never'
+  cuisinePreferences Json
+  dislikedFoods      Json
+  foodBudget         Float // USD per day
+
+  // Motivation & History
+  motivation              String
+  previousAttempts        Boolean
+  previousAttemptsDetails String?
+  biggestChallenges       Json
+
+  // Calculated values (cached)
+  tdee           Float? // Total Daily Energy Expenditure
+  bmr            Float? // Basal Metabolic Rate
+  targetCalories Float?
+  targetProtein  Float? // grams
+  targetFat      Float? // grams
+  targetCarbs    Float? // grams
+
+  // Metadata
+  onboardingCompleted   Boolean   @default(false)
+  onboardingCompletedAt DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+}
+
+// ============================================
+// CHAT
+// ============================================
+
+model ChatMessage {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  role    String // 'user' or 'assistant'
+  content String @db.Text
+
+  // Context used for this message (for debugging/improvement)
+  contextUsed Json?
+
+  // AI metadata
+  model  String? // 'gpt-4', 'gpt-3.5-turbo', etc.
+  tokens Int? // token count
+  cost   Float? // cost in USD
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([userId])
+}
+
+// ============================================
+// WORKOUT PLANS
+// ============================================
+
+model WorkoutPlan {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name             String // "8-Week Muscle Building Program"
+  weeklySchedule   Json // Array of WorkoutDay objects
+  startDate        DateTime
+  durationWeeks    Int
+  progressionScheme String
+  deloadWeek       Int?
+  notes            String? @db.Text
+
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  workoutLogs WorkoutLog[]
+
+  @@index([userId, isActive])
+}
+
+model WorkoutLog {
+  id            String       @id @default(cuid())
+  userId        String
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workoutPlanId String?
+  workoutPlan   WorkoutPlan? @relation(fields: [workoutPlanId], references: [id], onDelete: SetNull)
+
+  workoutName String // "Upper Push", "Lower Body"
+  exercises   Json // Array of ExerciseLog objects
+
+  completedAt DateTime @default(now())
+  duration    Int? // actual minutes
+  rating      Int? // 1-5 how it felt
+  notes       String?  @db.Text
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, completedAt])
+  @@index([userId])
+}
+
+// ============================================
+// NUTRITION PLANS
+// ============================================
+
+model NutritionPlan {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name String // "Muscle Gain Meal Plan"
+
+  // Targets
+  dailyCalories Float
+  proteinGrams  Float
+  fatGrams      Float
+  carbsGrams    Float
+
+  // Meal structure
+  mealsPerDay Int
+  mealPlan    Json // Array of Meal objects with recipes
+  groceryList Json // Shopping list
+
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, isActive])
+}
+
+// ============================================
+// PROGRESS TRACKING
+// ============================================
+
+model WeightLog {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  weight Float // kg
+  date   DateTime @default(now())
+  notes  String?
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, date])
+  @@index([userId, date])
+}
+
+// ============================================
+// PAYMENTS (Stripe)
+// ============================================
+
+model StripeEvent {
+  id        String   @id @default(cuid())
+  eventId   String   @unique // Stripe event ID
+  type      String // 'checkout.session.completed', etc.
+  data      Json // Full event data
+  processed Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([eventId])
+  @@index([processed])
+}

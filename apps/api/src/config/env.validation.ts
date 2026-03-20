@@ -15,12 +15,12 @@ const envSchema = z.object({
   JWT_SECRET: z.string().min(8, "JWT_SECRET must be at least 8 characters"),
   JWT_EXPIRES_IN: z.string().default("7d"),
 
-  // AI Provider
-  OPENAI_API_KEY: z.string().min(1, "OPENAI_API_KEY is required"),
+  // AI Provider (optional until AI module is implemented)
+  OPENAI_API_KEY: z.string().optional(),
 
-  // Stripe
-  STRIPE_SECRET_KEY: z.string().min(1, "STRIPE_SECRET_KEY is required"),
-  STRIPE_WEBHOOK_SECRET: z.string().min(1, "STRIPE_WEBHOOK_SECRET is required"),
+  // Stripe (optional until payments module is implemented)
+  STRIPE_SECRET_KEY: z.string().optional(),
+  STRIPE_WEBHOOK_SECRET: z.string().optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;

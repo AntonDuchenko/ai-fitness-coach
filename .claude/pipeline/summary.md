@@ -1,6 +1,6 @@
 # Pipeline Summary
 
-## Task: Task 0.3 — NestJS (Backend) Setup
+## Task: Task 0.4 — Database Setup (Prisma + PostgreSQL)
 ## Final Status: SUCCESS
 
 ## Timeline
@@ -20,26 +20,18 @@
 | No hardcoded hex colors | PASS |
 | TypeScript strict (no `any`) | PASS |
 | No console.log | PASS |
-| Swagger decorators | PASS |
-| Thin controllers | PASS |
+| Proper error handling | PASS |
 
 ## Files Created/Modified
-- `apps/api/package.json` — added @nestjs/config, @nestjs/jwt, @nestjs/passport, passport, passport-jwt, bcrypt, type deps
-- `apps/api/tsconfig.json` — added baseUrl and path aliases (@modules/*, @common/*, @config/*)
-- `apps/api/src/main.ts` — updated to use ConfigService for port/CORS, added credentials: true
-- `apps/api/src/app.module.ts` — added ConfigModule.forRoot with typed configs, imported all 7 feature modules
-- `apps/api/src/config/app.config.ts` — typed config registration (app, jwt, database)
-- `apps/api/.env.example` — environment variable template
-- `apps/api/src/modules/auth/` — auth module scaffold (module, controller, service)
-- `apps/api/src/modules/users/` — users module scaffold
-- `apps/api/src/modules/chat/` — chat module scaffold
-- `apps/api/src/modules/ai/` — ai module scaffold
-- `apps/api/src/modules/workouts/` — workouts module scaffold
-- `apps/api/src/modules/nutrition/` — nutrition module scaffold
-- `apps/api/src/modules/payments/` — payments module scaffold
-- `apps/api/src/common/` — decorators, filters, guards, interceptors, pipes directories
+- `apps/api/prisma/schema.prisma` — full database schema with 8 models from PRD
+- `apps/api/src/prisma/prisma.service.ts` — NestJS-wrapped PrismaClient with lifecycle hooks
+- `apps/api/src/prisma/prisma.module.ts` — global module exporting PrismaService
+- `apps/api/src/app.module.ts` — added PrismaModule import
+- `apps/api/src/config/env.validation.ts` — made OPENAI/STRIPE env vars optional
+- `apps/api/package.json` — added prisma@6.19.2, @prisma/client@6.19.2, prisma scripts
 
 ## Key Decisions
-- Used `registerAs` pattern for typed config access (e.g., `configService.get('app.port')`)
-- Added `baseUrl` to tsconfig for SWC/Windows compatibility with path aliases
-- Module scaffolds are intentionally minimal — ready for feature implementation in later tasks
+- **Prisma 6.x over 7.x:** Prisma 7 has breaking changes (no `url` in datasource, requires `prisma.config.ts`). Used 6.x for compatibility with PRD's traditional schema format.
+- **Global PrismaModule:** Marked `@Global()` so all feature modules can inject PrismaService without explicitly importing PrismaModule.
+- **Optional env vars:** OPENAI_API_KEY, STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET made optional since those features aren't implemented yet. DATABASE_URL and JWT_SECRET remain required.
+- **Runtime-dependent acceptance criteria deferred:** Database connection test and Prisma Studio require a running PostgreSQL instance, deferred to when the user sets up their database.
