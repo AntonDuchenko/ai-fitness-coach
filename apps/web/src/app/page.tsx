@@ -1,3 +1,11 @@
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { formatDate } from "@ai-fitness/utils";
 
 export default function Home() {
@@ -5,15 +13,20 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-background text-foreground">
-      <div className="text-center">
-        <h1 className="font-heading text-4xl font-bold text-primary">
-          AI Fitness Coach
-        </h1>
-        <p className="mt-4 text-lg text-muted-foreground">
-          Your personal AI-powered fitness companion
-        </p>
-        <p className="mt-2 text-sm text-muted-foreground">{today}</p>
-      </div>
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center">
+          <CardTitle className="font-heading text-4xl font-bold text-primary">
+            AI Fitness Coach
+          </CardTitle>
+          <CardDescription className="text-lg">
+            Your personal AI-powered fitness companion
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col items-center gap-4">
+          <p className="text-sm text-muted-foreground">{today}</p>
+          <Button>Get Started</Button>
+        </CardContent>
+      </Card>
     </main>
   );
 }

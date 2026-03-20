@@ -1,6 +1,6 @@
 # Pipeline Summary
 
-## Task: Task 0.1 — Monorepo Setup
+## Task: Task 0.2 — Next.js (Frontend) Setup
 ## Final Status: SUCCESS
 
 ## Timeline
@@ -17,30 +17,29 @@
 |------|--------|
 | Component size (<150 lines) | PASS |
 | Business logic separated (hooks/services) | PASS |
-| shadcn/ui used (no raw HTML) | N/A (setup task) |
+| shadcn/ui used (no raw HTML) | PASS |
 | Semantic design tokens (no hardcoded hex) | PASS |
 | Error/loading/empty states | N/A (setup task) |
-| Accessibility | N/A (setup task) |
+| Accessibility | PASS |
 | TypeScript strict (no `any`) | PASS |
 
-## Files Created
-- `package.json` — Root monorepo config with Turborepo scripts
-- `pnpm-workspace.yaml` — Workspace definition (apps/*, packages/*)
-- `turbo.json` — Build pipeline with caching config
-- `.npmrc` — pnpm settings (shamefully-hoist for NestJS)
-- `.gitignore` — Ignore node_modules, dist, .next, .turbo, .env
-- `tsconfig.base.json` — Shared TypeScript strict config
-- `biome.json` — Linter/formatter replacing ESLint + Prettier
-- `packages/types/` — Shared TypeScript types (@ai-fitness/types)
-- `packages/ui/` — Shared UI components placeholder (@ai-fitness/ui)
-- `packages/utils/` — Shared utilities (@ai-fitness/utils)
-- `apps/web/` — Next.js 14 App Router with Tailwind + design system
-- `apps/api/` — NestJS 10 with Swagger, health endpoint, SWC builder
+## Files Created/Modified
+- `apps/web/components.json` — shadcn/ui configuration (new-york style, Tailwind v4)
+- `apps/web/src/components/ui/button.tsx` — Button component with variants
+- `apps/web/src/components/ui/input.tsx` — Input component
+- `apps/web/src/components/ui/card.tsx` — Card component with subcomponents
+- `apps/web/src/components/ui/dialog.tsx` — Dialog modal component
+- `apps/web/src/components/ui/sonner.tsx` — Toast notification component
+- `apps/web/src/app/page.tsx` — Updated to use Button + Card for integration verification
+- `apps/web/package.json` — Added dependencies (cva, lucide-react, radix-ui, sonner, next-themes)
+- `apps/web/src/components/layout/.gitkeep` — Empty directory placeholder
+- `apps/web/src/components/common/.gitkeep` — Empty directory placeholder
+- `apps/web/src/features/.gitkeep` — Empty directory placeholder
+- `apps/web/src/hooks/.gitkeep` — Empty directory placeholder
+- `apps/web/src/types/.gitkeep` — Empty directory placeholder
 
 ## Key Decisions
-- Used Biome instead of ESLint + Prettier (biome.json already existed in project)
-- Tailwind CSS v4 with @tailwindcss/postcss (modern setup)
-- Full design system CSS variables integrated from day 1
-- SWC builder for NestJS (faster compilation)
-- useImportType rule disabled in Biome (NestJS DI requires runtime imports)
-- ESLint 8.x compatible version for eslint-config-next (peer dep)
+- Used Biome auto-fix to format shadcn/ui generated files (semicolons, import sorting)
+- Installed `sonner` instead of deprecated `toast` component
+- Added `class-variance-authority` and `lucide-react` as explicit dependencies (required by shadcn/ui components but not auto-added to package.json)
+- Skipping husky pre-commit hooks setup (can be added in a future task)
