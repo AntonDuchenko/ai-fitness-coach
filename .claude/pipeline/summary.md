@@ -1,6 +1,6 @@
 # Pipeline Summary
 
-## Task: Task 0.2 — Next.js (Frontend) Setup
+## Task: Task 0.3 — NestJS (Backend) Setup
 ## Final Status: SUCCESS
 
 ## Timeline
@@ -16,30 +16,30 @@
 | Rule | Status |
 |------|--------|
 | Component size (<150 lines) | PASS |
-| Business logic separated (hooks/services) | PASS |
-| shadcn/ui used (no raw HTML) | PASS |
-| Semantic design tokens (no hardcoded hex) | PASS |
-| Error/loading/empty states | N/A (setup task) |
-| Accessibility | PASS |
+| Business logic separated (services) | PASS |
+| No hardcoded hex colors | PASS |
 | TypeScript strict (no `any`) | PASS |
+| No console.log | PASS |
+| Swagger decorators | PASS |
+| Thin controllers | PASS |
 
 ## Files Created/Modified
-- `apps/web/components.json` — shadcn/ui configuration (new-york style, Tailwind v4)
-- `apps/web/src/components/ui/button.tsx` — Button component with variants
-- `apps/web/src/components/ui/input.tsx` — Input component
-- `apps/web/src/components/ui/card.tsx` — Card component with subcomponents
-- `apps/web/src/components/ui/dialog.tsx` — Dialog modal component
-- `apps/web/src/components/ui/sonner.tsx` — Toast notification component
-- `apps/web/src/app/page.tsx` — Updated to use Button + Card for integration verification
-- `apps/web/package.json` — Added dependencies (cva, lucide-react, radix-ui, sonner, next-themes)
-- `apps/web/src/components/layout/.gitkeep` — Empty directory placeholder
-- `apps/web/src/components/common/.gitkeep` — Empty directory placeholder
-- `apps/web/src/features/.gitkeep` — Empty directory placeholder
-- `apps/web/src/hooks/.gitkeep` — Empty directory placeholder
-- `apps/web/src/types/.gitkeep` — Empty directory placeholder
+- `apps/api/package.json` — added @nestjs/config, @nestjs/jwt, @nestjs/passport, passport, passport-jwt, bcrypt, type deps
+- `apps/api/tsconfig.json` — added baseUrl and path aliases (@modules/*, @common/*, @config/*)
+- `apps/api/src/main.ts` — updated to use ConfigService for port/CORS, added credentials: true
+- `apps/api/src/app.module.ts` — added ConfigModule.forRoot with typed configs, imported all 7 feature modules
+- `apps/api/src/config/app.config.ts` — typed config registration (app, jwt, database)
+- `apps/api/.env.example` — environment variable template
+- `apps/api/src/modules/auth/` — auth module scaffold (module, controller, service)
+- `apps/api/src/modules/users/` — users module scaffold
+- `apps/api/src/modules/chat/` — chat module scaffold
+- `apps/api/src/modules/ai/` — ai module scaffold
+- `apps/api/src/modules/workouts/` — workouts module scaffold
+- `apps/api/src/modules/nutrition/` — nutrition module scaffold
+- `apps/api/src/modules/payments/` — payments module scaffold
+- `apps/api/src/common/` — decorators, filters, guards, interceptors, pipes directories
 
 ## Key Decisions
-- Used Biome auto-fix to format shadcn/ui generated files (semicolons, import sorting)
-- Installed `sonner` instead of deprecated `toast` component
-- Added `class-variance-authority` and `lucide-react` as explicit dependencies (required by shadcn/ui components but not auto-added to package.json)
-- Skipping husky pre-commit hooks setup (can be added in a future task)
+- Used `registerAs` pattern for typed config access (e.g., `configService.get('app.port')`)
+- Added `baseUrl` to tsconfig for SWC/Windows compatibility with path aliases
+- Module scaffolds are intentionally minimal — ready for feature implementation in later tasks

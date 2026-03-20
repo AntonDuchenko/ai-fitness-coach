@@ -1,30 +1,27 @@
-# Test Report — Task 0.2: Next.js (Frontend) Setup
+# Test Report — Task 0.3: NestJS (Backend) Setup
 
 ## Verdict: PASSED
 
-## Acceptance Criteria Verification
-
-| Criteria | Status | Evidence |
-|----------|--------|----------|
-| Next.js dev server runs on localhost:3000 | PASS | `pnpm dev` configured with `--port 3000` |
-| Tailwind classes work | PASS | Build succeeds, page uses Tailwind classes throughout |
-| shadcn/ui button renders correctly | PASS | Button imported and used in page.tsx, build passes |
-| TypeScript has no errors | PASS | `pnpm build` compiles with 0 type errors |
-
 ## Code Quality Checks
+- [x] Component/file size (<150 lines) — max file is 16 lines
+- [x] Business logic in services, not controllers
+- [x] No `any` types — 0 occurrences
+- [x] No `console.log` — 0 occurrences
+- [x] No hardcoded hex colors — 0 occurrences
+- [x] TypeScript strict mode enabled (via tsconfig.base.json)
 
-| Check | Status |
-|-------|--------|
-| `pnpm build` passes | PASS (5/5 packages) |
-| `pnpm lint` passes | PASS (38 files, 0 errors) |
-| shadcn/ui components installed (5/5) | PASS (button, input, card, dialog, sonner) |
-| components.json configured | PASS (new-york style, Tailwind v4, CSS variables) |
-| Folder structure matches CLAUDE.md | PASS (components/ui, layout, common, features, hooks, types) |
-| No hardcoded hex in app code | PASS |
-| No `any` types | PASS |
-| All files ~150 lines or under | PASS (dialog.tsx at 158 — auto-generated, acceptable) |
-| Dependencies present | PASS (cva, lucide-react, radix-ui, sonner, next-themes) |
-| Design tokens used correctly | PASS |
+## Build Verification
+- [x] `pnpm build` — all 5 packages successful (26 API files compiled)
+- [x] `pnpm lint` — 60 files checked, 0 errors
 
-## Test Summary
-All acceptance criteria met. shadcn/ui is fully configured with 5 base components, folder structure is ready for feature development, and the integration is verified via page.tsx rendering Button + Card.
+## Structure Verification
+- [x] 7 feature modules created with controller + service pattern
+- [x] `common/` with 5 subdirectories (decorators, filters, guards, interceptors, pipes)
+- [x] `config/app.config.ts` with 3 typed config registrations
+- [x] `.env.example` with all expected environment variables
+
+## Acceptance Criteria
+- [x] Server configured on port 4000 (via ConfigService)
+- [x] Swagger at `/api/docs` with BearerAuth
+- [x] CORS with `credentials: true` and configurable origin
+- [x] Environment variables loaded via ConfigModule (global)

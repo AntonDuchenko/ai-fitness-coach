@@ -1,30 +1,41 @@
-# Review Report — Task 0.2: Next.js (Frontend) Setup
+# Review Report — Task 0.3: NestJS (Backend) Setup
 
 ## Verdict: APPROVED
 
 ## Checklist
 
-| # | Check | Status |
-|---|-------|--------|
-| 1 | Component size (<150 lines) | PASS |
-| 2 | Business logic separated | PASS |
-| 3 | shadcn/ui used (no raw HTML) | PASS |
-| 4 | Semantic design tokens | PASS |
-| 5 | No hardcoded hex colors | PASS |
-| 6 | TypeScript strict | PASS |
-| 7 | Path aliases used | PASS |
-| 8 | Server vs client correct | PASS |
-| 9 | Folder structure | PASS |
-| 10 | Build passes | PASS |
-| 11 | Lint passes | PASS |
-| 12 | cn() utility used | PASS |
-| 13 | Fonts configured | PASS |
-| 14 | No `any` types | PASS |
-| 15 | Accessibility | PASS |
+### Task Acceptance Criteria
+- [x] NestJS server runs on `localhost:4000` (ConfigService-driven)
+- [x] Swagger docs available at `/api/docs`
+- [x] CORS configured correctly (with `credentials: true`)
+- [x] Environment variables loaded (ConfigModule.forRoot, typed configs)
+
+### Task Subtasks
+- [x] Modular structure: 7 modules created (auth, users, chat, ai, workouts, nutrition, payments)
+- [x] `common/` directories (decorators, filters, guards, interceptors, pipes)
+- [x] `config/app.config.ts` with registerAs typed configs
+- [x] Core dependencies installed
+- [x] Dev type dependencies installed
+- [x] `.env.example` with all expected variables
+- [x] ConfigModule setup (global)
+- [x] Global validation pipe
+- [x] Swagger with BearerAuth
+- [x] Path aliases (@modules/*, @common/*, @config/*)
+
+### CLAUDE.md Convention Compliance
+- [x] Controller + service per module
+- [x] Swagger decorators on endpoints
+- [x] Thin controllers, service handles logic
+- [x] No `any` types
+- [x] No `console.log`
+- [x] Environment variables for config
+- [x] TypeScript strict mode
+
+### Build/Lint
+- [x] `pnpm build` passes (26 files, 0 errors)
+- [x] `pnpm lint` passes (0 errors)
 
 ## Notes
-- All shadcn/ui components generated correctly and formatted by Biome
-- `components.json` properly configured for Tailwind v4 with CSS variables
-- Page uses Card + Button to verify integration
-- Missing dependencies (class-variance-authority, lucide-react) were caught and installed
-- Empty directories created with .gitkeep for future feature development
+- All module scaffolds are minimal (empty service/controller) which is appropriate for setup task
+- Config uses `registerAs` for typed access — good pattern
+- baseUrl added to tsconfig for SWC compatibility on Windows
