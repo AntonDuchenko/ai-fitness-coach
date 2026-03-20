@@ -1,6 +1,6 @@
 # Pipeline Summary
 
-## Task: Task 0.4 — Database Setup (Prisma + PostgreSQL)
+## Task: Task 1.1 — Authentication Backend
 ## Final Status: SUCCESS
 
 ## Timeline
@@ -17,21 +17,29 @@
 |------|--------|
 | Component size (<150 lines) | PASS |
 | Business logic separated (services) | PASS |
-| No hardcoded hex colors | PASS |
+| No hardcoded hex colors | PASS (N/A — backend) |
 | TypeScript strict (no `any`) | PASS |
 | No console.log | PASS |
 | Proper error handling | PASS |
+| Swagger decorators | PASS |
+| class-validator DTOs | PASS |
 
 ## Files Created/Modified
-- `apps/api/prisma/schema.prisma` — full database schema with 8 models from PRD
-- `apps/api/src/prisma/prisma.service.ts` — NestJS-wrapped PrismaClient with lifecycle hooks
-- `apps/api/src/prisma/prisma.module.ts` — global module exporting PrismaService
-- `apps/api/src/app.module.ts` — added PrismaModule import
-- `apps/api/src/config/env.validation.ts` — made OPENAI/STRIPE env vars optional
-- `apps/api/package.json` — added prisma@6.19.2, @prisma/client@6.19.2, prisma scripts
+- `apps/api/src/modules/auth/dto/signup.dto.ts` — signup DTO with email, password, name validation
+- `apps/api/src/modules/auth/dto/login.dto.ts` — login DTO with email, password validation
+- `apps/api/src/modules/auth/dto/auth-response.dto.ts` — response DTO with accessToken + user
+- `apps/api/src/modules/auth/strategies/jwt.strategy.ts` — Passport JWT strategy
+- `apps/api/src/modules/auth/auth.service.ts` — signup, login, getMe business logic
+- `apps/api/src/modules/auth/auth.controller.ts` — POST /auth/signup, POST /auth/login, GET /auth/me
+- `apps/api/src/modules/auth/auth.module.ts` — PassportModule, JwtModule, UsersModule integration
+- `apps/api/src/modules/users/dto/user-response.dto.ts` — user response DTO (no sensitive fields)
+- `apps/api/src/modules/users/users.service.ts` — findByEmail, findById, create, updateLastLogin
+- `apps/api/src/common/guards/jwt-auth.guard.ts` — reusable JWT auth guard
+- `biome.json` — enabled unsafeParameterDecoratorsEnabled for NestJS
 
 ## Key Decisions
-- **Prisma 6.x over 7.x:** Prisma 7 has breaking changes (no `url` in datasource, requires `prisma.config.ts`). Used 6.x for compatibility with PRD's traditional schema format.
-- **Global PrismaModule:** Marked `@Global()` so all feature modules can inject PrismaService without explicitly importing PrismaModule.
-- **Optional env vars:** OPENAI_API_KEY, STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET made optional since those features aren't implemented yet. DATABASE_URL and JWT_SECRET remain required.
-- **Runtime-dependent acceptance criteria deferred:** Database connection test and Prisma Studio require a running PostgreSQL instance, deferred to when the user sets up their database.
+- **No refresh tokens for MVP** — single JWT access token with 7d expiry, simplifies implementation
+- **Same error for wrong email/password** — prevents email enumeration attacks
+- **UserProfile NOT created at signup** — will be created during onboarding (Task 1.3)
+- **Biome config update** — NestJS uses parameter decorators (@Body, @Request) which require `unsafeParameterDecoratorsEnabled` in biome
+- **JwtModuleOptions cast** — @nestjs/jwt v11 uses template literal types from `ms` package for expiresIn; cast needed for string config values

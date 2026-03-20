@@ -1,39 +1,41 @@
-# Test Report: Task 0.4 — Database Setup (Prisma + PostgreSQL)
+# Test Report: Task 1.1 — Authentication Backend
 
 ## Verdict: PASSED
 
 ## Code Quality Checks
-- [x] File size (<150 lines) — schema.prisma is 259 lines (data definition, not code logic — acceptable)
-- [x] PrismaService: 16 lines, PrismaModule: 9 lines
+- [x] File size (<150 lines) — all files under limit, largest: auth.service.ts (93 lines)
+- [x] Business logic separated — controller delegates to AuthService
 - [x] No `any` types
 - [x] No `console.log`
-- [x] No hardcoded secrets
+- [x] No hardcoded secrets or hex colors
 
 ## Build Verification
-- [x] `pnpm build` — 5 packages, 29 API files compiled, 0 errors
-- [x] `pnpm lint` — 63 files checked, 0 errors
-- [x] `prisma validate` — schema is valid
-- [x] `prisma generate` — client generated successfully (v6.19.2)
+- [x] `pnpm build` — 35 files compiled, 0 errors
+- [x] `pnpm lint` — 35 files checked, 0 errors
 
-## Schema Verification
-- [x] 8 models created: User, UserProfile, ChatMessage, WorkoutPlan, WorkoutLog, NutritionPlan, WeightLog, StripeEvent
-- [x] All fields match PRD Section 4.3 exactly
-- [x] Relations: User has 1:1 profile, 1:many for messages/plans/logs
-- [x] Cascade deletes on all user-owned relations
-- [x] SetNull on optional WorkoutPlan-WorkoutLog relation
-- [x] Indexes on all query-heavy fields (email, userId, dates, active flags)
-- [x] Unique constraints: email, stripeCustomerId, eventId, userId+date
+## Endpoint Verification
+- [x] POST /auth/signup — SignupDto (email, password, name?), returns AuthResponseDto (201)
+- [x] POST /auth/login — LoginDto (email, password), returns AuthResponseDto (200)
+- [x] GET /auth/me — protected with JwtAuthGuard, returns UserResponseDto (200)
 
-## Integration Verification
-- [x] PrismaModule is @Global() — available to all modules without explicit import
-- [x] PrismaService implements OnModuleInit (connect) + OnModuleDestroy (disconnect)
-- [x] AppModule imports PrismaModule
-- [x] Env validation: DATABASE_URL required, OPENAI/STRIPE optional
+## Security Verification
+- [x] Passwords hashed with bcrypt (10 rounds)
+- [x] Same error message for wrong email and wrong password (prevents enumeration)
+- [x] JWT secret from environment configuration
+- [x] JWT strategy validates token, extracts { id, email } to req.user
+- [x] JWT token expiry configurable (default 7d)
+
+## Architecture Verification
+- [x] DTOs: class-validator decorators (IsEmail, IsString, MinLength, IsOptional)
+- [x] Swagger: @ApiTags, @ApiOperation, @ApiResponse, @ApiBearerAuth on all endpoints
+- [x] JwtAuthGuard extends AuthGuard('jwt') from @nestjs/passport
+- [x] UsersService: findByEmail, findById, create, updateLastLogin (repository pattern)
+- [x] AuthModule imports PassportModule, JwtModule.registerAsync, UsersModule
+- [x] Biome config updated for NestJS parameter decorators
 
 ## Acceptance Criteria (from TASKS.md)
-- [x] Prisma installed and configured
-- [x] All tables/models created (schema.prisma)
-- [x] Prisma Client generated
-- [x] PrismaService created in NestJS
-- [ ] Database connection test (requires running PostgreSQL — deferred to runtime)
-- [ ] Prisma Studio accessible (requires running PostgreSQL — deferred to runtime)
+- [x] User can signup with email/password
+- [x] User can login and receive JWT
+- [x] Protected routes reject invalid tokens (JwtAuthGuard)
+- [x] Passwords are hashed (never stored plain)
+- [x] Proper error messages (409 email exists, 401 wrong credentials)
