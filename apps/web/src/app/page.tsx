@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { formatDate } from "@ai-fitness/utils";
+import Link from "next/link";
 
 export default function Home() {
   const today = formatDate(new Date());
@@ -24,7 +25,9 @@ export default function Home() {
         </CardHeader>
         <CardContent className="flex flex-col items-center gap-4">
           <p className="text-sm text-muted-foreground">{today}</p>
-          <Button>Get Started</Button>
+          <Button asChild>
+            <Link href="/onboarding">Get Started</Link>
+          </Button>
         </CardContent>
       </Card>
     </main>
