@@ -18,3 +18,10 @@ export const databaseConfig = registerAs("database", () => ({
 export const redisConfig = registerAs("redis", () => ({
   url: process.env.REDIS_URL || "redis://localhost:6379",
 }));
+
+export const openaiConfig = registerAs("openai", () => ({
+  apiKey: process.env.OPENAI_API_KEY,
+  defaultModel: process.env.OPENAI_MODEL || "gpt-4o",
+  maxRetries: 3,
+  retryBaseDelayMs: 1000,
+}));

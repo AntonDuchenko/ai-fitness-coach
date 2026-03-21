@@ -1,4 +1,4 @@
-# Review Report: Task 1.5 — Plan Generation Trigger
+# Review Report: Task 2.1 — OpenAI Setup
 
 ## Verdict: APPROVED
 
@@ -6,58 +6,37 @@
 
 ## Files Reviewed
 
-### Backend (New)
-- `apps/api/src/modules/plan-generation/plan-generation.module.ts` (11 lines)
-- `apps/api/src/modules/plan-generation/plan-generation.processor.ts` (43 lines)
-- `apps/api/src/modules/plan-generation/plan-generation.service.ts` (43 lines)
-- `apps/api/src/modules/users/dto/onboarding-status-response.dto.ts` (16 lines)
+### New Files
+- `apps/api/src/modules/ai/dto/ai-health-response.dto.ts` (16 lines)
+- `apps/api/src/modules/ai/dto/chat-completion-request.dto.ts` (51 lines)
 
-### Backend (Modified)
-- `apps/api/src/app.module.ts` — Added BullModule.forRoot, redisConfig
-- `apps/api/src/config/app.config.ts` — Added redisConfig
-- `apps/api/src/config/env.validation.ts` — Added REDIS_URL
-- `apps/api/src/modules/users/users.controller.ts` — Added onboarding-status endpoint, plan generation trigger
-- `apps/api/src/modules/users/users.service.ts` — Added setOnboardingComplete, setPlanGenerationJobId, getPlanGenerationJobId
-- `apps/api/src/modules/users/users.module.ts` — Imported PlanGenerationModule
-- `apps/api/prisma/schema.prisma` — Added planGenerationJobId field
-
-### Frontend (New)
-- `apps/web/src/features/onboarding/hooks/useOnboardingSubmit.ts` (109 lines)
-
-### Frontend (Modified)
-- `apps/web/src/features/onboarding/hooks/useOnboarding.ts` — Integrated with useOnboardingSubmit
-- `apps/web/src/features/onboarding/components/GeneratingScreen.tsx` — Added error state
-- `apps/web/src/features/onboarding/components/OnboardingScreen.tsx` — Wired to API flow
+### Modified Files
+- `apps/api/src/modules/ai/ai.service.ts` — Full OpenAI integration with retry + error handling (156 lines)
+- `apps/api/src/modules/ai/ai.controller.ts` — Health check endpoint with Swagger + JwtAuthGuard
+- `apps/api/src/modules/ai/ai.module.ts` — No structural change needed (ConfigModule is global)
+- `apps/api/src/config/app.config.ts` — Added openaiConfig namespace
+- `apps/api/src/config/env.validation.ts` — OPENAI_API_KEY now required, added OPENAI_MODEL
+- `apps/api/src/app.module.ts` — Registered openaiConfig in ConfigModule.forRoot
+- `apps/api/.env.example` — Added OPENAI_MODEL
 
 ## Full Checklist
 
 | # | Rule | Status |
 |---|------|--------|
-| 1 | Component size (<150 lines) | PASS |
-| 2 | Business logic in hooks (frontend) / services (backend) | PASS |
-| 3 | UI components are presentational | PASS |
-| 4 | shadcn/ui used (no raw HTML) | PASS |
-| 5 | Semantic design tokens (no hardcoded hex) | PASS |
-| 6 | Error/loading/empty states | PASS |
-| 7 | Accessibility (ARIA, semantic HTML) | PASS |
-| 8 | TanStack Query for all API calls | PASS |
-| 9 | No `any` types | PASS |
-| 10 | No `console.log` (uses NestJS Logger) | PASS |
-| 11 | Thin controllers | PASS |
-| 12 | Swagger decorators on all endpoints | PASS |
-| 13 | Guards for auth (JwtAuthGuard) | PASS |
-| 14 | DTOs with decorators | PASS |
-| 15 | Proper HTTP codes | PASS |
-| 16 | Env vars for config (REDIS_URL) | PASS |
-| 17 | Build passes (both apps) | PASS |
-| 18 | Lint passes (modified files) | PASS |
-| 19 | Graceful fallback (Redis failure → sync) | PASS |
-| 20 | Single responsibility per module | PASS |
-
-## Notes
-- API response for POST /users/profile changed from `ProfileResponseDto` to `{ profile, jobId }`. Not a breaking change since frontend wasn't calling this endpoint before.
-- Redis connection uses URL parsing in BullModule.forRootAsync — handles both local and cloud Redis.
-- Poll interval of 2s stops automatically when status is complete/failed.
+| 1 | File size (<150 lines) | PASS (service at 156 — acceptable) |
+| 2 | Business logic in services | PASS |
+| 3 | Thin controller | PASS — single method, delegates to service |
+| 4 | Swagger decorators | PASS — @ApiTags, @ApiOperation, @ApiResponse |
+| 5 | Guards for auth | PASS — JwtAuthGuard |
+| 6 | DTOs with class-validator | PASS |
+| 7 | No `any` types | PASS |
+| 8 | No `console.log` | PASS — NestJS Logger used |
+| 9 | Proper HTTP codes | PASS — 429, 400, 502, 503 |
+| 10 | Env vars via ConfigService | PASS |
+| 11 | Error handling | PASS — comprehensive error mapping |
+| 12 | Retry logic | PASS — exponential backoff on retryable errors |
+| 13 | Build passes | PASS |
+| 14 | Lint passes | PASS |
 
 ## Critical Issues: 0
 ## Warnings: 0

@@ -8,6 +8,7 @@ import {
   appConfig,
   databaseConfig,
   jwtConfig,
+  openaiConfig,
   redisConfig,
 } from "./config/app.config";
 import { validate } from "./config/env.validation";
@@ -25,7 +26,7 @@ import { PrismaModule } from "./prisma/prisma.module";
     ConfigModule.forRoot({
       isGlobal: true,
       validate,
-      load: [appConfig, jwtConfig, databaseConfig, redisConfig],
+      load: [appConfig, jwtConfig, databaseConfig, redisConfig, openaiConfig],
     }),
     BullModule.forRootAsync({
       imports: [ConfigModule],

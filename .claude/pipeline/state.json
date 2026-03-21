@@ -1,6 +1,6 @@
 {
-  "task": "Task 1.5",
-  "taskTitle": "Plan Generation Trigger",
+  "task": "Task 2.1",
+  "taskTitle": "OpenAI Setup",
   "phase": "summary",
   "status": "completed",
   "iterations": { "review": 1, "test": 1 },

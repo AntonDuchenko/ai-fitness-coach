@@ -1,120 +1,87 @@
-# Architect Plan: Task 1.5 — Plan Generation Trigger
+# Architect Plan: Task 2.1 — OpenAI Setup
 
 ## Overview
-Implement a queue-based plan generation system triggered after onboarding completion. Uses Bull + Redis for async job processing. The backend queues a job when a profile is created, and exposes a status endpoint for frontend polling. The frontend is updated to call the API and poll for real progress.
+Implement the OpenAI SDK integration in the existing AI module. This is a backend-only task: configure the OpenAI client, add environment validation, implement error handling with retry logic, and expose a health-check endpoint to verify connectivity.
 
 ## Current State
-- `POST /users/profile` creates profile and immediately sets `onboardingCompleted: true`
-- Frontend `useOnboarding` saves data to localStorage and fakes generation progress with a timer
-- No API call is made from the frontend to submit onboarding data
-- No queue system exists
+- AI module exists with empty `AiService`, `AiController`, and `AiModule`
+- `OPENAI_API_KEY` is already in `.env.example` and env validation (optional)
+- `ConfigModule` is global — available in all modules
+- No OpenAI SDK installed
 
 ## Architecture Decisions
-1. **Bull + Redis** for job queue — standard NestJS pattern
-2. **Separate `plan-generation` module** to keep queue logic isolated from users module
-3. **Store `planGenerationJobId` on UserProfile** — allows status lookups without extra tables
-4. **Profile creation no longer sets `onboardingCompleted: true`** — the job processor does this
-5. **Frontend uses TanStack Query** — `useMutation` for profile submission, `useQuery` with polling for status
-6. **Simulated progress** — the processor adds artificial delays to simulate AI work (will be replaced in Phase 2)
+1. **OpenAI SDK v4** — official `openai` npm package
+2. **ConfigService injection** — standard NestJS pattern for env access
+3. **OPENAI_API_KEY becomes required** — update env validation from optional to required (since this is Phase 2, AI is now needed)
+4. **Add `openai` config namespace** — new `openaiConfig` in `app.config.ts` for API key + model defaults
+5. **Retry with exponential backoff** — custom utility method in AiService, handles rate limits (429) and server errors (5xx)
+6. **Health check endpoint** — `GET /ai/health` to verify API connection with a simple models.list() call
+7. **Structured error handling** — catch OpenAI-specific errors and map to NestJS HttpExceptions
 
 ## Files to Create/Modify
 
-### Backend
-
-#### 1. Dependencies
-- Install: `@nestjs/bull bull ioredis @types/bull`
-- Add `REDIS_URL` to env validation (optional, default `redis://localhost:6379`)
-
-#### 2. New Module: `apps/api/src/modules/plan-generation/`
-
-**`plan-generation.module.ts`**
-- Register Bull queue named `plan-generation`
-- Import PrismaModule, UsersModule
-- Export PlanGenerationService
-
-**`plan-generation.processor.ts`**
-- `@Processor('plan-generation')`
-- `@Process('generate-plans')` handler:
-  1. Simulate AI work with delays (5 steps, ~1s each)
-  2. Update UserProfile: `onboardingCompleted: true`, `onboardingCompletedAt: now()`
-  3. Job progress reported via `job.progress()`
-
-**`plan-generation.service.ts`**
-- `triggerPlanGeneration(userId: string): Promise<{ jobId: string }>` — adds job to queue
-- `getJobStatus(jobId: string): Promise<{ status, progress }>` — returns job state
-
-#### 3. Modify: `apps/api/src/modules/users/users.service.ts`
-- `createProfile()`: Remove `onboardingCompleted: true` and `onboardingCompletedAt` from create data
-- Add `setOnboardingComplete(userId: string)` method for the processor to call
-
-#### 4. Modify: `apps/api/src/modules/users/users.controller.ts`
-- `POST /users/profile` response now includes `jobId` from plan generation trigger
-- New endpoint: `GET /users/onboarding-status` — returns `{ status: 'pending' | 'processing' | 'complete', progress: 0-100 }`
-
-#### 5. New DTO: `apps/api/src/modules/users/dto/onboarding-status-response.dto.ts`
-- `status: 'pending' | 'processing' | 'complete' | 'failed'`
-- `progress: number` (0-100)
-
-#### 6. Modify: `apps/api/src/config/env.validation.ts`
-- Add `REDIS_URL` optional field with default
-
-#### 7. Modify: `apps/api/src/app.module.ts`
-- Import `BullModule.forRoot()` with Redis config
-- Import `PlanGenerationModule`
-
-#### 8. Prisma Schema
-- Add `planGenerationJobId String?` to UserProfile model
-- Run migration
-
-### Frontend
-
-#### 9. New Hook: `apps/web/src/features/onboarding/hooks/useOnboardingSubmit.ts`
-- `useMutation` calling `POST /users/profile` with onboarding data
-- On success, stores jobId and triggers status polling
-- `useQuery` with `refetchInterval: 2000` polling `GET /users/onboarding-status`
-- Returns: `{ submit, isSubmitting, jobStatus, progress, error }`
-
-#### 10. Modify: `apps/web/src/features/onboarding/hooks/useOnboarding.ts`
-- Replace fake progress timer with real API submission
-- On last step "Generate My Plan", call `submit()` from useOnboardingSubmit
-- Map API status/progress to existing `isGenerating` and `generationProgress` state
-
-#### 11. Modify: `apps/web/src/features/onboarding/components/GeneratingScreen.tsx`
-- Add error state handling (show error message + retry button)
-- "Go to Dashboard" navigates to `/dashboard` (or `/` for now) on completion
-
-#### 12. Modify: `apps/web/src/features/onboarding/components/OnboardingScreen.tsx`
-- Pass submit error state down
-- Handle submission loading state on the "Generate My Plan" button
-
-## Data Flow
-
-```
-[Frontend: Last Step]
-  → POST /users/profile (onboarding data)
-  → Backend creates profile + queues job
-  → Returns { profile, jobId }
-
-[Frontend: GeneratingScreen]
-  → GET /users/onboarding-status (poll every 2s)
-  → Backend checks Bull job progress
-  → Returns { status, progress }
-
-[Backend: Job Processor]
-  → Simulates 5 steps with delays
-  → Reports progress via job.progress()
-  → On complete: sets onboardingCompleted = true
-  → Clears localStorage on frontend when complete
+### 1. Install dependency
+```bash
+cd apps/api && pnpm add openai
 ```
 
-## Error Handling
-- 401: Missing/invalid JWT on all endpoints
-- 409: Profile already exists (profile creation)
-- 404: No active job found (status endpoint returns `{ status: 'complete', progress: 100 }` if profile is already complete)
-- 500: Queue/Redis connection failure — graceful fallback: create profile synchronously and return complete status
-- Frontend: Show error state in GeneratingScreen with retry option
+### 2. Modify: `apps/api/src/config/app.config.ts`
+- Add `openaiConfig` registered as `openai` namespace:
+  - `apiKey: process.env.OPENAI_API_KEY`
+  - `defaultModel: process.env.OPENAI_MODEL || 'gpt-4o'`
+  - `maxRetries: 3`
+  - `retryBaseDelayMs: 1000`
+
+### 3. Modify: `apps/api/src/config/env.validation.ts`
+- Change `OPENAI_API_KEY` from `z.string().optional()` to `z.string().min(1, "OPENAI_API_KEY is required")`
+- Add `OPENAI_MODEL` as optional with default `gpt-4o`
+
+### 4. Modify: `apps/api/src/app.module.ts`
+- Add `openaiConfig` to `ConfigModule.forRoot({ load: [...] })`
+
+### 5. Modify: `apps/api/src/modules/ai/ai.service.ts`
+Full implementation:
+- Inject `ConfigService`
+- Initialize `OpenAI` client in constructor
+- `async testConnection(): Promise<{ status: string; model: string }>` — calls `openai.models.list()` with limit 1
+- `async createChatCompletion(messages, options?): Promise<string>` — wrapper around `openai.chat.completions.create()` with retry
+- `private async withRetry<T>(fn: () => Promise<T>, retries?: number): Promise<T>` — exponential backoff, catches rate limit (429) and server errors (>=500)
+- Proper error mapping: `RateLimitError` → 429, `AuthenticationError` → 401, `APIError` → 502
+
+### 6. Modify: `apps/api/src/modules/ai/ai.controller.ts`
+- `GET /ai/health` — calls `aiService.testConnection()`, returns status
+- Swagger decorators: `@ApiTags('AI')`, `@ApiOperation`, `@ApiResponse`
+- Protected with `@UseGuards(JwtAuthGuard)`
+
+### 7. Create: `apps/api/src/modules/ai/dto/ai-health-response.dto.ts`
+- `status: string` (e.g., "connected")
+- `model: string` (default model name)
+- `timestamp: string`
+
+### 8. Create: `apps/api/src/modules/ai/dto/chat-completion-request.dto.ts`
+- `messages: { role: string; content: string }[]`
+- `model?: string`
+- `temperature?: number`
+- `maxTokens?: number`
+
+## Error Handling Strategy
+- `APIConnectionError` → `ServiceUnavailableException` (503) — OpenAI unreachable
+- `RateLimitError` → retry with backoff, then `HttpException(429)` if exhausted
+- `AuthenticationError` → `InternalServerErrorException` (log error, don't expose key issues)
+- `BadRequestError` → `BadRequestException` (400)
+- Generic `APIError` → `BadGatewayException` (502)
+- All errors logged with NestJS Logger
+
+## Retry Logic
+```
+Attempt 1 → fail → wait 1s
+Attempt 2 → fail → wait 2s
+Attempt 3 → fail → wait 4s
+Attempt 4 → throw
+```
+Only retry on: rate limits (429), server errors (>=500), connection errors.
 
 ## Acceptance Criteria Match
-- ✅ Job is queued after onboarding → Bull job triggered in createProfile
-- ✅ Frontend can poll status → GET /users/onboarding-status with useQuery polling
-- ✅ User marked as complete when done → Processor sets onboardingCompleted = true
+- ✅ OpenAI client initialized — via ConfigService in constructor
+- ✅ Test call works — `GET /ai/health` endpoint
+- ✅ Errors handled gracefully — structured error mapping + retry logic

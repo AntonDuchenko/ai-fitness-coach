@@ -15,8 +15,9 @@ const envSchema = z.object({
   JWT_SECRET: z.string().min(8, "JWT_SECRET must be at least 8 characters"),
   JWT_EXPIRES_IN: z.string().default("7d"),
 
-  // AI Provider (optional until AI module is implemented)
-  OPENAI_API_KEY: z.string().optional(),
+  // AI Provider
+  OPENAI_API_KEY: z.string().min(1, "OPENAI_API_KEY is required"),
+  OPENAI_MODEL: z.string().optional().default("gpt-4o"),
 
   // Redis (for Bull queue)
   REDIS_URL: z.string().default("redis://localhost:6379"),
