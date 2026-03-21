@@ -1,82 +1,120 @@
-# Architect Plan: Task 1.3 — Onboarding Backend (User Profile)
+# Architect Plan: Task 1.5 — Plan Generation Trigger
 
 ## Overview
-Implement profile CRUD endpoints and nutrition calculations (TDEE, BMR, macros) in the Users module. The Prisma schema already has the `UserProfile` model. Auth (JWT) is already working.
+Implement a queue-based plan generation system triggered after onboarding completion. Uses Bull + Redis for async job processing. The backend queues a job when a profile is created, and exposes a status endpoint for frontend polling. The frontend is updated to call the API and poll for real progress.
+
+## Current State
+- `POST /users/profile` creates profile and immediately sets `onboardingCompleted: true`
+- Frontend `useOnboarding` saves data to localStorage and fakes generation progress with a timer
+- No API call is made from the frontend to submit onboarding data
+- No queue system exists
+
+## Architecture Decisions
+1. **Bull + Redis** for job queue — standard NestJS pattern
+2. **Separate `plan-generation` module** to keep queue logic isolated from users module
+3. **Store `planGenerationJobId` on UserProfile** — allows status lookups without extra tables
+4. **Profile creation no longer sets `onboardingCompleted: true`** — the job processor does this
+5. **Frontend uses TanStack Query** — `useMutation` for profile submission, `useQuery` with polling for status
+6. **Simulated progress** — the processor adds artificial delays to simulate AI work (will be replaced in Phase 2)
 
 ## Files to Create/Modify
 
-### 1. DTOs (`apps/api/src/modules/users/dto/`)
+### Backend
 
-**`create-profile.dto.ts`** — Full profile creation DTO with all onboarding fields:
-- Basic info: age (16-80), gender (enum), height (cm), weight (kg), targetWeight (optional)
-- Goals: primaryGoal (enum), secondaryGoals (string[])
-- Experience: fitnessLevel (enum), nutritionKnowledge (enum)
-- Schedule: trainingDaysPerWeek (1-7), sessionDuration (int), preferredTime (enum)
-- Equipment: trainingLocation (enum), equipment (string[])
-- Health: injuries?, medicalConditions?, medications?, dietaryRestrictions (string[])
-- Nutrition: mealsPerDay (2-6), cookingLevel (enum), cuisinePreferences (string[]), dislikedFoods (string[]), foodBudget (float)
-- Motivation: motivation (string), previousAttempts (bool), previousAttemptsDetails?, biggestChallenges (string[])
-- All fields validated with class-validator decorators
+#### 1. Dependencies
+- Install: `@nestjs/bull bull ioredis @types/bull`
+- Add `REDIS_URL` to env validation (optional, default `redis://localhost:6379`)
 
-**`update-profile.dto.ts`** — PartialType of CreateProfileDto for PATCH updates
+#### 2. New Module: `apps/api/src/modules/plan-generation/`
 
-**`profile-response.dto.ts`** — Response DTO with all profile fields + calculated values (tdee, bmr, targetCalories, macros) + onboardingCompleted flag. Uses @Exclude/@Expose for serialization.
+**`plan-generation.module.ts`**
+- Register Bull queue named `plan-generation`
+- Import PrismaModule, UsersModule
+- Export PlanGenerationService
 
-### 2. Service (`apps/api/src/modules/users/users.service.ts`)
+**`plan-generation.processor.ts`**
+- `@Processor('plan-generation')`
+- `@Process('generate-plans')` handler:
+  1. Simulate AI work with delays (5 steps, ~1s each)
+  2. Update UserProfile: `onboardingCompleted: true`, `onboardingCompletedAt: now()`
+  3. Job progress reported via `job.progress()`
 
-Add methods:
-- `getProfile(userId: string)` — Find profile by userId, throw 404 if not found
-- `createProfile(userId: string, dto: CreateProfileDto)` — Create profile, calculate TDEE/BMR/macros, set onboardingCompleted=true
-- `updateProfile(userId: string, dto: UpdateProfileDto)` — Partial update, recalculate TDEE/macros if relevant fields changed
-- `calculateBMR(profile)` — Mifflin-St Jeor equation
-- `calculateTDEE(bmr, trainingDaysPerWeek)` — BMR x activity multiplier
-- `getActivityMultiplier(trainingDays)` — Map days to multiplier
-- `getGoalCalories(tdee, primaryGoal)` — Goal-based adjustment
-- `calculateMacros(weight, goalCalories)` — Protein, fat, carbs
+**`plan-generation.service.ts`**
+- `triggerPlanGeneration(userId: string): Promise<{ jobId: string }>` — adds job to queue
+- `getJobStatus(jobId: string): Promise<{ status, progress }>` — returns job state
 
-### 3. Controller (`apps/api/src/modules/users/users.controller.ts`)
+#### 3. Modify: `apps/api/src/modules/users/users.service.ts`
+- `createProfile()`: Remove `onboardingCompleted: true` and `onboardingCompletedAt` from create data
+- Add `setOnboardingComplete(userId: string)` method for the processor to call
 
-Endpoints (all protected with `@UseGuards(JwtAuthGuard)`, `@ApiBearerAuth()`):
-- `GET /users/profile` — Get current user's profile (200 or 404)
-- `POST /users/profile` — Create profile / onboarding (201, 409 if exists)
-- `PATCH /users/profile` — Update profile (200 or 404)
+#### 4. Modify: `apps/api/src/modules/users/users.controller.ts`
+- `POST /users/profile` response now includes `jobId` from plan generation trigger
+- New endpoint: `GET /users/onboarding-status` — returns `{ status: 'pending' | 'processing' | 'complete', progress: 0-100 }`
 
-All with full Swagger decorators.
+#### 5. New DTO: `apps/api/src/modules/users/dto/onboarding-status-response.dto.ts`
+- `status: 'pending' | 'processing' | 'complete' | 'failed'`
+- `progress: number` (0-100)
 
-### 4. Module
-Already imports PrismaService via global PrismaModule. No changes needed.
+#### 6. Modify: `apps/api/src/config/env.validation.ts`
+- Add `REDIS_URL` optional field with default
 
-## Calculation Formulas
+#### 7. Modify: `apps/api/src/app.module.ts`
+- Import `BullModule.forRoot()` with Redis config
+- Import `PlanGenerationModule`
 
-### BMR (Mifflin-St Jeor)
-- Male: `10 * weight(kg) + 6.25 * height(cm) - 5 * age + 5`
-- Female/Other: `10 * weight(kg) + 6.25 * height(cm) - 5 * age - 161`
+#### 8. Prisma Schema
+- Add `planGenerationJobId String?` to UserProfile model
+- Run migration
 
-### Activity Multiplier
-| Training Days | Multiplier |
-|---------------|------------|
-| 0             | 1.2        |
-| 1-2           | 1.375      |
-| 3-4           | 1.55       |
-| 5-6           | 1.725      |
-| 7             | 1.9        |
+### Frontend
 
-### Goal Adjustment
-| Goal          | Adjustment  |
-|---------------|-------------|
-| weight_loss   | TDEE - 500  |
-| muscle_gain   | TDEE + 400  |
-| recomp        | TDEE - 200  |
-| health        | TDEE        |
-| performance   | TDEE + 200  |
+#### 9. New Hook: `apps/web/src/features/onboarding/hooks/useOnboardingSubmit.ts`
+- `useMutation` calling `POST /users/profile` with onboarding data
+- On success, stores jobId and triggers status polling
+- `useQuery` with `refetchInterval: 2000` polling `GET /users/onboarding-status`
+- Returns: `{ submit, isSubmitting, jobStatus, progress, error }`
 
-### Macros
-- Protein: `weight(kg) * 2.2` g
-- Fat: `weight(kg) * 1.0` g
-- Carbs: `(goalCalories - protein*4 - fat*9) / 4` g
+#### 10. Modify: `apps/web/src/features/onboarding/hooks/useOnboarding.ts`
+- Replace fake progress timer with real API submission
+- On last step "Generate My Plan", call `submit()` from useOnboardingSubmit
+- Map API status/progress to existing `isGenerating` and `generationProgress` state
+
+#### 11. Modify: `apps/web/src/features/onboarding/components/GeneratingScreen.tsx`
+- Add error state handling (show error message + retry button)
+- "Go to Dashboard" navigates to `/dashboard` (or `/` for now) on completion
+
+#### 12. Modify: `apps/web/src/features/onboarding/components/OnboardingScreen.tsx`
+- Pass submit error state down
+- Handle submission loading state on the "Generate My Plan" button
+
+## Data Flow
+
+```
+[Frontend: Last Step]
+  → POST /users/profile (onboarding data)
+  → Backend creates profile + queues job
+  → Returns { profile, jobId }
+
+[Frontend: GeneratingScreen]
+  → GET /users/onboarding-status (poll every 2s)
+  → Backend checks Bull job progress
+  → Returns { status, progress }
+
+[Backend: Job Processor]
+  → Simulates 5 steps with delays
+  → Reports progress via job.progress()
+  → On complete: sets onboardingCompleted = true
+  → Clears localStorage on frontend when complete
+```
 
 ## Error Handling
-- 401: Missing/invalid JWT
-- 404: Profile not found (GET, PATCH)
-- 409: Profile already exists (POST)
-- 422: Validation errors (class-validator)
+- 401: Missing/invalid JWT on all endpoints
+- 409: Profile already exists (profile creation)
+- 404: No active job found (status endpoint returns `{ status: 'complete', progress: 100 }` if profile is already complete)
+- 500: Queue/Redis connection failure — graceful fallback: create profile synchronously and return complete status
+- Frontend: Show error state in GeneratingScreen with retry option
+
+## Acceptance Criteria Match
+- ✅ Job is queued after onboarding → Bull job triggered in createProfile
+- ✅ Frontend can poll status → GET /users/onboarding-status with useQuery polling
+- ✅ User marked as complete when done → Processor sets onboardingCompleted = true

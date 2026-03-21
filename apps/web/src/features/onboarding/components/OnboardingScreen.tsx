@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dumbbell, Sparkles } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { ONBOARDING_STEPS } from "../constants";
 import { useOnboarding } from "../hooks/useOnboarding";
 import { GeneratingScreen } from "./GeneratingScreen";
@@ -21,18 +22,22 @@ const TITLES = [
 ];
 
 export function OnboardingScreen() {
+  const router = useRouter();
   const {
     state,
     canContinue,
     isGenerating,
     isHydrated,
     generationProgress,
+    isComplete,
+    isFailed,
+    error,
     stepErrors,
     updateData,
     toggleArrayValue,
     nextStep,
     prevStep,
-    reset,
+    handleComplete,
   } = useOnboarding();
 
   if (!isHydrated) {
@@ -53,7 +58,21 @@ export function OnboardingScreen() {
   }
 
   if (isGenerating) {
-    return <GeneratingScreen progress={generationProgress} onComplete={reset} />;
+    return (
+      <GeneratingScreen
+        progress={generationProgress}
+        isComplete={isComplete ?? false}
+        isFailed={isFailed ?? false}
+        error={error instanceof Error ? error : null}
+        onComplete={() => {
+          handleComplete();
+          router.push("/");
+        }}
+        onRetry={() => {
+          window.location.reload();
+        }}
+      />
+    );
   }
 
   const progressValue = (state.step / ONBOARDING_STEPS) * 100;
@@ -98,7 +117,6 @@ export function OnboardingScreen() {
         <Button
           onClick={nextStep}
           disabled={!canContinue}
-          variant={state.step === ONBOARDING_STEPS ? "default" : "default"}
           className={
             state.step === ONBOARDING_STEPS
               ? "h-10 flex-1 bg-success text-success-foreground hover:bg-success/90"

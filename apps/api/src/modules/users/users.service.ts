@@ -1,8 +1,4 @@
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
 import { CreateProfileDto } from "./dto/create-profile.dto";
 import { ProfileResponseDto } from "./dto/profile-response.dto";
@@ -49,63 +45,84 @@ export class UsersService {
     userId: string,
     dto: CreateProfileDto,
   ): Promise<ProfileResponseDto> {
-    const existing = await this.prisma.userProfile.findUnique({
-      where: { userId },
-    });
-
-    if (existing) {
-      throw new ConflictException("Profile already exists");
-    }
-
     const bmr = this.calculateBMR(dto.gender, dto.weight, dto.height, dto.age);
     const tdee = this.calculateTDEE(bmr, dto.trainingDaysPerWeek);
     const targetCalories = this.getGoalCalories(tdee, dto.primaryGoal);
     const macros = this.calculateMacros(dto.weight, targetCalories);
 
-    const profile = await this.prisma.userProfile.create({
-      data: {
-        userId,
-        age: dto.age,
-        gender: dto.gender,
-        height: dto.height,
-        weight: dto.weight,
-        targetWeight: dto.targetWeight ?? null,
-        primaryGoal: dto.primaryGoal,
-        secondaryGoals: dto.secondaryGoals,
-        fitnessLevel: dto.fitnessLevel,
-        nutritionKnowledge: dto.nutritionKnowledge,
-        trainingDaysPerWeek: dto.trainingDaysPerWeek,
-        sessionDuration: dto.sessionDuration,
-        preferredTime: dto.preferredTime,
-        trainingLocation: dto.trainingLocation,
-        equipment: dto.equipment,
-        injuries: dto.injuries ?? null,
-        medicalConditions: dto.medicalConditions ?? null,
-        medications: dto.medications ?? null,
-        dietaryRestrictions: dto.dietaryRestrictions,
-        mealsPerDay: dto.mealsPerDay,
-        cookingLevel: dto.cookingLevel,
-        cuisinePreferences: dto.cuisinePreferences,
-        dislikedFoods: dto.dislikedFoods,
-        foodBudget: dto.foodBudget,
-        motivation: dto.motivation,
-        previousAttempts: dto.previousAttempts,
-        previousAttemptsDetails: dto.previousAttemptsDetails ?? null,
-        biggestChallenges: dto.biggestChallenges,
-        bmr,
-        tdee,
-        targetCalories,
-        targetProtein: macros.protein,
-        targetFat: macros.fat,
-        targetCarbs: macros.carbs,
-        onboardingCompleted: true,
-        onboardingCompletedAt: new Date(),
-      },
+    const data = {
+      age: dto.age,
+      gender: dto.gender,
+      height: dto.height,
+      weight: dto.weight,
+      targetWeight: dto.targetWeight ?? null,
+      primaryGoal: dto.primaryGoal,
+      secondaryGoals: dto.secondaryGoals,
+      fitnessLevel: dto.fitnessLevel,
+      nutritionKnowledge: dto.nutritionKnowledge,
+      trainingDaysPerWeek: dto.trainingDaysPerWeek,
+      sessionDuration: dto.sessionDuration,
+      preferredTime: dto.preferredTime,
+      trainingLocation: dto.trainingLocation,
+      equipment: dto.equipment,
+      injuries: dto.injuries ?? null,
+      medicalConditions: dto.medicalConditions ?? null,
+      medications: dto.medications ?? null,
+      dietaryRestrictions: dto.dietaryRestrictions,
+      mealsPerDay: dto.mealsPerDay,
+      cookingLevel: dto.cookingLevel,
+      cuisinePreferences: dto.cuisinePreferences,
+      dislikedFoods: dto.dislikedFoods,
+      foodBudget: dto.foodBudget,
+      motivation: dto.motivation,
+      previousAttempts: dto.previousAttempts,
+      previousAttemptsDetails: dto.previousAttemptsDetails ?? null,
+      biggestChallenges: dto.biggestChallenges,
+      bmr,
+      tdee,
+      targetCalories,
+      targetProtein: macros.protein,
+      targetFat: macros.fat,
+      targetCarbs: macros.carbs,
+      onboardingCompleted: false,
+    };
+
+    const profile = await this.prisma.userProfile.upsert({
+      where: { userId },
+      create: { userId, ...data },
+      update: data,
     });
 
     return new ProfileResponseDto(
       profile as unknown as Partial<ProfileResponseDto>,
     );
+  }
+
+  async setOnboardingComplete(userId: string) {
+    return this.prisma.userProfile.update({
+      where: { userId },
+      data: {
+        onboardingCompleted: true,
+        onboardingCompletedAt: new Date(),
+      },
+    });
+  }
+
+  async setPlanGenerationJobId(userId: string, jobId: string) {
+    return this.prisma.userProfile.update({
+      where: { userId },
+      data: { planGenerationJobId: jobId },
+    });
+  }
+
+  async getPlanGenerationJobId(userId: string): Promise<string | null> {
+    const profile = await this.prisma.userProfile.findUnique({
+      where: { userId },
+      select: { planGenerationJobId: true, onboardingCompleted: true },
+    });
+    if (!profile) return null;
+    if (profile.onboardingCompleted) return null;
+    return profile.planGenerationJobId;
   }
 
   async updateProfile(
@@ -197,7 +214,6 @@ export class UsersService {
         return tdee - 200;
       case "performance":
         return tdee + 200;
-      case "health":
       default:
         return tdee;
     }

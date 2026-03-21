@@ -1,49 +1,63 @@
-# Review Report: Task 1.4 — Onboarding Frontend (8 Steps)
+# Review Report: Task 1.5 — Plan Generation Trigger
 
 ## Verdict: APPROVED
 
-## Review Iteration: 2/3
+## Review Iteration: 1/3
 
-## Previous Issues Resolution
+## Files Reviewed
 
-| # | Issue | Status |
-|---|-------|--------|
-| 1 | Component size >150 lines | FIXED — All files under 150 lines (max: StepNutrition at 140) |
-| 2 | Raw `<button>` instead of shadcn `<Button>` | FIXED — OptionButton uses `<Button>`, CheckRow uses `<Checkbox>` |
-| 3 | 35+ hardcoded hex colors | FIXED — Zero hardcoded hex found, all semantic tokens |
-| 4 | No accessibility | FIXED — role, aria-checked, aria-label, aria-invalid, aria-live, aria-hidden throughout |
-| 5 | No zod validation | FIXED — Zod schemas per step with inline error display |
-| 6 | Missing async UI states | FIXED — Skeleton loading state during hydration, generation screen |
-| 7 | Wrong input types | FIXED — Textarea for long text, Select for dropdowns, radio buttons for meals |
-| 8 | No dark mode | FIXED — Semantic tokens auto-switch via CSS variables |
-| 9 | Multiple components per file | FIXED — Each component in its own file |
-| W1 | Pre-filled defaults | FIXED — Empty/neutral defaults |
-| W2 | generationProgress starts at 68 | FIXED — Starts at 0 |
+### Backend (New)
+- `apps/api/src/modules/plan-generation/plan-generation.module.ts` (11 lines)
+- `apps/api/src/modules/plan-generation/plan-generation.processor.ts` (43 lines)
+- `apps/api/src/modules/plan-generation/plan-generation.service.ts` (43 lines)
+- `apps/api/src/modules/users/dto/onboarding-status-response.dto.ts` (16 lines)
+
+### Backend (Modified)
+- `apps/api/src/app.module.ts` — Added BullModule.forRoot, redisConfig
+- `apps/api/src/config/app.config.ts` — Added redisConfig
+- `apps/api/src/config/env.validation.ts` — Added REDIS_URL
+- `apps/api/src/modules/users/users.controller.ts` — Added onboarding-status endpoint, plan generation trigger
+- `apps/api/src/modules/users/users.service.ts` — Added setOnboardingComplete, setPlanGenerationJobId, getPlanGenerationJobId
+- `apps/api/src/modules/users/users.module.ts` — Imported PlanGenerationModule
+- `apps/api/prisma/schema.prisma` — Added planGenerationJobId field
+
+### Frontend (New)
+- `apps/web/src/features/onboarding/hooks/useOnboardingSubmit.ts` (109 lines)
+
+### Frontend (Modified)
+- `apps/web/src/features/onboarding/hooks/useOnboarding.ts` — Integrated with useOnboardingSubmit
+- `apps/web/src/features/onboarding/components/GeneratingScreen.tsx` — Added error state
+- `apps/web/src/features/onboarding/components/OnboardingScreen.tsx` — Wired to API flow
 
 ## Full Checklist
 
 | # | Rule | Status |
 |---|------|--------|
 | 1 | Component size (<150 lines) | PASS |
-| 2 | Business logic in hooks | PASS |
+| 2 | Business logic in hooks (frontend) / services (backend) | PASS |
 | 3 | UI components are presentational | PASS |
 | 4 | shadcn/ui used (no raw HTML) | PASS |
 | 5 | Semantic design tokens (no hardcoded hex) | PASS |
 | 6 | Error/loading/empty states | PASS |
 | 7 | Accessibility (ARIA, semantic HTML) | PASS |
-| 8 | Form validation with zod | PASS |
+| 8 | TanStack Query for all API calls | PASS |
 | 9 | No `any` types | PASS |
-| 10 | No `console.log` | PASS |
-| 11 | Server vs Client components | PASS |
-| 12 | No inline styles | PASS |
-| 13 | `cn()` utility used | PASS |
-| 14 | One component per file | PASS |
-| 15 | No prop drilling >2 levels | PASS |
-| 16 | File organization (features/) | PASS |
-| 17 | Build passes | PASS |
-| 18 | Correct input types (Textarea, Select) | PASS |
-| 19 | localStorage persistence | PASS |
-| 20 | Dark mode via semantic tokens | PASS |
+| 10 | No `console.log` (uses NestJS Logger) | PASS |
+| 11 | Thin controllers | PASS |
+| 12 | Swagger decorators on all endpoints | PASS |
+| 13 | Guards for auth (JwtAuthGuard) | PASS |
+| 14 | DTOs with decorators | PASS |
+| 15 | Proper HTTP codes | PASS |
+| 16 | Env vars for config (REDIS_URL) | PASS |
+| 17 | Build passes (both apps) | PASS |
+| 18 | Lint passes (modified files) | PASS |
+| 19 | Graceful fallback (Redis failure → sync) | PASS |
+| 20 | Single responsibility per module | PASS |
+
+## Notes
+- API response for POST /users/profile changed from `ProfileResponseDto` to `{ profile, jobId }`. Not a breaking change since frontend wasn't calling this endpoint before.
+- Redis connection uses URL parsing in BullModule.forRootAsync — handles both local and cloud Redis.
+- Poll interval of 2s stops automatically when status is complete/failed.
 
 ## Critical Issues: 0
 ## Warnings: 0

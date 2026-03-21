@@ -8,6 +8,7 @@ import {
 } from "../constants";
 import { type StepErrors, validateStep } from "../schemas";
 import type { OnboardingData, OnboardingState } from "../types";
+import { useOnboardingSubmit } from "./useOnboardingSubmit";
 
 export function useOnboarding() {
   const [state, setState] = useState<OnboardingState>({
@@ -15,9 +16,19 @@ export function useOnboarding() {
     data: defaultOnboardingData,
   });
   const [isHydrated, setIsHydrated] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [generationProgress, setGenerationProgress] = useState(0);
   const [showErrors, setShowErrors] = useState(false);
+
+  const {
+    submit,
+    isSubmitting,
+    submitError,
+    isSubmitted,
+    progress: apiProgress,
+    isComplete,
+    isFailed,
+    statusError,
+    handleComplete,
+  } = useOnboardingSubmit();
 
   useEffect(() => {
     const raw = localStorage.getItem(ONBOARDING_STORAGE_KEY);
@@ -40,14 +51,6 @@ export function useOnboarding() {
       localStorage.setItem(ONBOARDING_STORAGE_KEY, JSON.stringify(state));
     }
   }, [state, isHydrated]);
-
-  useEffect(() => {
-    if (!isGenerating) return;
-    const id = window.setInterval(() => {
-      setGenerationProgress((prev) => Math.min(prev + 8, 100));
-    }, 700);
-    return () => window.clearInterval(id);
-  }, [isGenerating]);
 
   const stepErrors: StepErrors = useMemo(
     () => (showErrors ? validateStep(state.step, state.data) : {}),
@@ -96,7 +99,7 @@ export function useOnboarding() {
       setShowErrors(false);
       return;
     }
-    setIsGenerating(true);
+    submit(state.data);
   };
 
   const prevStep = () => {
@@ -104,13 +107,9 @@ export function useOnboarding() {
     setShowErrors(false);
   };
 
-  const reset = () => {
-    localStorage.removeItem(ONBOARDING_STORAGE_KEY);
-    setState({ step: 1, data: defaultOnboardingData });
-    setIsGenerating(false);
-    setGenerationProgress(0);
-    setShowErrors(false);
-  };
+  const isGenerating = isSubmitting || isSubmitted;
+  const generationProgress = isSubmitting ? 0 : apiProgress;
+  const error = submitError || statusError;
 
   return {
     state,
@@ -118,11 +117,14 @@ export function useOnboarding() {
     isGenerating,
     isHydrated,
     generationProgress,
+    isComplete,
+    isFailed,
+    error,
     stepErrors,
     updateData,
     toggleArrayValue,
     nextStep,
     prevStep,
-    reset,
+    handleComplete,
   };
 }

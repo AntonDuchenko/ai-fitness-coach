@@ -1,15 +1,15 @@
 # Pipeline Summary
 
-## Task: Task 1.4 — Onboarding Frontend (8 Steps)
+## Task: Task 1.5 — Plan Generation Trigger
 ## Final Status: SUCCESS
 
 ## Timeline
 | Phase | Status | Iterations |
 |-------|--------|------------|
-| Init | Skipped (review-only start) | -- |
-| Architect | Skipped (review-only start) | -- |
+| Init | Completed | - |
+| Architect | Completed | - |
 | Developer | Completed | 1 pass |
-| Reviewer | APPROVED | 2/3 iterations |
+| Reviewer | APPROVED | 1/3 iterations |
 | Tester | PASSED | 1/3 iterations |
 
 ## Convention Compliance
@@ -22,42 +22,37 @@
 | Error/loading/empty states | PASS |
 | Accessibility | PASS |
 | TypeScript strict (no `any`) | PASS |
-| Zod form validation | PASS |
-| One component per file | PASS |
 
 ## Files Created/Modified
-- `apps/web/src/app/onboarding/page.tsx` — Replaced hardcoded hex with `bg-background`
-- `apps/web/src/features/onboarding/schemas.ts` — NEW: Zod validation schemas per step
-- `apps/web/src/features/onboarding/constants.ts` — Changed pre-filled defaults to empty/neutral
-- `apps/web/src/features/onboarding/hooks/useOnboarding.ts` — Added isHydrated, zod validation, fixed generationProgress default
-- `apps/web/src/features/onboarding/components/OnboardingScreen.tsx` — Rewritten: semantic tokens, Skeleton loading, Progress component
-- `apps/web/src/features/onboarding/components/GeneratingScreen.tsx` — NEW: Extracted generating screen with semantic tokens
-- `apps/web/src/features/onboarding/components/OnboardingStepContent.tsx` — Rewritten: now delegates to per-step components
-- `apps/web/src/features/onboarding/components/OptionButton.tsx` — NEW: Uses shadcn Button with role="radio"
-- `apps/web/src/features/onboarding/components/CheckRow.tsx` — NEW: Uses shadcn Checkbox with Label
-- `apps/web/src/features/onboarding/components/StepBasicInfo.tsx` — NEW: Step 1 with ARIA, inline errors
-- `apps/web/src/features/onboarding/components/StepGoals.tsx` — NEW: Step 2 with radiogroup role
-- `apps/web/src/features/onboarding/components/StepExperience.tsx` — NEW: Step 3
-- `apps/web/src/features/onboarding/components/StepSchedule.tsx` — NEW: Step 4 with Select dropdowns
-- `apps/web/src/features/onboarding/components/StepEquipment.tsx` — NEW: Step 5
-- `apps/web/src/features/onboarding/components/StepLimitations.tsx` — NEW: Step 6 with Textarea
-- `apps/web/src/features/onboarding/components/StepNutrition.tsx` — NEW: Step 7 with Select, radio meals
-- `apps/web/src/features/onboarding/components/StepMotivation.tsx` — NEW: Step 8 with Textarea
-- `apps/web/src/components/ui/textarea.tsx` — NEW: shadcn/ui Textarea
-- `apps/web/src/components/ui/select.tsx` — NEW: shadcn/ui Select
-- `apps/web/src/components/ui/skeleton.tsx` — NEW: shadcn/ui Skeleton
-- `apps/web/src/components/ui/progress.tsx` — NEW: shadcn/ui Progress
-- `apps/web/src/components/ui/checkbox.tsx` — NEW: shadcn/ui Checkbox
+
+### New Files
+- `apps/api/src/modules/plan-generation/plan-generation.module.ts` — Bull queue module registration
+- `apps/api/src/modules/plan-generation/plan-generation.processor.ts` — Job processor (simulates AI work)
+- `apps/api/src/modules/plan-generation/plan-generation.service.ts` — Job triggering and status lookup
+- `apps/api/src/modules/users/dto/onboarding-status-response.dto.ts` — Status response DTO
+- `apps/web/src/features/onboarding/hooks/useOnboardingSubmit.ts` — API submission + polling hook
+
+### Modified Files
+- `apps/api/src/app.module.ts` — Added BullModule.forRoot with Redis config
+- `apps/api/src/config/app.config.ts` — Added redisConfig
+- `apps/api/src/config/env.validation.ts` — Added REDIS_URL
+- `apps/api/src/modules/users/users.module.ts` — Imported PlanGenerationModule
+- `apps/api/src/modules/users/users.controller.ts` — Added GET /users/onboarding-status, plan trigger in POST /users/profile
+- `apps/api/src/modules/users/users.service.ts` — Added setOnboardingComplete, setPlanGenerationJobId, getPlanGenerationJobId
+- `apps/api/prisma/schema.prisma` — Added planGenerationJobId to UserProfile
+- `apps/api/.env` — Added REDIS_URL
+- `apps/api/.env.example` — Added REDIS_URL
+- `apps/api/package.json` — Added @nestjs/bull, bull, ioredis
+- `apps/web/src/features/onboarding/hooks/useOnboarding.ts` — Replaced fake progress with API integration
+- `apps/web/src/features/onboarding/components/GeneratingScreen.tsx` — Added error state with retry
+- `apps/web/src/features/onboarding/components/OnboardingScreen.tsx` — Wired to API-driven flow
 
 ## Key Decisions
-- **Per-step components** — Split 405-line monolith into 8 step files + 2 shared (OptionButton, CheckRow)
-- **Zod over manual validation** — Per-step schemas with inline error display, conforming to CLAUDE.md
-- **shadcn Checkbox** — Replaced custom CheckRow `<button>` with Radix Checkbox + Label for proper a11y
-- **Select for dropdowns** — Replaced text Input with shadcn Select for session duration, preferred time, cooking level
-- **Textarea for long text** — Injuries, medical conditions, motivation use Textarea per task requirements
-- **Radio buttons for meals** — Replaced text Input with 5-option radio group (2-6)
-- **Empty defaults** — Removed pre-filled data, users must intentionally fill each field
-- **Hydration guard** — Skeleton loading state while localStorage is read, prevents flash of empty form
+- Used Bull + Redis for async job queue (NestJS standard pattern)
+- Graceful fallback: if Redis unavailable, profile creation completes synchronously
+- Frontend polls every 2s via TanStack Query refetchInterval, auto-stops on complete/failed
+- Job processor simulates 5 AI steps with 1s delays (placeholder for Phase 2 real AI)
+- planGenerationJobId stored on UserProfile for status lookups
 
 ## Remaining Issues
-- Pencil MCP batch_get was unresponsive — visual design comparison deferred to next session
+- None

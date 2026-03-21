@@ -14,3 +14,7 @@ export const jwtConfig = registerAs("jwt", () => ({
 export const databaseConfig = registerAs("database", () => ({
   url: process.env.DATABASE_URL,
 }));
+
+export const redisConfig = registerAs("redis", () => ({
+  url: process.env.REDIS_URL || "redis://localhost:6379",
+}));

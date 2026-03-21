@@ -1,9 +1,15 @@
+import { BullModule } from "@nestjs/bull";
 import { ClassSerializerInterceptor, Module } from "@nestjs/common";
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { APP_INTERCEPTOR } from "@nestjs/core";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-import { appConfig, databaseConfig, jwtConfig } from "./config/app.config";
+import {
+  appConfig,
+  databaseConfig,
+  jwtConfig,
+  redisConfig,
+} from "./config/app.config";
 import { validate } from "./config/env.validation";
 import { AiModule } from "./modules/ai/ai.module";
 import { AuthModule } from "./modules/auth/auth.module";
@@ -19,7 +25,22 @@ import { PrismaModule } from "./prisma/prisma.module";
     ConfigModule.forRoot({
       isGlobal: true,
       validate,
-      load: [appConfig, jwtConfig, databaseConfig],
+      load: [appConfig, jwtConfig, databaseConfig, redisConfig],
+    }),
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const redisUrl = configService.get<string>("redis.url");
+        const url = new URL(redisUrl || "redis://localhost:6379");
+        return {
+          redis: {
+            host: url.hostname,
+            port: Number(url.port) || 6379,
+            password: url.password || undefined,
+          },
+        };
+      },
     }),
     PrismaModule,
     AuthModule,

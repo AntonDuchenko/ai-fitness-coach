@@ -107,6 +107,9 @@ model UserProfile {
   targetFat      Float? // grams
   targetCarbs    Float? // grams
 
+  // Plan generation
+  planGenerationJobId String?
+
   // Metadata
   onboardingCompleted   Boolean   @default(false)
   onboardingCompletedAt DateTime?
