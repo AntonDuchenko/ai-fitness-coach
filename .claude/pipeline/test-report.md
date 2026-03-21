@@ -1,4 +1,4 @@
-# Test Report: Task 2.2 — AI Context Building
+# Test Report — Task 2.3: Chat Backend
 
 ## Verdict: PASSED
 
@@ -6,42 +6,48 @@
 
 ## Code Quality Tests
 
-| Test | Status | Details |
-|------|--------|---------|
-| Logic separation (service layer) | PASS | All logic in ContextService/WorkoutsService/NutritionService |
-| TypeScript strict (no `any`) | PASS | No `any` types found |
-| No `console.log` | PASS | NestJS Logger used |
-| Module wiring | PASS | Proper imports/exports, DI works |
-| Build verification | PASS | 0 errors, 47 files compiled |
-| Lint verification | PASS | biome check clean |
+| Test | Status |
+|------|--------|
+| File size (<150 lines) | PASS |
+| Business logic in service | PASS |
+| class-validator on DTOs | PASS |
+| Swagger on endpoints | PASS |
+| No `any` types | PASS |
+| No `console.log` | PASS — NestJS Logger used |
+| Build verification | PASS — 52 files compiled, 0 errors |
+| Lint verification | PASS — biome check clean |
 
-## Acceptance Criteria (from TASKS.md)
+## Acceptance Criteria
 
 | Criteria | Status |
 |----------|--------|
-| Context fetches all relevant data | PASS — profile, history, plans, workouts via Promise.all |
-| System prompt includes profile | PASS — formatted profile with all key fields |
-| Context size optimized (<4000 tokens) | PASS — message summarization + token truncation |
+| User can send message and get AI response | PASS |
+| Free tier limited to 5 messages/day | PASS |
+| Premium users unlimited | PASS |
+| Messages saved to database | PASS |
+| Context included in AI calls | PASS |
+| Appropriate model selected | PASS |
+| Token usage tracked | PASS |
 
-## Backend Architecture
+## API Endpoints
 
-| Check | Status |
-|-------|--------|
-| ContextService created | PASS — buildContext, buildSystemPrompt, invalidateCache |
-| Parallel data fetching | PASS — Promise.all with 5 concurrent queries |
-| Message optimization | PASS — summarize >10 messages, keep last 10 verbatim |
-| Workout log truncation | PASS — only key fields (name, date, duration, rating) |
-| Cache with TTL | PASS — 5-minute in-memory Map cache |
-| getCurrentPlan (workouts) | PASS — queries active plan, ordered by createdAt desc |
-| getCurrentPlan (nutrition) | PASS — queries active plan, ordered by createdAt desc |
+| Endpoint | Method | Status | HTTP Code |
+|----------|--------|--------|-----------|
+| /chat/send | POST | PASS | 201 |
+| /chat/history | GET | PASS | 200 |
+| /chat/clear | DELETE | PASS | 204 |
+| /chat/usage | GET | PASS | 200 |
 
-## Files Created/Modified (5 total)
+## Files Created/Modified (8 total)
 
-### New (2)
-- `apps/api/src/modules/ai/context.service.ts` (200 lines)
-- `apps/api/src/modules/ai/types/ai-context.type.ts` (22 lines)
+### New (5 DTOs)
+- `apps/api/src/modules/chat/dto/send-message.dto.ts`
+- `apps/api/src/modules/chat/dto/chat-message-response.dto.ts`
+- `apps/api/src/modules/chat/dto/send-message-response.dto.ts`
+- `apps/api/src/modules/chat/dto/chat-history-query.dto.ts`
+- `apps/api/src/modules/chat/dto/chat-usage-response.dto.ts`
 
 ### Modified (3)
-- `apps/api/src/modules/ai/ai.module.ts` — Added WorkoutsModule, NutritionModule imports + ContextService
-- `apps/api/src/modules/workouts/workouts.service.ts` — Added getCurrentPlan + PrismaService DI
-- `apps/api/src/modules/nutrition/nutrition.service.ts` — Added getCurrentPlan + PrismaService DI
+- `apps/api/src/modules/chat/chat.service.ts` — Full implementation
+- `apps/api/src/modules/chat/chat.controller.ts` — 4 endpoints with guards/swagger
+- `apps/api/src/modules/chat/chat.module.ts` — Added AiModule, UsersModule imports

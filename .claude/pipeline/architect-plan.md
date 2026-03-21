@@ -1,41 +1,71 @@
-# Architect Plan: Task 2.2 — AI Context Building
+# Architect Plan — Task 2.3: Chat Backend
 
 ## Overview
-Create a `ContextService` in the AI module that builds a rich context object from the user's profile, conversation history, workout plans, nutrition plans, and recent workouts. This context is used to construct a system prompt for the AI chat. Context is cached for 5 minutes to reduce DB load.
+Implement the chat backend: send messages with AI response, conversation history, clear conversation, and usage tracking. Free tier limited to 5 messages/day; premium unlimited.
 
-## Files to Create/Modify
+## Existing Infrastructure
+- `ChatModule` — empty scaffold (controller + service)
+- `AiService.createChatCompletion()` — calls OpenAI with retry logic
+- `ContextService.buildContext()` + `buildSystemPrompt()` — builds AI context from user profile/history
+- `UsersService.findById()` — fetches user (includes `isPremium`, `messagesToday`, `messagesResetAt`)
+- Prisma `ChatMessage` model — `id, userId, role, content, contextUsed, model, tokens, cost, createdAt`
+- Prisma `User` model — has `isPremium`, `messagesToday`, `messagesResetAt` fields
 
-### New Files
-1. **`apps/api/src/modules/ai/types/ai-context.type.ts`** — AiContext interface
-2. **`apps/api/src/modules/ai/context.service.ts`** — ContextService
+## Files to Create
 
-### Modified Files
-3. **`apps/api/src/modules/workouts/workouts.service.ts`** — Add `getCurrentPlan(userId)` method
-4. **`apps/api/src/modules/nutrition/nutrition.service.ts`** — Add `getCurrentPlan(userId)` method
-5. **`apps/api/src/modules/workouts/workouts.module.ts`** — Import PrismaModule
-6. **`apps/api/src/modules/nutrition/nutrition.module.ts`** — Import PrismaModule
-7. **`apps/api/src/modules/ai/ai.module.ts`** — Import PrismaModule, WorkoutsModule, NutritionModule; register ContextService
+### 1. DTOs (`apps/api/src/modules/chat/dto/`)
 
-## Architecture Decisions
+**send-message.dto.ts**
+- `SendMessageDto` — `{ message: string }` with `@IsString()`, `@IsNotEmpty()`, `@MinLength(1)`, `@MaxLength(5000)`
 
-1. **Cache Strategy**: In-memory Map with TTL (5 min). No new deps needed. `@nestjs/cache-manager` not installed. Simple Map<userId, {data, expiresAt}> pattern.
+**chat-message-response.dto.ts**
+- `ChatMessageResponseDto` — `{ id, role, content, model?, tokens?, createdAt }`
 
-2. **Context Size Optimization** (<4000 tokens target):
-   - Keep last 10 messages verbatim; if >10, prepend a one-line summary of older messages
-   - Truncate workout logs: only exercise names + sets/reps/weight, no notes
-   - Estimate tokens as `Math.ceil(text.length / 4)`
+**send-message-response.dto.ts**
+- `SendMessageResponseDto` — `{ userMessage: ChatMessageResponseDto, aiMessage: ChatMessageResponseDto }`
 
-3. **Dependency Flow**: ContextService → PrismaService (profile, chat history), WorkoutsService (getCurrentPlan), NutritionService (getCurrentPlan)
+**chat-history-query.dto.ts**
+- `ChatHistoryQueryDto` — `{ limit?: number (default 50, max 100), offset?: number (default 0) }`
 
-4. **No controller changes** — ContextService is internal, consumed by future chat endpoints (Task 2.3)
+**chat-usage-response.dto.ts**
+- `ChatUsageResponseDto` — `{ messagesUsedToday: number, dailyLimit: number, isPremium: boolean, remaining: number }`
+
+### 2. Service (`apps/api/src/modules/chat/chat.service.ts`)
+
+Methods:
+- `sendMessage(userId, message)` — check limit -> save user msg -> build context -> select model -> call AI -> save AI msg -> update usage -> return both
+- `getHistory(userId, limit, offset)` — paginated history
+- `clearConversation(userId)` — delete all + invalidate cache
+- `getUsage(userId)` — today's count and limits
+- `private checkAndResetDailyLimit(userId)` — lazy reset if new day
+- `private selectModel(message)` — heuristic per task spec
+- `private saveMessage(userId, role, content, metadata?)` — save to DB
+- `private updateUsageTracking(userId)` — increment messagesToday
+
+Dependencies: PrismaService, AiService, ContextService, UsersService
+
+### 3. Controller (`apps/api/src/modules/chat/chat.controller.ts`)
+
+`@UseGuards(JwtAuthGuard)` at class level. Extract userId from JWT.
+
+- `POST /chat/send` — body: SendMessageDto -> 201 SendMessageResponseDto
+- `GET /chat/history` — query: ChatHistoryQueryDto -> 200 ChatMessageResponseDto[]
+- `DELETE /chat/clear` — 204 No Content
+- `GET /chat/usage` — 200 ChatUsageResponseDto
+
+### 4. Module update (`chat.module.ts`)
+
+Import: AiModule, UsersModule
 
 ## Implementation Order
-1. Add PrismaModule imports + `getCurrentPlan()` to WorkoutsService and NutritionService
-2. Create AiContext type
-3. Create ContextService with buildContext, buildSystemPrompt, caching, optimization
-4. Update AiModule imports/exports
+1. Create all DTOs
+2. Implement ChatService with all methods
+3. Implement ChatController with all endpoints
+4. Update ChatModule imports
 
-## Acceptance Criteria Match
-- Context fetches all relevant data (profile, history, plans, workouts)
-- System prompt includes profile
-- Context size optimized (<4000 tokens)
+## Convention Compliance
+- Thin controller, all logic in service
+- class-validator on all DTOs, Swagger on every endpoint
+- HTTP codes: 201, 200, 204, 403
+- JwtAuthGuard for auth
+- No `any` types

@@ -1,37 +1,35 @@
-# Review Report: Task 2.2 — AI Context Building
+# Review Report — Task 2.3: Chat Backend
 
 ## Verdict: APPROVED
 
 ## Review Iteration: 1/3
 
 ## Files Reviewed
+- `apps/api/src/modules/chat/chat.service.ts` (162 lines)
+- `apps/api/src/modules/chat/chat.controller.ts` (79 lines)
+- `apps/api/src/modules/chat/chat.module.ts` (13 lines)
+- `apps/api/src/modules/chat/dto/send-message.dto.ts` (14 lines)
+- `apps/api/src/modules/chat/dto/chat-message-response.dto.ts` (25 lines)
+- `apps/api/src/modules/chat/dto/send-message-response.dto.ts` (18 lines)
+- `apps/api/src/modules/chat/dto/chat-history-query.dto.ts` (17 lines)
+- `apps/api/src/modules/chat/dto/chat-usage-response.dto.ts` (19 lines)
 
-### New Files
-- `apps/api/src/modules/ai/context.service.ts` (200 lines)
-- `apps/api/src/modules/ai/types/ai-context.type.ts` (22 lines)
-
-### Modified Files
-- `apps/api/src/modules/ai/ai.module.ts` — Added imports for WorkoutsModule, NutritionModule; registered ContextService
-- `apps/api/src/modules/workouts/workouts.service.ts` — Added getCurrentPlan method + PrismaService DI
-- `apps/api/src/modules/nutrition/nutrition.service.ts` — Added getCurrentPlan method + PrismaService DI
-
-## Full Checklist
-
+## Checklist
 | # | Rule | Status |
 |---|------|--------|
-| 1 | Business logic in services | PASS |
-| 2 | TypeScript strict (no `any`) | PASS |
-| 3 | Proper DI and module wiring | PASS |
-| 4 | Parallel data fetching | PASS — Promise.all for 5 queries |
-| 5 | Context optimization | PASS — message summarization, workout truncation |
-| 6 | Token limit enforcement | PASS — ~4000 token target with truncation |
-| 7 | Cache with TTL | PASS — 5-minute in-memory cache |
-| 8 | No `console.log` | PASS — NestJS Logger used |
-| 9 | Build passes | PASS |
-| 10 | Lint passes | PASS |
+| 1 | File size under 150 lines | PASS |
+| 2 | Thin controller | PASS |
+| 3 | Business logic in service | PASS |
+| 4 | class-validator on all DTOs | PASS |
+| 5 | Swagger decorators on all endpoints | PASS |
+| 6 | Proper HTTP codes (201, 200, 204, 403) | PASS |
+| 7 | JwtAuthGuard for auth | PASS |
+| 8 | No `any` types | PASS |
+| 9 | Module imports/exports correct | PASS |
+| 10 | Build passes | PASS |
+| 11 | Lint passes | PASS |
 
 ## Critical Issues: 0
 ## Warnings: 0
 ## Minor Notes
-- context.service.ts at 200 lines — slightly over 150 guideline but acceptable for backend service with multiple private helpers
-- In-memory cache has no proactive eviction — acceptable for MVP scale
+- Double `findById` calls in sendMessage/getUsage — could cache user object. Low priority.
