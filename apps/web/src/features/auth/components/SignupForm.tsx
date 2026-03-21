@@ -117,15 +117,15 @@ export function SignupForm({
             />
           </div>
 
-          <label className="flex cursor-pointer items-start gap-2.5">
+          <label className="flex cursor-pointer items-center gap-2.5">
             <input
               type="checkbox"
               checked={fields.agreedToTerms}
               onChange={(e) => onUpdateField("agreedToTerms", e.target.checked)}
-              className="mt-0.5 size-[18px] rounded border-border accent-primary"
+              className="size-[18px] shrink-0 rounded border-border accent-primary"
               aria-invalid={!!errors.agreedToTerms}
             />
-            <span className="text-xs text-muted-foreground">
+            <span className="leading-none text-xs text-muted-foreground">
               I agree to the{" "}
               <span className="font-medium text-primary">Terms of Service</span>{" "}
               and{" "}

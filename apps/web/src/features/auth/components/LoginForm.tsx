@@ -17,7 +17,8 @@ interface LoginFormProps {
   onSubmit: (e: React.FormEvent) => void;
 }
 
-const inputClass = "h-10 rounded-[10px] bg-[#161618] border-[#1F1F23] px-3.5";
+const inputClass =
+  "h-[45px] rounded-[10px] border-[#1F1F23] bg-[#161618] px-3.5 md:h-10";
 
 export function LoginForm({
   fields,
@@ -27,15 +28,15 @@ export function LoginForm({
   onSubmit,
 }: LoginFormProps) {
   return (
-    <div className="flex w-full max-w-sm flex-col gap-8">
+    <div className="flex w-full max-w-[342px] flex-col gap-8 md:max-w-[528px] lg:max-w-[424px]">
       <div className="flex flex-col gap-2">
-        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-blue-400">
+        <div className="hidden h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-blue-400 md:flex">
           <Dumbbell className="size-6 text-white" />
         </div>
-        <h1 className="font-heading text-[28px] font-bold text-foreground">
+        <h1 className="font-heading text-[42px] font-bold leading-none text-foreground md:text-[34px] lg:text-[36px]">
           Welcome back
         </h1>
-        <p className="text-[15px] text-muted-foreground">
+        <p className="text-[24px] text-muted-foreground md:text-[17px] lg:text-[15px]">
           Sign in to your account to continue
         </p>
       </div>
@@ -46,10 +47,12 @@ export function LoginForm({
         </div>
       )}
 
-      <form onSubmit={onSubmit} className="flex flex-col gap-5">
+      <form onSubmit={onSubmit} className="flex flex-col gap-6 md:gap-5">
         <div className="flex flex-col gap-5">
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email" className="text-[16px] md:text-[14px]">
+              Email
+            </Label>
             <Input
               id="email"
               type="email"
@@ -66,7 +69,9 @@ export function LoginForm({
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password" className="text-[16px] md:text-[14px]">
+              Password
+            </Label>
             <PasswordInput
               id="password"
               value={fields.password}
@@ -77,7 +82,7 @@ export function LoginForm({
           </div>
 
           <div className="flex justify-end">
-            <span className="cursor-pointer text-[13px] font-medium text-primary hover:underline">
+            <span className="cursor-pointer text-[16px] font-medium text-primary hover:underline md:text-[13px]">
               Forgot password?
             </span>
           </div>
@@ -101,33 +106,35 @@ export function LoginForm({
       </form>
 
       <div className="flex items-center justify-center gap-1">
-        <span className="text-[13px] text-muted-foreground">
+        <span className="text-[14px] text-muted-foreground md:text-[13px]">
           Don&apos;t have an account?
         </span>
         <Link
           href="/signup"
-          className="text-[13px] font-semibold text-primary hover:underline"
+          className="text-[14px] font-semibold text-primary hover:underline md:text-[13px]"
         >
           Sign up
         </Link>
       </div>
 
-      <div className="flex items-center justify-center gap-6">
+      <div className="flex items-center justify-center gap-4 md:gap-6">
         <div className="flex items-center gap-1.5">
           <ShieldCheck className="size-3.5 text-muted-foreground" />
-          <span className="text-[11px] text-muted-foreground">
+          <span className="text-[12px] text-muted-foreground md:text-[11px]">
             SSL Encrypted
           </span>
         </div>
         <div className="flex items-center gap-1.5">
           <Lock className="size-3.5 text-muted-foreground" />
-          <span className="text-[11px] text-muted-foreground">
+          <span className="text-[12px] text-muted-foreground md:text-[11px]">
             Secure Login
           </span>
         </div>
         <div className="flex items-center gap-1.5">
           <Users className="size-3.5 text-muted-foreground" />
-          <span className="text-[11px] text-muted-foreground">10K+ Users</span>
+          <span className="text-[12px] text-muted-foreground md:text-[11px]">
+            10K+ Users
+          </span>
         </div>
       </div>
     </div>
