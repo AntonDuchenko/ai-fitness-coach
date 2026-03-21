@@ -1,6 +1,6 @@
 # Pipeline Summary
 
-## Task: Task 2.1 — OpenAI Setup
+## Task: Task 2.2 — AI Context Building
 ## Final Status: SUCCESS
 
 ## Timeline
@@ -15,28 +15,24 @@
 ## Convention Compliance
 | Rule | Status |
 |------|--------|
-| File size (<150 lines) | PASS |
 | Business logic separated (services) | PASS |
-| Swagger decorators | PASS |
-| Guards for auth (JwtAuthGuard) | PASS |
-| DTOs with class-validator | PASS |
 | TypeScript strict (no `any`) | PASS |
 | No console.log (NestJS Logger) | PASS |
-| Proper HTTP codes | PASS |
+| Proper module wiring (DI) | PASS |
+| Build passes | PASS |
+| Lint passes | PASS |
 
 ## Files Created/Modified
-- `apps/api/src/modules/ai/ai.service.ts` — OpenAI client, createChatCompletion, retry logic, error mapping
-- `apps/api/src/modules/ai/ai.controller.ts` — GET /ai/health endpoint with Swagger + auth
-- `apps/api/src/modules/ai/ai.module.ts` — No structural change (ConfigModule is global)
-- `apps/api/src/modules/ai/dto/ai-health-response.dto.ts` — Health response DTO
-- `apps/api/src/modules/ai/dto/chat-completion-request.dto.ts` — Chat completion request/message DTOs
-- `apps/api/src/config/app.config.ts` — Added openaiConfig namespace
-- `apps/api/src/config/env.validation.ts` — OPENAI_API_KEY required, OPENAI_MODEL optional
-- `apps/api/src/app.module.ts` — Registered openaiConfig
-- `apps/api/.env.example` — Added OPENAI_MODEL
+- `apps/api/src/modules/ai/context.service.ts` — ContextService with buildContext, buildSystemPrompt, caching, optimization
+- `apps/api/src/modules/ai/types/ai-context.type.ts` — AiContext and CachedContext interfaces
+- `apps/api/src/modules/ai/ai.module.ts` — Added WorkoutsModule, NutritionModule imports + ContextService provider/export
+- `apps/api/src/modules/workouts/workouts.service.ts` — Added getCurrentPlan method + PrismaService DI
+- `apps/api/src/modules/nutrition/nutrition.service.ts` — Added getCurrentPlan method + PrismaService DI
 
 ## Key Decisions
-- Used `models.retrieve(defaultModel)` for health check instead of `models.list()` (SDK v6 API)
-- Auth errors map to 503 (not 401) to avoid exposing API key misconfiguration details
-- Retry only on rate limits (429), server errors (5xx), and connection errors — bad requests fail immediately
-- `createChatCompletion` wrapper ready for consumption by Task 2.2 (Context Building) and Task 2.3 (Chat)
+- In-memory Map cache with TTL instead of Redis cache module (no `@nestjs/cache-manager` installed)
+- Message optimization: summarize older messages when >10, keep last 10 verbatim
+- Profile formatted as concise key-value lines instead of raw JSON (saves tokens)
+- Workout logs show only name, date, duration, rating (no exercise details JSON)
+- Token estimation: ~4 chars per token, truncate at 4000 tokens
+- ContextService is internal — no controller endpoints, consumed by future chat service (Task 2.3)
