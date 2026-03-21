@@ -41,9 +41,15 @@ export class ChatService {
     const systemPrompt = this.contextService.buildSystemPrompt(context);
     const model = this.selectModel(message);
 
+    const historyMessages = context.conversationHistory.map((m) => ({
+      role: m.role as "user" | "assistant" | "system",
+      content: m.content,
+    }));
+
     const aiResponseContent = await this.aiService.createChatCompletion(
       [
         { role: "system", content: systemPrompt },
+        ...historyMessages,
         { role: "user", content: message },
       ],
       { model },

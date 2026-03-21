@@ -37,21 +37,21 @@ export class ChatController {
   @ApiResponse({ status: 201, type: SendMessageResponseDto })
   @ApiResponse({ status: 403, description: "Daily message limit reached" })
   async sendMessage(
-    @Request() req: { user: { sub: string } },
+    @Request() req: { user: { id: string } },
     @Body() dto: SendMessageDto,
   ): Promise<SendMessageResponseDto> {
-    return this.chatService.sendMessage(req.user.sub, dto.message);
+    return this.chatService.sendMessage(req.user.id, dto.message);
   }
 
   @Get("history")
   @ApiOperation({ summary: "Get conversation history" })
   @ApiResponse({ status: 200, type: [ChatMessageResponseDto] })
   async getHistory(
-    @Request() req: { user: { sub: string } },
+    @Request() req: { user: { id: string } },
     @Query() query: ChatHistoryQueryDto,
   ): Promise<ChatMessageResponseDto[]> {
     return this.chatService.getHistory(
-      req.user.sub,
+      req.user.id,
       query.limit ?? 50,
       query.offset ?? 0,
     );
@@ -62,17 +62,17 @@ export class ChatController {
   @ApiOperation({ summary: "Clear conversation history" })
   @ApiResponse({ status: 204, description: "Conversation cleared" })
   async clearConversation(
-    @Request() req: { user: { sub: string } },
+    @Request() req: { user: { id: string } },
   ): Promise<void> {
-    return this.chatService.clearConversation(req.user.sub);
+    return this.chatService.clearConversation(req.user.id);
   }
 
   @Get("usage")
   @ApiOperation({ summary: "Get daily message usage" })
   @ApiResponse({ status: 200, type: ChatUsageResponseDto })
   async getUsage(
-    @Request() req: { user: { sub: string } },
+    @Request() req: { user: { id: string } },
   ): Promise<ChatUsageResponseDto> {
-    return this.chatService.getUsage(req.user.sub);
+    return this.chatService.getUsage(req.user.id);
   }
 }

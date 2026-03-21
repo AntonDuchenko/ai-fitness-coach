@@ -20221,7 +20221,8 @@
                   "content": "We need some basic information to personalize your fitness plan",
                   "textAlign": "center",
                   "fontFamily": "Inter",
-                  "fontSize": 14
+                  "fontSize": 14,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -20319,7 +20320,8 @@
                               "fill": "#FFFFFF",
                               "content": "25",
                               "fontFamily": "Inter",
-                              "fontSize": 14
+                              "fontSize": 14,
+                              "fontWeight": "normal"
                             }
                           ]
                         }
@@ -20391,7 +20393,8 @@
                                   "fill": "#71717A",
                                   "content": "Female",
                                   "fontFamily": "Inter",
-                                  "fontSize": 14
+                                  "fontSize": 14,
+                                  "fontWeight": "normal"
                                 }
                               ]
                             }
@@ -20447,7 +20450,8 @@
                               "fill": "#FFFFFF",
                               "content": "175",
                               "fontFamily": "Inter",
-                              "fontSize": 14
+                              "fontSize": 14,
+                              "fontWeight": "normal"
                             }
                           ]
                         },
@@ -20499,7 +20503,8 @@
                                   "fill": "#71717A",
                                   "content": "ft",
                                   "fontFamily": "Inter",
-                                  "fontSize": 12
+                                  "fontSize": 12,
+                                  "fontWeight": "normal"
                                 }
                               ]
                             }
@@ -20555,7 +20560,8 @@
                               "fill": "#FFFFFF",
                               "content": "75",
                               "fontFamily": "Inter",
-                              "fontSize": 14
+                              "fontSize": 14,
+                              "fontWeight": "normal"
                             }
                           ]
                         }
@@ -20600,7 +20606,8 @@
                               "fill": "#71717A",
                               "content": "70",
                               "fontFamily": "Inter",
-                              "fontSize": 14
+                              "fontSize": 14,
+                              "fontWeight": "normal"
                             }
                           ]
                         }
@@ -20646,7 +20653,8 @@
                       "fill": "#FFFFFF",
                       "content": "→",
                       "fontFamily": "Inter",
-                      "fontSize": 15
+                      "fontSize": 15,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -20736,7 +20744,8 @@
                   "content": "Select your primary fitness goal",
                   "textAlign": "center",
                   "fontFamily": "Inter",
-                  "fontSize": 14
+                  "fontSize": 14,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -21010,7 +21019,8 @@
                       "fill": "#FFFFFF",
                       "content": "Improve flexibility",
                       "fontFamily": "Inter",
-                      "fontSize": 14
+                      "fontSize": 14,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -21038,7 +21048,8 @@
                       "fill": "#FFFFFF",
                       "content": "Reduce stress",
                       "fontFamily": "Inter",
-                      "fontSize": 14
+                      "fontSize": 14,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -21066,7 +21077,8 @@
                       "fill": "#FFFFFF",
                       "content": "Better sleep",
                       "fontFamily": "Inter",
-                      "fontSize": 14
+                      "fontSize": 14,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -21094,7 +21106,8 @@
                       "fill": "#FFFFFF",
                       "content": "More energy",
                       "fontFamily": "Inter",
-                      "fontSize": 14
+                      "fontSize": 14,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -21240,7 +21253,8 @@
                   "content": "This helps us calibrate your plan difficulty",
                   "textAlign": "center",
                   "fontFamily": "Inter",
-                  "fontSize": 14
+                  "fontSize": 14,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -21369,7 +21383,8 @@
                       "fill": "#FFFFFF",
                       "content": "Intermediate — Some experience",
                       "fontFamily": "Inter",
-                      "fontSize": 14
+                      "fontSize": 14,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -21404,7 +21419,8 @@
                       "fill": "#FFFFFF",
                       "content": "Advanced — Regular training",
                       "fontFamily": "Inter",
-                      "fontSize": 14
+                      "fontSize": 14,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -21439,7 +21455,8 @@
                       "fill": "#FFFFFF",
                       "content": "Athlete — Competitive level",
                       "fontFamily": "Inter",
-                      "fontSize": 14
+                      "fontSize": 14,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -21494,7 +21511,8 @@
                       "fill": "#FFFFFF",
                       "content": "None — I have no idea about nutrition",
                       "fontFamily": "Inter",
-                      "fontSize": 14
+                      "fontSize": 14,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -21529,7 +21547,8 @@
                       "fill": "#FFFFFF",
                       "content": "Basic — I know the fundamentals",
                       "fontFamily": "Inter",
-                      "fontSize": 14
+                      "fontSize": 14,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -21600,7 +21619,8 @@
                       "fill": "#FFFFFF",
                       "content": "Expert — I understand it deeply",
                       "fontFamily": "Inter",
-                      "fontSize": 14
+                      "fontSize": 14,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -21746,7 +21766,8 @@
                   "content": "When and how often can you train?",
                   "textAlign": "center",
                   "fontFamily": "Inter",
-                  "fontSize": 14
+                  "fontSize": 14,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -22028,7 +22049,8 @@
                           "fill": "#FFFFFF",
                           "content": "45-60 minutes",
                           "fontFamily": "Inter",
-                          "fontSize": 14
+                          "fontSize": 14,
+                          "fontWeight": "normal"
                         },
                         {
                           "type": "text",
@@ -22037,7 +22059,8 @@
                           "fill": "#71717A",
                           "content": "▾",
                           "fontFamily": "Inter",
-                          "fontSize": 14
+                          "fontSize": 14,
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -22083,7 +22106,8 @@
                           "fill": "#FFFFFF",
                           "content": "Morning (6-9 AM)",
                           "fontFamily": "Inter",
-                          "fontSize": 14
+                          "fontSize": 14,
+                          "fontWeight": "normal"
                         },
                         {
                           "type": "text",
@@ -22092,7 +22116,8 @@
                           "fill": "#71717A",
                           "content": "▾",
                           "fontFamily": "Inter",
-                          "fontSize": 14
+                          "fontSize": 14,
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -22240,7 +22265,8 @@
                   "content": "Select your training location and available equipment",
                   "textAlign": "center",
                   "fontFamily": "Inter",
-                  "fontSize": 14
+                  "fontSize": 14,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -22474,7 +22500,8 @@
                       "fill": "#FFFFFF",
                       "content": "Dumbbells",
                       "fontFamily": "Inter",
-                      "fontSize": 14
+                      "fontSize": 14,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -22516,7 +22543,8 @@
                       "fill": "#FFFFFF",
                       "content": "Barbell & Plates",
                       "fontFamily": "Inter",
-                      "fontSize": 14
+                      "fontSize": 14,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -22544,7 +22572,8 @@
                       "fill": "#FFFFFF",
                       "content": "Pull-up Bar",
                       "fontFamily": "Inter",
-                      "fontSize": 14
+                      "fontSize": 14,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -22572,7 +22601,8 @@
                       "fill": "#FFFFFF",
                       "content": "Resistance Bands",
                       "fontFamily": "Inter",
-                      "fontSize": 14
+                      "fontSize": 14,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -22614,7 +22644,8 @@
                       "fill": "#FFFFFF",
                       "content": "Cable Machine",
                       "fontFamily": "Inter",
-                      "fontSize": 14
+                      "fontSize": 14,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -22760,7 +22791,8 @@
                   "content": "Tell us about any health concerns so we can keep you safe",
                   "textAlign": "center",
                   "fontFamily": "Inter",
-                  "fontSize": 14
+                  "fontSize": 14,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -22851,7 +22883,8 @@
                           "fill": "#3F3F46",
                           "content": "e.g. Lower back pain, knee injury...",
                           "fontFamily": "Inter",
-                          "fontSize": 14
+                          "fontSize": 14,
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -22896,7 +22929,8 @@
                           "fill": "#3F3F46",
                           "content": "e.g. Asthma, diabetes...",
                           "fontFamily": "Inter",
-                          "fontSize": 14
+                          "fontSize": 14,
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -22944,7 +22978,8 @@
                           "fill": "#FFFFFF",
                           "content": "Vegetarian",
                           "fontFamily": "Inter",
-                          "fontSize": 14
+                          "fontSize": 14,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -22972,7 +23007,8 @@
                           "fill": "#FFFFFF",
                           "content": "Vegan",
                           "fontFamily": "Inter",
-                          "fontSize": 14
+                          "fontSize": 14,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -23014,7 +23050,8 @@
                           "fill": "#FFFFFF",
                           "content": "Lactose intolerant",
                           "fontFamily": "Inter",
-                          "fontSize": 14
+                          "fontSize": 14,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -23042,7 +23079,8 @@
                           "fill": "#FFFFFF",
                           "content": "Gluten-free",
                           "fontFamily": "Inter",
-                          "fontSize": 14
+                          "fontSize": 14,
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -23193,7 +23231,8 @@
                   "content": "Help us build your meal plan",
                   "textAlign": "center",
                   "fontFamily": "Inter",
-                  "fontSize": 14
+                  "fontSize": 14,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -23292,7 +23331,8 @@
                               "fill": "#FFFFFF",
                               "content": "4 meals",
                               "fontFamily": "Inter",
-                              "fontSize": 14
+                              "fontSize": 14,
+                              "fontWeight": "normal"
                             },
                             {
                               "type": "text",
@@ -23348,7 +23388,8 @@
                               "fill": "#FFFFFF",
                               "content": "Intermediate",
                               "fontFamily": "Inter",
-                              "fontSize": 14
+                              "fontSize": 14,
+                              "fontWeight": "normal"
                             },
                             {
                               "type": "text",
@@ -23438,7 +23479,8 @@
                               "fill": "#FFFFFF",
                               "content": "Asian",
                               "fontFamily": "Inter",
-                              "fontSize": 13
+                              "fontSize": 13,
+                              "fontWeight": "normal"
                             }
                           ]
                         },
@@ -23489,7 +23531,8 @@
                               "fill": "#FFFFFF",
                               "content": "American",
                               "fontFamily": "Inter",
-                              "fontSize": 13
+                              "fontSize": 13,
+                              "fontWeight": "normal"
                             }
                           ]
                         }
@@ -23536,7 +23579,8 @@
                           "fill": "#3F3F46",
                           "content": "e.g. broccoli, fish...",
                           "fontFamily": "Inter",
-                          "fontSize": 14
+                          "fontSize": 14,
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -23581,7 +23625,8 @@
                           "fill": "#FFFFFF",
                           "content": "150",
                           "fontFamily": "Inter",
-                          "fontSize": 14
+                          "fontSize": 14,
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -23732,7 +23777,8 @@
                   "content": "Understanding your 'why' helps us keep you on track",
                   "textAlign": "center",
                   "fontFamily": "Inter",
-                  "fontSize": 14
+                  "fontSize": 14,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -23823,7 +23869,8 @@
                           "fill": "#FFFFFF",
                           "content": "I want to feel more confident and energetic...",
                           "fontFamily": "Inter",
-                          "fontSize": 14
+                          "fontSize": 14,
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -23895,7 +23942,8 @@
                               "fill": "#71717A",
                               "content": "No",
                               "fontFamily": "Inter",
-                              "fontSize": 14
+                              "fontSize": 14,
+                              "fontWeight": "normal"
                             }
                           ]
                         }
@@ -23922,7 +23970,8 @@
                           "fill": "#3F3F46",
                           "content": "What happened? e.g. lost motivation after 2 weeks...",
                           "fontFamily": "Inter",
-                          "fontSize": 13
+                          "fontSize": 13,
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -23984,7 +24033,8 @@
                           "fill": "#FFFFFF",
                           "content": "Staying consistent",
                           "fontFamily": "Inter",
-                          "fontSize": 14
+                          "fontSize": 14,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -24012,7 +24062,8 @@
                           "fill": "#FFFFFF",
                           "content": "Finding time",
                           "fontFamily": "Inter",
-                          "fontSize": 14
+                          "fontSize": 14,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -24054,7 +24105,8 @@
                           "fill": "#FFFFFF",
                           "content": "Knowing what to eat",
                           "fontFamily": "Inter",
-                          "fontSize": 14
+                          "fontSize": 14,
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -24206,7 +24258,8 @@
                   "content": "Our AI is crafting a personalized fitness and nutrition plan just for you",
                   "textAlign": "center",
                   "fontFamily": "Inter",
-                  "fontSize": 14
+                  "fontSize": 14,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -24398,7 +24451,8 @@
                       "fill": "#71717A",
                       "content": "Creating meal plans",
                       "fontFamily": "Inter",
-                      "fontSize": 14
+                      "fontSize": 14,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -24426,7 +24480,2172 @@
                       "fill": "#71717A",
                       "content": "Finalizing your plan",
                       "fontFamily": "Inter",
-                      "fontSize": 14
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "24ys1",
+      "x": 6420,
+      "y": 12946,
+      "name": "Chat / Desktop 1440",
+      "clip": true,
+      "width": 1440,
+      "height": 900,
+      "fill": "#0A0A0A",
+      "children": [
+        {
+          "type": "frame",
+          "id": "OE7A6",
+          "name": "Sidebar",
+          "width": 280,
+          "height": "fill_container",
+          "fill": "#111113",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "VZm7p",
+              "name": "SidebarHeader",
+              "width": "fill_container",
+              "height": 72,
+              "fill": "#111113",
+              "gap": 12,
+              "padding": [
+                0,
+                20
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "sGrxV",
+                  "name": "LogoIcon",
+                  "width": 32,
+                  "height": 32,
+                  "fill": "#2563EB",
+                  "cornerRadius": 8
+                },
+                {
+                  "type": "text",
+                  "id": "GFRof",
+                  "name": "LogoText",
+                  "fill": "#FFFFFF",
+                  "content": "AI Pocket Trainer",
+                  "fontFamily": "Poppins",
+                  "fontSize": 15,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "0A6Kw",
+                  "name": "NewChatBtn",
+                  "width": 32,
+                  "height": 32,
+                  "fill": "#1E1E22",
+                  "cornerRadius": 8,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "EsbjK",
+                      "name": "plusIcon",
+                      "fill": "#FFFFFF",
+                      "content": "+",
+                      "fontFamily": "Inter",
+                      "fontSize": 18,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "tZeW2",
+              "name": "Divider",
+              "width": "fill_container",
+              "height": 1,
+              "fill": "#1F1F23"
+            },
+            {
+              "type": "frame",
+              "id": "LZRNX",
+              "name": "ConversationList",
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 4,
+              "padding": [
+                12,
+                8
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "xWwqv",
+                  "name": "ConvItem_Active",
+                  "width": "fill_container",
+                  "height": 44,
+                  "fill": "#1E1E22",
+                  "cornerRadius": 8,
+                  "gap": 8,
+                  "padding": [
+                    0,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "r666G",
+                      "name": "conv1Text",
+                      "fill": "#F9FAFB",
+                      "content": "My workout plan",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "nojx2",
+                  "name": "ConvItem",
+                  "width": "fill_container",
+                  "height": 44,
+                  "cornerRadius": 8,
+                  "gap": 8,
+                  "padding": [
+                    0,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "s5tpj",
+                      "name": "conv2Text",
+                      "fill": "#9CA3AF",
+                      "content": "Nutrition advice",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "tZx3a",
+                  "name": "ConvItem",
+                  "width": "fill_container",
+                  "height": 44,
+                  "cornerRadius": 8,
+                  "gap": 8,
+                  "padding": [
+                    0,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "LnTpH",
+                      "name": "conv3Text",
+                      "fill": "#9CA3AF",
+                      "content": "Protein shake recipes",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "2XqfA",
+                  "name": "ConvItem",
+                  "width": "fill_container",
+                  "height": 44,
+                  "cornerRadius": 8,
+                  "gap": 8,
+                  "padding": [
+                    0,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "MqI3a",
+                      "name": "conv4Text",
+                      "fill": "#9CA3AF",
+                      "content": "Morning stretching routine",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "FEet5",
+                  "name": "ConvItem",
+                  "width": "fill_container",
+                  "height": 44,
+                  "cornerRadius": 8,
+                  "gap": 8,
+                  "padding": [
+                    0,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "nF6Q2",
+                      "name": "conv5Text",
+                      "fill": "#9CA3AF",
+                      "content": "Recovery tips",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "5GDLz",
+              "name": "Divider2",
+              "width": "fill_container",
+              "height": 1,
+              "fill": "#1F1F23"
+            },
+            {
+              "type": "frame",
+              "id": "lWOPo",
+              "name": "SidebarFooter",
+              "width": "fill_container",
+              "height": 64,
+              "fill": "#111113",
+              "gap": 12,
+              "padding": [
+                0,
+                16
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "I6z8z",
+                  "name": "UserAvatar",
+                  "width": 36,
+                  "height": 36,
+                  "fill": "#2563EB",
+                  "cornerRadius": 18,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "CaIIJ",
+                      "name": "avatarText",
+                      "fill": "#FFFFFF",
+                      "content": "JD",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "4jVEN",
+                  "name": "UserInfo",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "dog0x",
+                      "name": "userName",
+                      "fill": "#F9FAFB",
+                      "content": "John Doe",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "text",
+                      "id": "M7dv7",
+                      "name": "userPlan",
+                      "fill": "#71717A",
+                      "content": "Free Plan",
+                      "fontFamily": "Inter",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "i75nc",
+          "name": "MainArea",
+          "width": "fill_container",
+          "height": "fill_container",
+          "fill": "#0A0A0A",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "0dqmj",
+              "name": "ChatHeader",
+              "width": "fill_container",
+              "height": 72,
+              "fill": "#0A0A0A",
+              "gap": 12,
+              "padding": [
+                0,
+                24
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "U4HgL",
+                  "name": "HeaderLeft",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "4la0L",
+                      "name": "headerTitle",
+                      "fill": "#F9FAFB",
+                      "content": "My workout plan",
+                      "fontFamily": "Poppins",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "niGjb",
+                      "name": "StatusRow",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Pc9hH",
+                          "name": "StatusDot",
+                          "width": 8,
+                          "height": 8,
+                          "fill": "#10B981",
+                          "cornerRadius": 4
+                        },
+                        {
+                          "type": "text",
+                          "id": "TyiSC",
+                          "name": "statusText",
+                          "fill": "#71717A",
+                          "content": "AI Online",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "lDcve",
+                  "name": "MsgCounter",
+                  "fill": "#1E1E22",
+                  "cornerRadius": 16,
+                  "gap": 4,
+                  "padding": [
+                    6,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "E6TGy",
+                      "name": "msgCountText",
+                      "fill": "#A1A1AA",
+                      "content": "3/5 messages today",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "z8byC",
+              "name": "HeaderDivider",
+              "width": "fill_container",
+              "height": 1,
+              "fill": "#1F1F23"
+            },
+            {
+              "type": "frame",
+              "id": "ZRI65",
+              "name": "MessageArea",
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 24,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "AnkUJ",
+                  "name": "AIMessage1",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "mq1bO",
+                      "name": "AIAvatar",
+                      "width": 36,
+                      "height": 36,
+                      "fill": "#2563EB",
+                      "cornerRadius": 18,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "K7gaL",
+                          "name": "aiAvatarIcon",
+                          "fill": "#FFFFFF",
+                          "content": "AI",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "u6vE9",
+                      "name": "AIBubble",
+                      "width": 580,
+                      "fill": "#161618",
+                      "cornerRadius": 12,
+                      "layout": "vertical",
+                      "gap": 8,
+                      "padding": [
+                        12,
+                        16
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "EBifp",
+                          "name": "aiBubbleText1",
+                          "fill": "#F9FAFB",
+                          "content": "Hey John! 👋 I've analyzed your profile and I'm ready to help you with your workout plan. Based on your goals of building muscle and your intermediate experience level, I'd recommend a 4-day push/pull/legs split.\n\nHere's what I suggest:\n\n• Day 1 — Push (Chest, Shoulders, Triceps)\n• Day 2 — Pull (Back, Biceps)\n• Day 3 — Rest\n• Day 4 — Legs & Core\n• Day 5 — Upper Body\n\nWould you like me to detail the exercises for each day?",
+                          "lineHeight": 1.5,
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "QIQ6r",
+                          "name": "aiTime1",
+                          "fill": "#71717A",
+                          "content": "10:32 AM",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "iD2nv",
+                  "name": "UserMessage1",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "gn8sS",
+                      "name": "UserBubble",
+                      "width": 420,
+                      "fill": "#2563EB",
+                      "cornerRadius": 12,
+                      "layout": "vertical",
+                      "gap": 8,
+                      "padding": [
+                        12,
+                        16
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Z6DPx",
+                          "name": "userBubbleText1",
+                          "fill": "#FFFFFF",
+                          "content": "Yes please! Let's start with Day 1 — Push day. What exercises should I do and how many sets/reps?",
+                          "lineHeight": 1.5,
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "fKUSJ",
+                          "name": "userTime1",
+                          "fill": "#ffffff99",
+                          "content": "10:33 AM",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "dInHO",
+                      "name": "UserAvatar",
+                      "width": 36,
+                      "height": 36,
+                      "fill": "#1F2937",
+                      "cornerRadius": 18,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "xSaMy",
+                          "name": "userAvatarText",
+                          "fill": "#F9FAFB",
+                          "content": "JD",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "e1mk0",
+                  "name": "AIMessage2",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "QU2NT",
+                      "name": "AIAvatar2",
+                      "width": 36,
+                      "height": 36,
+                      "fill": "#2563EB",
+                      "cornerRadius": 18,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "2Ev5J",
+                          "name": "aiAvIcon2",
+                          "fill": "#FFFFFF",
+                          "content": "AI",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "xNyj2",
+                      "name": "AIBubble2",
+                      "width": 580,
+                      "fill": "#161618",
+                      "cornerRadius": 12,
+                      "layout": "vertical",
+                      "gap": 8,
+                      "padding": [
+                        12,
+                        16
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "4Tv1Q",
+                          "name": "aiBubText2",
+                          "fill": "#F9FAFB",
+                          "content": "Great choice! Here's your Push Day workout:\n\n1. Barbell Bench Press — 4×8-10\n2. Incline Dumbbell Press — 3×10-12\n3. Overhead Press — 3×8-10\n4. Cable Lateral Raises — 3×12-15\n5. Tricep Pushdowns — 3×10-12\n6. Overhead Tricep Extension — 3×10-12\n\nRest 90-120 seconds between sets. Start with a 5-min warm-up on the treadmill.",
+                          "lineHeight": 1.5,
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Jn59R",
+                          "name": "aiTime2",
+                          "fill": "#71717A",
+                          "content": "10:34 AM",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "18Q49",
+              "name": "InputDivider",
+              "width": "fill_container",
+              "height": 1,
+              "fill": "#1F1F23"
+            },
+            {
+              "type": "frame",
+              "id": "SpRoh",
+              "name": "InputArea",
+              "width": "fill_container",
+              "height": 80,
+              "fill": "#0A0A0A",
+              "gap": 12,
+              "padding": [
+                16,
+                24
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "rGvUi",
+                  "name": "InputField",
+                  "width": "fill_container",
+                  "height": 48,
+                  "fill": "#161618",
+                  "cornerRadius": 12,
+                  "stroke": {
+                    "thickness": 1,
+                    "fill": "#1F1F23"
+                  },
+                  "gap": 8,
+                  "padding": [
+                    0,
+                    16
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "CcfeZ",
+                      "name": "inputPlaceholder",
+                      "fill": "#71717A",
+                      "content": "Ask your AI trainer anything...",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "MwQtD",
+                  "name": "SendButton",
+                  "width": 48,
+                  "height": 48,
+                  "fill": "#2563EB",
+                  "cornerRadius": 12,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "tFs9w",
+                      "name": "sendIcon",
+                      "fill": "#FFFFFF",
+                      "content": "→",
+                      "fontFamily": "Inter",
+                      "fontSize": 18,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "6HqgE",
+      "x": 7960,
+      "y": 12946,
+      "name": "Chat / Empty State — Desktop 1440",
+      "clip": true,
+      "width": 1440,
+      "height": 900,
+      "fill": "#0A0A0A",
+      "children": [
+        {
+          "type": "frame",
+          "id": "WuiRr",
+          "name": "Sidebar",
+          "width": 280,
+          "height": "fill_container",
+          "fill": "#111113",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "RAjfn",
+              "name": "SidebarHeader",
+              "width": "fill_container",
+              "height": 72,
+              "gap": 12,
+              "padding": [
+                0,
+                20
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "BKcXa",
+                  "name": "LogoIcon",
+                  "width": 32,
+                  "height": 32,
+                  "fill": "#2563EB",
+                  "cornerRadius": 8
+                },
+                {
+                  "type": "text",
+                  "id": "P3N3W",
+                  "name": "empLogoTxt",
+                  "fill": "#FFFFFF",
+                  "content": "AI Pocket Trainer",
+                  "fontFamily": "Poppins",
+                  "fontSize": 15,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "Y7gFq",
+                  "name": "NewChatBtn",
+                  "width": 32,
+                  "height": 32,
+                  "fill": "#1E1E22",
+                  "cornerRadius": 8,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ZjiwL",
+                      "name": "empPlusIcon",
+                      "fill": "#FFFFFF",
+                      "content": "+",
+                      "fontFamily": "Inter",
+                      "fontSize": 18,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "biSyF",
+              "name": "Divider",
+              "width": "fill_container",
+              "height": 1,
+              "fill": "#1F1F23"
+            },
+            {
+              "type": "frame",
+              "id": "EhKgt",
+              "name": "EmptyConvs",
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 4,
+              "padding": [
+                24,
+                20
+              ],
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "2m7om",
+                  "name": "empConvText",
+                  "fill": "#71717A",
+                  "content": "No conversations yet",
+                  "textAlign": "center",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "SZwxF",
+              "name": "SbDivider",
+              "width": "fill_container",
+              "height": 1,
+              "fill": "#1F1F23"
+            },
+            {
+              "type": "frame",
+              "id": "v8pOK",
+              "name": "SidebarFooter",
+              "width": "fill_container",
+              "height": 64,
+              "fill": "#111113",
+              "gap": 12,
+              "padding": [
+                0,
+                16
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "D2Usp",
+                  "name": "UserAvatar",
+                  "width": 36,
+                  "height": 36,
+                  "fill": "#2563EB",
+                  "cornerRadius": 18,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "30vZu",
+                      "name": "empSbAvTxt",
+                      "fill": "#FFFFFF",
+                      "content": "JD",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ZHc2S",
+                  "name": "UserInfo",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "WDz6V",
+                      "name": "empSbUserName",
+                      "fill": "#F9FAFB",
+                      "content": "John Doe",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "text",
+                      "id": "S43RE",
+                      "name": "empSbUserPlan",
+                      "fill": "#71717A",
+                      "content": "Free Plan",
+                      "fontFamily": "Inter",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "1kJ6X",
+          "name": "MainArea",
+          "width": "fill_container",
+          "height": "fill_container",
+          "fill": "#0A0A0A",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "fJQkF",
+              "name": "ChatHeader",
+              "width": "fill_container",
+              "height": 72,
+              "fill": "#0A0A0A",
+              "gap": 12,
+              "padding": [
+                0,
+                24
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "7ZBaW",
+                  "name": "empHTitle",
+                  "fill": "#F9FAFB",
+                  "content": "New Chat",
+                  "fontFamily": "Poppins",
+                  "fontSize": 16,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "uE3w2",
+              "name": "HeaderDivider",
+              "width": "fill_container",
+              "height": 1,
+              "fill": "#1F1F23"
+            },
+            {
+              "type": "frame",
+              "id": "88raT",
+              "name": "EmptyContent",
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 32,
+              "padding": [
+                40,
+                80
+              ],
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "eu1ss",
+                  "name": "WelcomeIcon",
+                  "width": 72,
+                  "height": 72,
+                  "fill": "#161618",
+                  "cornerRadius": 36,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "w9LEX",
+                      "name": "empIcon",
+                      "fill": "#2563EB",
+                      "content": "AI",
+                      "fontFamily": "Inter",
+                      "fontSize": 24,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "V6ES1",
+                  "name": "empWelcomeTitle",
+                  "fill": "#F9FAFB",
+                  "content": "Welcome to AI Pocket Trainer",
+                  "textAlign": "center",
+                  "fontFamily": "Poppins",
+                  "fontSize": 28,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "GU9QT",
+                  "name": "empWelcomeSub",
+                  "fill": "#9CA3AF",
+                  "content": "Your personal AI fitness coach is ready to help.\nAsk me about workouts, nutrition, or recovery.",
+                  "lineHeight": 1.5,
+                  "textAlign": "center",
+                  "fontFamily": "Inter",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "R41VJ",
+                  "name": "ChipsRow1",
+                  "gap": 12,
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "NKoOi",
+                      "name": "Chip1",
+                      "fill": "#161618",
+                      "cornerRadius": 10,
+                      "stroke": {
+                        "thickness": 1,
+                        "fill": "#1F1F23"
+                      },
+                      "gap": 8,
+                      "padding": [
+                        10,
+                        16
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "ucHOW",
+                          "name": "chip1Icon",
+                          "content": "💪",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "4fns7",
+                          "name": "chip1Text",
+                          "fill": "#F9FAFB",
+                          "content": "Create a workout plan",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "b65cg",
+                      "name": "Chip2",
+                      "fill": "#161618",
+                      "cornerRadius": 10,
+                      "stroke": {
+                        "thickness": 1,
+                        "fill": "#1F1F23"
+                      },
+                      "gap": 8,
+                      "padding": [
+                        10,
+                        16
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "XqEAC",
+                          "name": "chip2Icon",
+                          "content": "🥗",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "aHcq3",
+                          "name": "chip2Text",
+                          "fill": "#F9FAFB",
+                          "content": "Plan my meals",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "QOUG3",
+                  "name": "ChipsRow2",
+                  "gap": 12,
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "VYGUN",
+                      "name": "Chip3",
+                      "fill": "#161618",
+                      "cornerRadius": 10,
+                      "stroke": {
+                        "thickness": 1,
+                        "fill": "#1F1F23"
+                      },
+                      "gap": 8,
+                      "padding": [
+                        10,
+                        16
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "xbG9b",
+                          "name": "chip3Icon",
+                          "content": "📊",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "hcrRT",
+                          "name": "chip3Text",
+                          "fill": "#F9FAFB",
+                          "content": "Track my progress",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "yAAeS",
+                      "name": "Chip4",
+                      "fill": "#161618",
+                      "cornerRadius": 10,
+                      "stroke": {
+                        "thickness": 1,
+                        "fill": "#1F1F23"
+                      },
+                      "gap": 8,
+                      "padding": [
+                        10,
+                        16
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "GtNo9",
+                          "name": "chip4Icon",
+                          "content": "🧘",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "qrB8y",
+                          "name": "chip4Text",
+                          "fill": "#F9FAFB",
+                          "content": "Recovery tips",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "sOYDm",
+              "name": "InputDivider",
+              "width": "fill_container",
+              "height": 1,
+              "fill": "#1F1F23"
+            },
+            {
+              "type": "frame",
+              "id": "bPzo8",
+              "name": "InputArea",
+              "width": "fill_container",
+              "height": 80,
+              "fill": "#0A0A0A",
+              "gap": 12,
+              "padding": [
+                16,
+                24
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "RGCOT",
+                  "name": "InputField",
+                  "width": "fill_container",
+                  "height": 48,
+                  "fill": "#161618",
+                  "cornerRadius": 12,
+                  "stroke": {
+                    "thickness": 1,
+                    "fill": "#1F1F23"
+                  },
+                  "gap": 8,
+                  "padding": [
+                    0,
+                    16
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Rw9JH",
+                      "name": "empInputPlh",
+                      "fill": "#71717A",
+                      "content": "Ask your AI trainer anything...",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "smBrX",
+                  "name": "SendButton",
+                  "width": 48,
+                  "height": 48,
+                  "fill": "#1E1E22",
+                  "cornerRadius": 12,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "TVTE1",
+                      "name": "empSendIcon",
+                      "fill": "#71717A",
+                      "content": "→",
+                      "fontFamily": "Inter",
+                      "fontSize": 18,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "grk9U",
+      "x": 9500,
+      "y": 12946,
+      "name": "Chat / Mobile 390",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#0A0A0A",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "q7Kuo",
+          "name": "MobileHeader",
+          "width": "fill_container",
+          "height": 60,
+          "fill": "#111113",
+          "gap": 12,
+          "padding": [
+            0,
+            16
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "7rGc5",
+              "name": "MenuBtn",
+              "width": 32,
+              "height": 32,
+              "fill": "#1E1E22",
+              "cornerRadius": 8,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "MVJyj",
+                  "name": "mobMenuIcon",
+                  "fill": "#F9FAFB",
+                  "content": "☰",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "VZxQr",
+              "name": "LogoIcon",
+              "width": 28,
+              "height": 28,
+              "fill": "#2563EB",
+              "cornerRadius": 6
+            },
+            {
+              "type": "text",
+              "id": "9kSDb",
+              "name": "mobTitle",
+              "fill": "#FFFFFF",
+              "content": "AI Pocket Trainer",
+              "fontFamily": "Poppins",
+              "fontSize": 14,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "hxRci",
+              "name": "MsgCounter",
+              "fill": "#1E1E22",
+              "cornerRadius": 12,
+              "padding": [
+                4,
+                10
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "84kin",
+                  "name": "mobCountText",
+                  "fill": "#A1A1AA",
+                  "content": "3/5",
+                  "fontFamily": "Inter",
+                  "fontSize": 11,
+                  "fontWeight": "500"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "PrXpb",
+          "name": "HeaderDivider",
+          "width": "fill_container",
+          "height": 1,
+          "fill": "#1F1F23"
+        },
+        {
+          "type": "frame",
+          "id": "0FwIY",
+          "name": "MessageArea",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            16,
+            12
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "FrC1i",
+              "name": "AIMessage",
+              "width": "fill_container",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "n5bmf",
+                  "name": "AIAvatar",
+                  "width": 28,
+                  "height": 28,
+                  "fill": "#2563EB",
+                  "cornerRadius": 14,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "lXAFa",
+                      "name": "mobAiAvT",
+                      "fill": "#FFFFFF",
+                      "content": "AI",
+                      "fontFamily": "Inter",
+                      "fontSize": 9,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "0O4wa",
+                  "name": "AIBubble",
+                  "width": 300,
+                  "fill": "#161618",
+                  "cornerRadius": 12,
+                  "layout": "vertical",
+                  "gap": 6,
+                  "padding": [
+                    10,
+                    14
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "VOfk8",
+                      "name": "mobAiText",
+                      "fill": "#F9FAFB",
+                      "content": "Hey John! 👋 Here's your Push Day workout:\n\n1. Bench Press — 4×8-10\n2. Incline DB Press — 3×10-12\n3. Overhead Press — 3×8-10\n4. Cable Lateral Raises — 3×12-15\n5. Tricep Pushdowns — 3×10-12\n\nRest 90-120s between sets.",
+                      "lineHeight": 1.5,
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "OC4g8",
+                      "name": "mobAiTime",
+                      "fill": "#71717A",
+                      "content": "10:32 AM",
+                      "fontFamily": "Inter",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "v6Xz6",
+              "name": "UserMessage",
+              "width": "fill_container",
+              "gap": 8,
+              "justifyContent": "end",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "N9Qkb",
+                  "name": "UserBubble",
+                  "width": 260,
+                  "fill": "#2563EB",
+                  "cornerRadius": 12,
+                  "layout": "vertical",
+                  "gap": 6,
+                  "padding": [
+                    10,
+                    14
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "aCA2d",
+                      "name": "mobUserText",
+                      "fill": "#FFFFFF",
+                      "content": "Great! What about the warm-up? Should I do cardio first?",
+                      "lineHeight": 1.5,
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "X5xqD",
+                      "name": "mobUserTime",
+                      "fill": "#ffffff99",
+                      "content": "10:33 AM",
+                      "fontFamily": "Inter",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "nDXiF",
+                  "name": "UserAvatar",
+                  "width": 28,
+                  "height": 28,
+                  "fill": "#1F2937",
+                  "cornerRadius": 14,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "C0YO1",
+                      "name": "mobUserAvT",
+                      "fill": "#F9FAFB",
+                      "content": "JD",
+                      "fontFamily": "Inter",
+                      "fontSize": 9,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Qe2nm",
+              "name": "TypingIndicator",
+              "width": "fill_container",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "1KrTy",
+                  "name": "TypingAvatar",
+                  "width": 28,
+                  "height": 28,
+                  "fill": "#2563EB",
+                  "cornerRadius": 14,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "pPduJ",
+                      "name": "mobTypAvT",
+                      "fill": "#FFFFFF",
+                      "content": "AI",
+                      "fontFamily": "Inter",
+                      "fontSize": 9,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "bCCQt",
+                  "name": "TypingBubble",
+                  "fill": "#161618",
+                  "cornerRadius": 12,
+                  "gap": 6,
+                  "padding": [
+                    12,
+                    16
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "nbMeV",
+                      "name": "Dot1",
+                      "width": 8,
+                      "height": 8,
+                      "fill": "#71717A",
+                      "cornerRadius": 4
+                    },
+                    {
+                      "type": "frame",
+                      "id": "HM3He",
+                      "name": "Dot2",
+                      "width": 8,
+                      "height": 8,
+                      "fill": "#9CA3AF",
+                      "cornerRadius": 4
+                    },
+                    {
+                      "type": "frame",
+                      "id": "pZGkx",
+                      "name": "Dot3",
+                      "width": 8,
+                      "height": 8,
+                      "fill": "#71717A",
+                      "cornerRadius": 4
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "yhVEl",
+          "name": "InputDivider",
+          "width": "fill_container",
+          "height": 1,
+          "fill": "#1F1F23"
+        },
+        {
+          "type": "frame",
+          "id": "kka3e",
+          "name": "InputArea",
+          "width": "fill_container",
+          "height": 68,
+          "fill": "#0A0A0A",
+          "gap": 8,
+          "padding": 12,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "C1Xct",
+              "name": "InputField",
+              "width": "fill_container",
+              "height": 44,
+              "fill": "#161618",
+              "cornerRadius": 10,
+              "stroke": {
+                "thickness": 1,
+                "fill": "#1F1F23"
+              },
+              "gap": 8,
+              "padding": [
+                0,
+                14
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "kLuBQ",
+                  "name": "mobInputPlh",
+                  "fill": "#71717A",
+                  "content": "Type a message...",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "HOZO4",
+              "name": "SendButton",
+              "width": 44,
+              "height": 44,
+              "fill": "#2563EB",
+              "cornerRadius": 10,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "flMMP",
+                  "name": "mobSendIcon",
+                  "fill": "#FFFFFF",
+                  "content": "→",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "600"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "MScgz",
+      "x": 6420,
+      "y": 13946,
+      "name": "Chat / Limit Reached — Desktop 1440",
+      "clip": true,
+      "width": 1440,
+      "height": 900,
+      "fill": "#0A0A0A",
+      "children": [
+        {
+          "type": "frame",
+          "id": "okr4C",
+          "name": "Sidebar",
+          "width": 280,
+          "height": "fill_container",
+          "fill": "#111113",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "gK656",
+              "name": "SidebarHeader",
+              "width": "fill_container",
+              "height": 72,
+              "gap": 12,
+              "padding": [
+                0,
+                20
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "qhOhk",
+                  "name": "LogoIcon",
+                  "width": 32,
+                  "height": 32,
+                  "fill": "#2563EB",
+                  "cornerRadius": 8
+                },
+                {
+                  "type": "text",
+                  "id": "zkyjD",
+                  "name": "limitLogoTxt",
+                  "fill": "#FFFFFF",
+                  "content": "AI Pocket Trainer",
+                  "fontFamily": "Poppins",
+                  "fontSize": 15,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "V2JyJ",
+              "name": "Divider",
+              "width": "fill_container",
+              "height": 1,
+              "fill": "#1F1F23"
+            },
+            {
+              "type": "frame",
+              "id": "rDW1O",
+              "name": "ConvList",
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 4,
+              "padding": [
+                12,
+                8
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "k2hsR",
+                  "name": "ConvActive",
+                  "width": "fill_container",
+                  "height": 44,
+                  "fill": "#1E1E22",
+                  "cornerRadius": 8,
+                  "gap": 8,
+                  "padding": [
+                    0,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "AExNM",
+                      "name": "limitConv1T",
+                      "fill": "#F9FAFB",
+                      "content": "My workout plan",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "GWi6F",
+              "name": "SbDivider",
+              "width": "fill_container",
+              "height": 1,
+              "fill": "#1F1F23"
+            },
+            {
+              "type": "frame",
+              "id": "KEP6X",
+              "name": "SidebarFooter",
+              "width": "fill_container",
+              "height": 64,
+              "fill": "#111113",
+              "gap": 12,
+              "padding": [
+                0,
+                16
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "NUb8J",
+                  "name": "UserAvatar",
+                  "width": 36,
+                  "height": 36,
+                  "fill": "#2563EB",
+                  "cornerRadius": 18,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "0NLHo",
+                      "name": "limSbAvT",
+                      "fill": "#FFFFFF",
+                      "content": "JD",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "H0PNt",
+                  "name": "UserInfo",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "iocXU",
+                      "name": "limSbName",
+                      "fill": "#F9FAFB",
+                      "content": "John Doe",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "text",
+                      "id": "q4NFE",
+                      "name": "limSbPlan",
+                      "fill": "#71717A",
+                      "content": "Free Plan",
+                      "fontFamily": "Inter",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "mUPkX",
+          "name": "MainArea",
+          "width": "fill_container",
+          "height": "fill_container",
+          "fill": "#0A0A0A",
+          "layout": "none",
+          "children": [
+            {
+              "type": "frame",
+              "id": "jrkPH",
+              "x": 0,
+              "y": 0,
+              "name": "ChatHeader",
+              "width": 1160,
+              "height": 72,
+              "gap": 12,
+              "padding": [
+                0,
+                24
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "jCywX",
+                  "name": "limitHTitle",
+                  "fill": "#F9FAFB",
+                  "content": "My workout plan",
+                  "fontFamily": "Poppins",
+                  "fontSize": 16,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "kenKR",
+                  "name": "MsgCounterFull",
+                  "fill": "#1E1E22",
+                  "cornerRadius": 16,
+                  "gap": 4,
+                  "padding": [
+                    6,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "XTpwQ",
+                      "name": "limitHCountTxt",
+                      "fill": "#EF4444",
+                      "content": "5/5 messages today",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "YmxLX",
+              "x": 0,
+              "y": 72,
+              "name": "HeaderDivider",
+              "width": 1160,
+              "height": 1,
+              "fill": "#1F1F23"
+            },
+            {
+              "type": "frame",
+              "id": "qAIAL",
+              "x": 0,
+              "y": 73,
+              "name": "MessageArea",
+              "opacity": 0.15,
+              "width": 1160,
+              "height": 727,
+              "layout": "vertical",
+              "padding": [
+                24,
+                32
+              ],
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "gUYpU",
+                  "name": "limitFadedMsg",
+                  "fill": "#71717A",
+                  "content": "Chat messages shown behind overlay...",
+                  "textAlign": "center",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "4IuFr",
+              "x": 0,
+              "y": 73,
+              "name": "ModalOverlay",
+              "opacity": 0.5,
+              "width": 1160,
+              "height": 827,
+              "fill": "#000000"
+            },
+            {
+              "type": "frame",
+              "id": "7wqG1",
+              "x": 360,
+              "y": 220,
+              "name": "UpgradeModal",
+              "width": 440,
+              "fill": "#161618",
+              "cornerRadius": 16,
+              "stroke": {
+                "thickness": 1,
+                "fill": "#1F1F23"
+              },
+              "layout": "vertical",
+              "gap": 24,
+              "padding": 32,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "UdeGJ",
+                  "name": "ModalIcon",
+                  "width": 64,
+                  "height": 64,
+                  "fill": "#1E1E22",
+                  "cornerRadius": 32,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "t05Ni",
+                      "name": "modIconT2",
+                      "content": "⚡",
+                      "fontFamily": "Inter",
+                      "fontSize": 28,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "9V9LM",
+                  "name": "modTitle2",
+                  "fill": "#F9FAFB",
+                  "content": "Daily Message Limit Reached",
+                  "textAlign": "center",
+                  "fontFamily": "Poppins",
+                  "fontSize": 24,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "xyYJ5",
+                  "name": "modDesc2",
+                  "fill": "#9CA3AF",
+                  "content": "You've used all 5 free messages for today.\nUpgrade to Pro for unlimited AI coaching.",
+                  "lineHeight": 1.5,
+                  "textAlign": "center",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "kvt7U",
+                  "name": "UpgradeBtn",
+                  "width": "fill_container",
+                  "height": 48,
+                  "fill": "#2563EB",
+                  "cornerRadius": 10,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "rKkqk",
+                      "name": "upBtnTxt2",
+                      "fill": "#FFFFFF",
+                      "content": "Upgrade to Pro — $9.99/mo",
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "M6q1G",
+                  "name": "DismissBtn",
+                  "width": "fill_container",
+                  "height": 44,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "i6214",
+                      "name": "disBtnTxt2",
+                      "fill": "#71717A",
+                      "content": "Maybe later",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "J3FPE",
+              "x": 0,
+              "y": 800,
+              "name": "InputDivider",
+              "width": 1160,
+              "height": 1,
+              "fill": "#1F1F23"
+            },
+            {
+              "type": "frame",
+              "id": "Po4FS",
+              "x": 0,
+              "y": 801,
+              "name": "InputArea",
+              "width": 1160,
+              "height": 99,
+              "fill": "#0A0A0A",
+              "gap": 12,
+              "padding": [
+                16,
+                24
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "LAATD",
+                  "name": "InputField",
+                  "opacity": 0.4,
+                  "width": "fill_container",
+                  "height": 48,
+                  "fill": "#161618",
+                  "cornerRadius": 12,
+                  "padding": [
+                    0,
+                    16
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "z9KQn",
+                      "name": "limInputPlh",
+                      "fill": "#71717A",
+                      "content": "Daily limit reached — upgrade to continue",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "uldvL",
+                  "name": "SendButton",
+                  "opacity": 0.4,
+                  "width": 48,
+                  "height": 48,
+                  "fill": "#1E1E22",
+                  "cornerRadius": 12,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "iJgmo",
+                      "name": "limSendIcon",
+                      "fill": "#71717A",
+                      "content": "→",
+                      "fontFamily": "Inter",
+                      "fontSize": 18,
+                      "fontWeight": "600"
                     }
                   ]
                 }

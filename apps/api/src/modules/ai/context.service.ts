@@ -66,7 +66,7 @@ export class ContextService {
       workoutPlan: currentWorkoutPlan,
       nutritionPlan: currentNutritionPlan,
       recentWorkouts,
-      language: "en",
+      language: "auto",
     };
 
     this.cache.set(userId, {
@@ -95,13 +95,6 @@ export class ContextService {
         ? context.recentWorkouts.map((w) => this.formatWorkoutLog(w)).join("\n")
         : "No recent workouts";
 
-    const historySection =
-      context.conversationHistory.length > 0
-        ? context.conversationHistory
-            .map((m) => `${m.role}: ${m.content}`)
-            .join("\n")
-        : "";
-
     let prompt = `You are a certified personal fitness trainer and nutritionist.
 
 User Profile:
@@ -117,17 +110,14 @@ Recent Workouts:
 ${workoutLogsSection}
 
 Guidelines:
-- Always respond in ${context.language}
+- Always respond in the SAME LANGUAGE the user writes in. If the user writes in Russian, respond in Russian. If in English, respond in English.
+- You ALREADY HAVE the user's full profile above. Use it directly — do NOT ask the user for information that is already in their profile (goals, weight, training preferences, dietary restrictions, etc.)
+- Be specific and actionable. Generate concrete plans, exercises, and meals based on the profile data above.
 - Be supportive but honest
-- Provide specific, actionable advice
-- Reference user's profile and history
+- Reference user's profile data and history in your answers
 - If medical issue, recommend seeing a doctor
-- Use Markdown for formatting
+- Use Markdown for formatting (bold, lists, headers)
 - Keep responses concise (200-400 words) unless detail requested`;
-
-    if (historySection) {
-      prompt += `\n\nPrevious conversation:\n${historySection}`;
-    }
 
     prompt = this.truncateToTokenLimit(prompt);
 

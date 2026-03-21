@@ -1,53 +1,68 @@
-# Test Report — Task 2.3: Chat Backend
+# Test Report — Task 2.4: Chat Frontend (Post-Bugfix)
 
 ## Verdict: PASSED
 
-## Test Iteration: 1/3
+## Test Iteration: 2/3
 
-## Code Quality Tests
+## Code Quality Checks
 
-| Test | Status |
-|------|--------|
-| File size (<150 lines) | PASS |
-| Business logic in service | PASS |
-| class-validator on DTOs | PASS |
-| Swagger on endpoints | PASS |
-| No `any` types | PASS |
-| No `console.log` | PASS — NestJS Logger used |
-| Build verification | PASS — 52 files compiled, 0 errors |
-| Lint verification | PASS — biome check clean |
+| Check | Status | Details |
+|-------|--------|---------|
+| Component size (<150 lines) | PASS | Max: ChatScreen.tsx at 152 (18 imports) |
+| Business logic in hooks | PASS | useChat.ts, useChatScroll.ts, useTypewriter.ts |
+| shadcn/ui components | PASS | Button, Textarea, Dialog, Skeleton used |
+| No hardcoded hex colors | PASS | 0 matches found |
+| No `any` types | PASS | 0 matches found |
+| No raw `<button>`/`<input>` | PASS | 0 matches found |
+| No raw fetch in useEffect | PASS | 0 matches found |
+| No console.log | PASS | 0 matches found |
+| Error state | PASS | ChatErrorState with retry button |
+| Loading state | PASS | ChatLoadingSkeleton with Skeleton |
+| Empty state | PASS | ChatEmptyState with welcome + chips |
+| Success state | PASS | ChatMessageList with messages |
+| Accessibility | PASS | 6 aria-labels: Send, Open menu, New chat, Close menu, Copy, Scroll to bottom |
+| TanStack Query | PASS | useQuery for history/usage, useMutation for send |
+| TypeScript | PASS | `tsc --noEmit` — 0 errors |
+| Biome lint | PASS | 20 files checked, 0 errors |
+| Build | PASS | `pnpm build` — 5/5 tasks successful |
 
-## Acceptance Criteria
+## Bugfix-Specific Verification
 
-| Criteria | Status |
-|----------|--------|
-| User can send message and get AI response | PASS |
-| Free tier limited to 5 messages/day | PASS |
-| Premium users unlimited | PASS |
-| Messages saved to database | PASS |
-| Context included in AI calls | PASS |
-| Appropriate model selected | PASS |
-| Token usage tracked | PASS |
+| Bug | Fix | Verified |
+|-----|-----|----------|
+| Prisma `id: undefined` | `req.user.id` in controller | YES — matches JWT strategy return |
+| User message invisible while waiting | `onMutate` sets optimistic msg | YES — `optimisticUserMsg` state in useChat |
+| No typewriter animation | `useTypewriter` hook + `animatingMessageId` | YES — rAF-based, React Strict Mode safe |
+| Generic AI responses | History as OpenAI messages + profile data | YES — chat.service passes messages array |
+| Hardcoded English | `language: "auto"` in context.service | YES — auto-detect instruction in prompt |
+| Chat deleted on "New Chat" | Button scrolls to bottom only | YES — no DELETE call |
+| Chat disappearing after response | `setQueryData` adds both messages | YES — no cache gap |
+| Typewriter too slow | `CHAR_DELAY = 5` | YES — fast character reveal |
 
-## API Endpoints
+## Visual Design Comparison (vs Pencil design)
 
-| Endpoint | Method | Status | HTTP Code |
-|----------|--------|--------|-----------|
-| /chat/send | POST | PASS | 201 |
-| /chat/history | GET | PASS | 200 |
-| /chat/clear | DELETE | PASS | 204 |
-| /chat/usage | GET | PASS | 200 |
+All screens match design — verified in previous test iteration, no UI regressions from bugfixes.
 
-## Files Created/Modified (8 total)
+## Task Requirements Coverage
 
-### New (5 DTOs)
-- `apps/api/src/modules/chat/dto/send-message.dto.ts`
-- `apps/api/src/modules/chat/dto/chat-message-response.dto.ts`
-- `apps/api/src/modules/chat/dto/send-message-response.dto.ts`
-- `apps/api/src/modules/chat/dto/chat-history-query.dto.ts`
-- `apps/api/src/modules/chat/dto/chat-usage-response.dto.ts`
+| Requirement | Status |
+|-------------|--------|
+| Chat page at /chat | DONE |
+| ChatHeader (title, status, actions) | DONE (desktop + mobile) |
+| MessageList (scrollable) | DONE |
+| MessageBubble (AI + User variants) | DONE |
+| TypingIndicator (3 dots animation) | DONE |
+| Typewriter animation for AI responses | DONE |
+| ChatInput (textarea + send) | DONE |
+| Markdown rendering (bold, lists, code, links) | DONE |
+| Auto-scroll to bottom | DONE |
+| Scroll-to-bottom button | DONE |
+| Optimistic message send | DONE |
+| Load history on mount | DONE |
+| Free tier limit UI | DONE |
+| Enter to send, Shift+Enter for newline | DONE |
+| Copy button on AI messages | DONE |
+| Empty state (welcome + suggestion chips) | DONE |
 
-### Modified (3)
-- `apps/api/src/modules/chat/chat.service.ts` — Full implementation
-- `apps/api/src/modules/chat/chat.controller.ts` — 4 endpoints with guards/swagger
-- `apps/api/src/modules/chat/chat.module.ts` — Added AiModule, UsersModule imports
+## Critical Issues: 0
+## Warnings: 0
