@@ -5,6 +5,7 @@
 - **Backend:** NestJS 10 (modular) — `apps/api/`
 - **Monorepo:** Turborepo + pnpm workspaces
 - **UI:** shadcn/ui + Tailwind CSS (CSS variable tokens)
+- **Data fetching:** TanStack Query (React Query) — all API calls go through `useQuery`/`useMutation`
 - **Fonts:** Inter (body), Poppins (headings)
 
 ## Key Files
@@ -43,7 +44,8 @@ packages/
 - UI components are **pure presentational** — they receive data via props and render UI. No API calls, no business logic inside.
 - All business logic lives in **custom hooks** (`use*.ts` files in `hooks/` directory):
   - `useAuth()`, `useWorkout()`, `useChatMessages()` etc.
-  - Hooks handle: API calls, state management, data transformations, side effects.
+  - Hooks handle: API calls (via TanStack Query `useQuery`/`useMutation`), state management, data transformations, side effects.
+  - **All API calls MUST use TanStack Query** — `useQuery` for reads, `useMutation` for writes. Never use raw `fetch`/`useEffect` for API calls.
 - Pattern: `hook (logic) → component (UI) → shadcn/ui primitives (atoms)`
 - Example structure for a feature:
   ```

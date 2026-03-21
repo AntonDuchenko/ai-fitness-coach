@@ -1,3 +1,5 @@
+import { AuthProviderWrapper } from "@/features/auth";
+import { Providers } from "@/lib/providers";
 import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
@@ -28,7 +30,9 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${poppins.variable} font-sans antialiased`}
       >
-        {children}
+        <Providers>
+          <AuthProviderWrapper>{children}</AuthProviderWrapper>
+        </Providers>
       </body>
     </html>
   );

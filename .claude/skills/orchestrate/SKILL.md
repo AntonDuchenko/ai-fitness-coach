@@ -131,6 +131,12 @@ You are the **Orchestrator**. You execute the entire development pipeline inline
 - Follow the full process from `.claude/skills/tester/SKILL.md`:
   - For UI: open Pencil design, compare screenshots/layouts with implementation
   - For API: verify endpoints, DTOs, guards, Swagger, error handling
+  - **Playwright visual regression (MANDATORY for UI tasks):**
+    - If visual tests don't exist for the new pages, CREATE them in `apps/web/e2e/`
+    - Run `cd apps/web && npx playwright test --update-snapshots` (first run creates baselines)
+    - READ the captured screenshot PNGs and compare them against Pencil design screenshots
+    - Look for: missing elements, wrong colors/spacing, layout differences, missing decorative elements
+    - If discrepancies are found, report them as critical issues and return to Developer
   - **Code quality tests** (always run):
     - Component size check (<150 lines)
     - Logic separation check (hooks/services vs components/controllers)

@@ -1,6 +1,6 @@
 # Pipeline Summary
 
-## Task: Task 1.1 — Authentication Backend
+## Task: Task 1.2 — Authentication Frontend
 ## Final Status: SUCCESS
 
 ## Timeline
@@ -16,30 +16,45 @@
 | Rule | Status |
 |------|--------|
 | Component size (<150 lines) | PASS |
-| Business logic separated (services) | PASS |
-| No hardcoded hex colors | PASS (N/A — backend) |
+| Business logic separated (hooks/services) | PASS |
+| shadcn/ui used (no raw HTML) | PASS |
+| Semantic design tokens (no hardcoded hex) | PASS |
+| Error/loading/empty states | PASS |
+| Accessibility | PASS |
 | TypeScript strict (no `any`) | PASS |
-| No console.log | PASS |
-| Proper error handling | PASS |
-| Swagger decorators | PASS |
-| class-validator DTOs | PASS |
+| TanStack Query for API calls | PASS |
 
 ## Files Created/Modified
-- `apps/api/src/modules/auth/dto/signup.dto.ts` — signup DTO with email, password, name validation
-- `apps/api/src/modules/auth/dto/login.dto.ts` — login DTO with email, password validation
-- `apps/api/src/modules/auth/dto/auth-response.dto.ts` — response DTO with accessToken + user
-- `apps/api/src/modules/auth/strategies/jwt.strategy.ts` — Passport JWT strategy
-- `apps/api/src/modules/auth/auth.service.ts` — signup, login, getMe business logic
-- `apps/api/src/modules/auth/auth.controller.ts` — POST /auth/signup, POST /auth/login, GET /auth/me
-- `apps/api/src/modules/auth/auth.module.ts` — PassportModule, JwtModule, UsersModule integration
-- `apps/api/src/modules/users/dto/user-response.dto.ts` — user response DTO (no sensitive fields)
-- `apps/api/src/modules/users/users.service.ts` — findByEmail, findById, create, updateLastLogin
-- `apps/api/src/common/guards/jwt-auth.guard.ts` — reusable JWT auth guard
-- `biome.json` — enabled unsafeParameterDecoratorsEnabled for NestJS
+- `apps/web/src/features/auth/types.ts` — Auth types (User, AuthResponse, AuthContextType, form types)
+- `apps/web/src/features/auth/hooks/useAuth.ts` — Auth context + TanStack Query (useQuery/useMutation)
+- `apps/web/src/features/auth/hooks/useAuthForm.ts` — Form state + zod validation + submission
+- `apps/web/src/features/auth/hooks/usePasswordStrength.ts` — Password strength calculator
+- `apps/web/src/features/auth/components/AuthLayout.tsx` — Split-panel auth layout
+- `apps/web/src/features/auth/components/AuthHero.tsx` — Left decorative hero panel
+- `apps/web/src/features/auth/components/LoginForm.tsx` — Login form UI
+- `apps/web/src/features/auth/components/SignupForm.tsx` — Signup form UI
+- `apps/web/src/features/auth/components/PasswordInput.tsx` — Reusable password input with toggle
+- `apps/web/src/features/auth/components/PasswordStrength.tsx` — Strength bars + requirements
+- `apps/web/src/features/auth/components/SocialButtons.tsx` — Google/Apple social buttons
+- `apps/web/src/features/auth/components/AuthProviderWrapper.tsx` — Auth context provider
+- `apps/web/src/features/auth/index.ts` — Public exports
+- `apps/web/src/lib/api-client.ts` — Fetch wrapper with auth headers + error handling
+- `apps/web/src/lib/query-client.ts` — TanStack Query client factory
+- `apps/web/src/lib/providers.tsx` — QueryClientProvider wrapper
+- `apps/web/src/components/common/ProtectedRoute.tsx` — Auth guard component
+- `apps/web/src/components/ui/label.tsx` — shadcn/ui Label (added)
+- `apps/web/src/app/(auth)/layout.tsx` — Auth route group layout (dark mode)
+- `apps/web/src/app/(auth)/login/page.tsx` — Login page
+- `apps/web/src/app/(auth)/signup/page.tsx` — Signup page
+- `apps/web/src/app/layout.tsx` — Root layout with Providers + AuthProvider
+- `apps/web/package.json` — Added zod, @tanstack/react-query
+- `CLAUDE.md` — Added TanStack Query to stack + conventions
 
 ## Key Decisions
-- **No refresh tokens for MVP** — single JWT access token with 7d expiry, simplifies implementation
-- **Same error for wrong email/password** — prevents email enumeration attacks
-- **UserProfile NOT created at signup** — will be created during onboarding (Task 1.3)
-- **Biome config update** — NestJS uses parameter decorators (@Body, @Request) which require `unsafeParameterDecoratorsEnabled` in biome
-- **JwtModuleOptions cast** — @nestjs/jwt v11 uses template literal types from `ms` package for expiresIn; cast needed for string config values
+- **TanStack Query** — All API calls via useQuery/useMutation per user requirement
+- **localStorage for JWT** — simpler for MVP (task spec allows localStorage or httpOnly cookie)
+- **Dark mode forced on auth pages** — via wrapper div with `dark` class, matches Pencil design
+- **Social login UI-only** — Google/Apple buttons present but disabled for MVP
+- **Forgot password UI-only** — link present but non-functional (optional per task spec)
+- **PasswordInput extracted** — shared between login/signup to reduce duplication
+- **Zod v4** — for form validation schemas (installed as zod@^4.3.6)
