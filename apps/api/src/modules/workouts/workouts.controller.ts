@@ -1,11 +1,16 @@
 import {
+  Body,
   Controller,
+  DefaultValuePipe,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
   NotFoundException,
   Param,
+  ParseIntPipe,
   Post,
+  Query,
   Request,
   UseGuards,
 } from "@nestjs/common";
@@ -13,12 +18,16 @@ import {
   ApiBearerAuth,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../../common/guards/jwt-auth.guard";
+import { CreateWorkoutLogDto } from "./dto/create-workout-log.dto";
 import { WorkoutDayResponseDto } from "./dto/workout-day-response.dto";
+import { WorkoutLogResponseDto } from "./dto/workout-log-response.dto";
 import { WorkoutPlanResponseDto } from "./dto/workout-plan-response.dto";
+import { WorkoutStatsResponseDto } from "./dto/workout-stats-response.dto";
 import { WorkoutsService } from "./workouts.service";
 
 @ApiTags("Workouts")
@@ -174,5 +183,96 @@ export class WorkoutsController {
     @Request() req: { user: { id: string } },
   ): Promise<WorkoutPlanResponseDto> {
     return this.workoutsService.regeneratePlan(req.user.id);
+  }
+
+  // ─── Workout Logging ────────────────────────────────────
+
+  @Post("log")
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: "Log a completed workout" })
+  @ApiResponse({
+    status: 201,
+    description: "Workout logged successfully",
+    type: WorkoutLogResponseDto,
+  })
+  @ApiResponse({ status: 400, description: "Invalid input" })
+  async logWorkout(
+    @Request() req: { user: { id: string } },
+    @Body() dto: CreateWorkoutLogDto,
+  ): Promise<WorkoutLogResponseDto> {
+    return this.workoutsService.logWorkout(req.user.id, dto);
+  }
+
+  @Get("logs")
+  @ApiOperation({ summary: "Get workout history" })
+  @ApiQuery({
+    name: "limit",
+    required: false,
+    type: Number,
+    example: 10,
+    description: "Number of logs to return (default 10)",
+  })
+  @ApiQuery({
+    name: "offset",
+    required: false,
+    type: Number,
+    example: 0,
+    description: "Number of logs to skip (default 0)",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Workout history",
+    type: [WorkoutLogResponseDto],
+  })
+  async getWorkoutLogs(
+    @Request() req: { user: { id: string } },
+    @Query("limit", new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query("offset", new DefaultValuePipe(0), ParseIntPipe) offset: number,
+  ): Promise<WorkoutLogResponseDto[]> {
+    return this.workoutsService.getWorkoutLogs(req.user.id, limit, offset);
+  }
+
+  @Get("log/:id")
+  @ApiOperation({ summary: "Get a specific workout log" })
+  @ApiParam({ name: "id", description: "Workout log ID" })
+  @ApiResponse({
+    status: 200,
+    description: "Workout log details",
+    type: WorkoutLogResponseDto,
+  })
+  @ApiResponse({ status: 404, description: "Workout log not found" })
+  async getWorkoutLog(
+    @Request() req: { user: { id: string } },
+    @Param("id") logId: string,
+  ): Promise<WorkoutLogResponseDto> {
+    return this.workoutsService.getWorkoutLog(req.user.id, logId);
+  }
+
+  @Delete("log/:id")
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: "Delete a workout log" })
+  @ApiParam({ name: "id", description: "Workout log ID" })
+  @ApiResponse({ status: 204, description: "Workout log deleted" })
+  @ApiResponse({ status: 404, description: "Workout log not found" })
+  async deleteWorkoutLog(
+    @Request() req: { user: { id: string } },
+    @Param("id") logId: string,
+  ): Promise<void> {
+    await this.workoutsService.deleteWorkoutLog(req.user.id, logId);
+  }
+
+  @Get("stats")
+  @ApiOperation({
+    summary: "Get workout statistics (streaks, PRs, totals)",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Workout statistics",
+    type: WorkoutStatsResponseDto,
+  })
+  async getWorkoutStats(
+    @Request() req: { user: { id: string } },
+  ): Promise<WorkoutStatsResponseDto> {
+    return this.workoutsService.getWorkoutStats(req.user.id);
   }
 }

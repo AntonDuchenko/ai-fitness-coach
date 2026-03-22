@@ -1,66 +1,107 @@
-# Architect Plan: Task 3.1 — Workout Plan Display Backend
+# Architect Plan: Task 3.3 — Workout Logging Backend
 
 ## Overview
-Add missing endpoints to the existing Workouts module to support the frontend workout display: get today's workout by day of week, and an explicit regenerate endpoint.
+Add workout logging endpoints to the existing workouts module: log completed workouts, fetch history, get specific logs, delete logs, calculate streaks, and track personal records (PRs).
 
-## Gap Analysis
-The workouts module already has:
-- `POST /workouts/generate` — generates plan, archives old ones
-- `GET /workouts/plan` — gets active plan
-- `GET /workouts/plan/:id` — gets specific plan
-- `GET /workouts/plans` — lists all plans
-- `getCurrentPlan()`, `getActivePlan()`, `getPlanById()`, `getUserPlans()`
+## Data Model
+Already exists in Prisma schema (`WorkoutLog` model) — no schema changes needed. The `exercises` field is a JSON column storing `ExerciseLog[]`.
 
-**Missing per Task 3.1:**
-1. `GET /workouts/day/:dayOfWeek` — get a specific day's workout from the active plan
-2. `POST /workouts/plan/regenerate` — explicit regenerate (alias for generate, semantic clarity)
-3. `getTodaysWorkout(userId, dayOfWeek)` service method
-4. `WorkoutDayResponseDto` — typed response DTO for a single workout day
+## DTOs to Create
 
-## Implementation Steps
+### Input DTOs (`dto/`)
 
-### 1. Create `WorkoutDayResponseDto` (`dto/workout-day-response.dto.ts`)
-- Fields: `dayOfWeek`, `focus`, `duration`, `exercises` (typed array)
-- Nested `ExerciseDto` class with Swagger decorators
-- Constructor that maps from the JSON weeklySchedule entry
+1. **`set-log.dto.ts`** — `SetLogDto`
+   - `setNumber: number` (@IsInt)
+   - `weight: number` (@IsNumber)
+   - `reps: number` (@IsInt)
+   - `rpe?: number` (@IsInt, @Min(1), @Max(10), @IsOptional)
 
-### 2. Add `getTodaysWorkout()` to `WorkoutsService`
-```typescript
-async getTodaysWorkout(userId: string, dayOfWeek?: string): Promise<WorkoutDayResponseDto | null> {
-  const plan = await this.getCurrentPlan(userId);
-  if (!plan) return null;
+2. **`exercise-log.dto.ts`** — `ExerciseLogDto`
+   - `exerciseName: string` (@IsString)
+   - `sets: SetLogDto[]` (@IsArray, @ValidateNested, @Type)
+   - `notes?: string` (@IsString, @IsOptional)
 
-  const targetDay = dayOfWeek || new Date().toLocaleDateString('en-US', { weekday: 'long' });
-  const schedule = plan.weeklySchedule as GeneratedWorkoutDay[];
-  const workout = schedule.find(w => w.dayOfWeek.toLowerCase() === targetDay.toLowerCase());
+3. **`create-workout-log.dto.ts`** — `CreateWorkoutLogDto`
+   - `workoutPlanId: string` (@IsString)
+   - `workoutName: string` (@IsString)
+   - `exercises: ExerciseLogDto[]` (@IsArray, @ValidateNested, @Type)
+   - `duration?: number` (@IsNumber, @IsOptional)
+   - `rating?: number` (@IsInt, @Min(1), @Max(5), @IsOptional)
+   - `notes?: string` (@IsString, @IsOptional)
 
-  return workout ? new WorkoutDayResponseDto(workout) : null;
-}
-```
+### Response DTOs
 
-### 3. Add `regeneratePlan()` to `WorkoutsService`
-- Delegates to `generatePlan()` — same behavior, explicit name for semantic clarity
+4. **`workout-log-response.dto.ts`** — `WorkoutLogResponseDto`
+   - Maps from WorkoutLog entity
+   - All fields from the model with Swagger decorators
 
-### 4. Add controller endpoints
-- `GET /workouts/day/:dayOfWeek` → calls `getTodaysWorkout()`
-  - Returns 200 with workout day data, or 404 if no plan or no workout for that day
-  - Swagger: `@ApiParam` for dayOfWeek with enum of weekday names
-- `POST /workouts/plan/regenerate` → calls `regeneratePlan()`
-  - Returns 201 with new plan
-  - Swagger decorators matching existing generate endpoint
+5. **`workout-stats-response.dto.ts`** — `WorkoutStatsResponseDto`
+   - `totalWorkouts: number`
+   - `currentStreak: number`
+   - `longestStreak: number`
+   - `personalRecords: PersonalRecordDto[]`
 
-### 5. Add `GET /workouts/today` convenience endpoint
-- No params, auto-resolves current day of week
-- Returns workout for today or 404 with "Rest day" message
+6. **`personal-record.dto.ts`** — `PersonalRecordDto`
+   - `exerciseName: string`
+   - `maxWeight: number`
+   - `maxReps: number`
+   - `achievedAt: Date`
 
-## Files to Create
-1. `apps/api/src/modules/workouts/dto/workout-day-response.dto.ts`
+## Controller Endpoints (add to existing `WorkoutsController`)
 
-## Files to Modify
-1. `apps/api/src/modules/workouts/workouts.service.ts`
-2. `apps/api/src/modules/workouts/workouts.controller.ts`
+| Method | Path | Description | Status |
+|--------|------|-------------|--------|
+| POST | `/workouts/log` | Log completed workout | 201 |
+| GET | `/workouts/logs` | Get workout history (query: `limit`, `offset`) | 200 |
+| GET | `/workouts/log/:id` | Get specific log | 200 |
+| DELETE | `/workouts/log/:id` | Delete a log | 204 |
+| GET | `/workouts/stats` | Get streaks + PRs | 200 |
 
-## No Changes Needed
-- Schema (WorkoutPlan model already has weeklySchedule JSON)
-- Module file (no new imports needed)
-- Frontend (Task 3.2)
+All endpoints: `@UseGuards(JwtAuthGuard)`, `@ApiBearerAuth()`, full Swagger decorators.
+
+## Service Methods (add to existing `WorkoutsService`)
+
+1. **`logWorkout(userId, dto)`** — Creates WorkoutLog, returns response DTO
+2. **`getWorkoutLogs(userId, limit, offset)`** — Paginated history, ordered by completedAt desc
+3. **`getWorkoutLog(userId, logId)`** — Single log by ID, scoped to user
+4. **`deleteWorkoutLog(userId, logId)`** — Delete log, scoped to user
+5. **`getWorkoutStats(userId)`** — Calculates:
+   - Total workout count
+   - Current streak (consecutive days with logged workouts, allowing 1-day gaps for rest days)
+   - Longest streak
+   - Personal records (max weight per exercise across all logs)
+
+### Streak Calculation Logic
+- Fetch all log dates for user, ordered desc
+- Group by calendar date
+- Count consecutive days (a gap of exactly 1 day is allowed — rest day)
+- A gap of 2+ days breaks the streak
+
+### Personal Records Logic
+- Flatten all exercise logs across all workout logs
+- For each unique exercise, find the max weight lifted (with reps)
+- Return as PersonalRecordDto[]
+
+## Files to Create/Modify
+
+### New files:
+- `apps/api/src/modules/workouts/dto/set-log.dto.ts`
+- `apps/api/src/modules/workouts/dto/exercise-log.dto.ts`
+- `apps/api/src/modules/workouts/dto/create-workout-log.dto.ts`
+- `apps/api/src/modules/workouts/dto/workout-log-response.dto.ts`
+- `apps/api/src/modules/workouts/dto/workout-stats-response.dto.ts`
+- `apps/api/src/modules/workouts/dto/personal-record.dto.ts`
+
+### Modified files:
+- `apps/api/src/modules/workouts/workouts.controller.ts` — Add 5 new endpoints
+- `apps/api/src/modules/workouts/workouts.service.ts` — Add 5 new methods + streak/PR helpers
+
+## Convention Compliance
+- Thin controller: validate -> delegate to service -> return response
+- class-validator decorators on all DTOs
+- Swagger decorators on all endpoints
+- JwtAuthGuard on all endpoints
+- Proper HTTP codes (201 create, 200 success, 204 no content, 404 not found)
+- Structured error responses via NestJS exceptions
+- No `any` types
+- NestJS Logger for logging

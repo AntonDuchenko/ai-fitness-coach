@@ -5,11 +5,15 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from "@nestjs/common";
-import type { UserProfile, WorkoutPlan } from "@prisma/client";
+import type { UserProfile, WorkoutLog, WorkoutPlan } from "@prisma/client";
 import { PrismaService } from "../../prisma/prisma.service";
 import { AiService } from "../ai/ai.service";
+import type { CreateWorkoutLogDto } from "./dto/create-workout-log.dto";
+import { PersonalRecordDto } from "./dto/personal-record.dto";
 import { WorkoutDayResponseDto } from "./dto/workout-day-response.dto";
+import { WorkoutLogResponseDto } from "./dto/workout-log-response.dto";
 import { WorkoutPlanResponseDto } from "./dto/workout-plan-response.dto";
+import { WorkoutStatsResponseDto } from "./dto/workout-stats-response.dto";
 
 interface GeneratedExercise {
   name: string;
@@ -171,6 +175,184 @@ export class WorkoutsService {
   async regeneratePlan(userId: string): Promise<WorkoutPlanResponseDto> {
     this.logger.log(`Regenerating workout plan for user ${userId}`);
     return this.generatePlan(userId);
+  }
+
+  // ─── Workout Logging ────────────────────────────────────
+
+  async logWorkout(
+    userId: string,
+    dto: CreateWorkoutLogDto,
+  ): Promise<WorkoutLogResponseDto> {
+    const log = await this.prisma.workoutLog.create({
+      data: {
+        userId,
+        workoutPlanId: dto.workoutPlanId,
+        workoutName: dto.workoutName,
+        exercises: JSON.parse(JSON.stringify(dto.exercises)),
+        duration: dto.duration ?? null,
+        rating: dto.rating ?? null,
+        notes: dto.notes ?? null,
+        completedAt: new Date(),
+      },
+    });
+
+    this.logger.log(`Workout logged: ${log.id} for user ${userId}`);
+
+    return new WorkoutLogResponseDto(log);
+  }
+
+  async getWorkoutLogs(
+    userId: string,
+    limit: number,
+    offset: number,
+  ): Promise<WorkoutLogResponseDto[]> {
+    const logs = await this.prisma.workoutLog.findMany({
+      where: { userId },
+      orderBy: { completedAt: "desc" },
+      take: limit,
+      skip: offset,
+    });
+
+    return logs.map((log) => new WorkoutLogResponseDto(log));
+  }
+
+  async getWorkoutLog(
+    userId: string,
+    logId: string,
+  ): Promise<WorkoutLogResponseDto> {
+    const log = await this.prisma.workoutLog.findFirst({
+      where: { id: logId, userId },
+    });
+
+    if (!log) {
+      throw new NotFoundException("Workout log not found.");
+    }
+
+    return new WorkoutLogResponseDto(log);
+  }
+
+  async deleteWorkoutLog(userId: string, logId: string): Promise<void> {
+    const log = await this.prisma.workoutLog.findFirst({
+      where: { id: logId, userId },
+    });
+
+    if (!log) {
+      throw new NotFoundException("Workout log not found.");
+    }
+
+    await this.prisma.workoutLog.delete({ where: { id: logId } });
+
+    this.logger.log(`Workout log deleted: ${logId} for user ${userId}`);
+  }
+
+  async getWorkoutStats(userId: string): Promise<WorkoutStatsResponseDto> {
+    const logs = await this.prisma.workoutLog.findMany({
+      where: { userId },
+      orderBy: { completedAt: "desc" },
+    });
+
+    const totalWorkouts = logs.length;
+    const { currentStreak, longestStreak } = this.calculateStreaks(logs);
+    const personalRecords = this.calculatePersonalRecords(logs);
+
+    return new WorkoutStatsResponseDto({
+      totalWorkouts,
+      currentStreak,
+      longestStreak,
+      personalRecords,
+    });
+  }
+
+  private calculateStreaks(logs: WorkoutLog[]): {
+    currentStreak: number;
+    longestStreak: number;
+  } {
+    if (logs.length === 0) {
+      return { currentStreak: 0, longestStreak: 0 };
+    }
+
+    const formatDate = (d: Date): string =>
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+
+    const uniqueDates = [
+      ...new Set(logs.map((log) => formatDate(new Date(log.completedAt)))),
+    ].sort((a, b) => b.localeCompare(a));
+
+    const today = new Date();
+    const todayStr = formatDate(today);
+    const yesterdayDate = new Date(today);
+    yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+    const yesterdayStr = formatDate(yesterdayDate);
+
+    const isStreakActive =
+      uniqueDates[0] === todayStr || uniqueDates[0] === yesterdayStr;
+
+    const streaks: number[] = [];
+    let streak = 1;
+
+    for (let i = 1; i < uniqueDates.length; i++) {
+      const newer = new Date(uniqueDates[i - 1]);
+      const older = new Date(uniqueDates[i]);
+      const diffDays = Math.round(
+        (newer.getTime() - older.getTime()) / (1000 * 60 * 60 * 24),
+      );
+
+      if (diffDays <= 2) {
+        streak++;
+      } else {
+        streaks.push(streak);
+        streak = 1;
+      }
+    }
+    streaks.push(streak);
+
+    const longestStreak = Math.max(...streaks);
+    const currentStreak = isStreakActive ? streaks[0] : 0;
+
+    return { currentStreak, longestStreak };
+  }
+
+  private calculatePersonalRecords(logs: WorkoutLog[]): PersonalRecordDto[] {
+    const prMap = new Map<
+      string,
+      { maxWeight: number; repsAtMax: number; achievedAt: Date }
+    >();
+
+    for (const log of logs) {
+      const exercises = log.exercises as Array<{
+        exerciseName: string;
+        sets: Array<{ weight: number; reps: number }>;
+      }>;
+
+      if (!Array.isArray(exercises)) continue;
+
+      for (const exercise of exercises) {
+        if (!Array.isArray(exercise.sets)) continue;
+
+        for (const set of exercise.sets) {
+          const name = exercise.exerciseName;
+          const existing = prMap.get(name);
+
+          if (!existing || set.weight > existing.maxWeight) {
+            prMap.set(name, {
+              maxWeight: set.weight,
+              repsAtMax: set.reps,
+              achievedAt: log.completedAt,
+            });
+          }
+        }
+      }
+    }
+
+    return Array.from(prMap.entries()).map(
+      ([exerciseName, data]) =>
+        new PersonalRecordDto({
+          exerciseName,
+          maxWeight: data.maxWeight,
+          repsAtMax: data.repsAtMax,
+          achievedAt: data.achievedAt,
+        }),
+    );
   }
 
   private buildWorkoutPlanPrompt(profile: UserProfile): string {

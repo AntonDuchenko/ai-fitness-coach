@@ -1,36 +1,40 @@
-# Review Report — Task 3.2: Workout Plan Display Frontend
+# Review Report — Task 3.3: Workout Logging Backend
 
 ## Verdict: APPROVED
 
-## Iteration: 2/3
+## Iteration: 2/3 (1 fix iteration for streak bug)
 
 ## Build / Lint
-- **Build:** PASS
-- **Lint:** PASS (no errors in workout files)
+- **Build:** PASS (0 errors)
+- **Lint:** PASS (0 errors)
 
-## Previous Issues — Resolution
-| Issue | Status |
-|-------|--------|
-| WorkoutPlanScreen.tsx 282→139 lines | FIXED (extracted Skeleton, Empty, Error, WeekContent + hook) |
-| Raw `<button>` in WeekSelector | FIXED (uses `<Button variant="outline">`) |
-| Raw `<button>` in DayCard | FIXED (uses `<Button variant="ghost">`) |
-| Raw `<button>` in ExerciseItem | FIXED (uses `<Button variant="link">`) |
+## Issues Found & Resolved
+| Issue | Severity | Status |
+|-------|----------|--------|
+| `calculateStreaks` returned wrong `currentStreak` (overwritten by last streak value) | Critical | FIXED — refactored to collect streaks array, use `streaks[0]` for current |
 
 ## Convention Checklist
 
 | # | Rule | Status |
 |---|------|--------|
-| 1 | Component size (<150 lines) | PASS — all files ≤139 lines |
-| 2 | Business logic in hooks | PASS — useWorkoutPlan + useWorkoutPlanView |
-| 3 | shadcn/ui (no raw HTML) | PASS — 0 raw buttons found |
-| 4 | Semantic tokens (no hardcoded hex) | PASS |
-| 5 | Error/loading/empty states | PASS |
-| 6 | Accessibility | PASS |
-| 7 | TypeScript strict (no `any`) | PASS |
-| 8 | TanStack Query for API calls | PASS |
-| 9 | File organization (features/) | PASS |
-| 10 | Mobile responsive | PASS |
-| 11 | Design match | PARTIAL (minor deviations noted, non-blocking) |
+| 1 | Thin controller (validate -> delegate -> return) | PASS |
+| 2 | Business logic in service | PASS |
+| 3 | class-validator on all DTOs | PASS |
+| 4 | Swagger decorators on all endpoints | PASS |
+| 5 | JwtAuthGuard on all endpoints | PASS |
+| 6 | Proper HTTP codes (201/200/204/404) | PASS |
+| 7 | Structured error responses (NestJS exceptions) | PASS |
+| 8 | No `any` types | PASS |
+| 9 | NestJS Logger (no console.log) | PASS |
+| 10 | Nested DTO validation (@ValidateNested + @Type) | PASS |
+| 11 | User-scoped queries (userId filter on all reads/deletes) | PASS |
 
-## Files (14 total)
-All under 150 lines. No critical issues remaining.
+## Files Reviewed (8 total)
+- `dto/set-log.dto.ts` — clean
+- `dto/exercise-log.dto.ts` — clean
+- `dto/create-workout-log.dto.ts` — clean
+- `dto/workout-log-response.dto.ts` — clean
+- `dto/workout-stats-response.dto.ts` — clean
+- `dto/personal-record.dto.ts` — clean
+- `workouts.controller.ts` — clean, 5 new endpoints added
+- `workouts.service.ts` — streak bug fixed, all methods correct

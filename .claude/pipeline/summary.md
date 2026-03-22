@@ -1,13 +1,13 @@
 # Pipeline Summary
 
-## Task: Task 3.2 — Workout Plan Display Frontend
+## Task: Task 3.3 — Workout Logging Backend
 ## Final Status: SUCCESS
 
 ## Timeline
 | Phase | Status | Iterations |
 |-------|--------|------------|
 | Init | Completed | — |
-| Architect | Skipped (started from review) | — |
+| Architect | Completed | — |
 | Developer | Completed | 2 passes |
 | Reviewer | APPROVED | 2/3 iterations |
 | Tester | PASSED | 1/3 iterations |
@@ -15,32 +15,30 @@
 ## Convention Compliance
 | Rule | Status |
 |------|--------|
-| Component size (<150 lines) | PASS |
-| Business logic separated (hooks/services) | PASS |
-| shadcn/ui used (no raw HTML) | PASS |
-| Semantic design tokens (no hardcoded hex) | PASS |
-| Error/loading/empty states | PASS |
-| Accessibility | PASS |
+| Thin controller | PASS |
+| Business logic in service | PASS |
+| class-validator on DTOs | PASS |
+| Swagger decorators | PASS |
+| JwtAuthGuard | PASS |
+| Proper HTTP codes | PASS |
 | TypeScript strict (no `any`) | PASS |
+| NestJS Logger (no console.log) | PASS |
 
 ## Files Created/Modified
-- `apps/web/src/features/workout/components/WorkoutPlanSkeleton.tsx` — extracted loading skeleton state
-- `apps/web/src/features/workout/components/WorkoutPlanEmpty.tsx` — extracted empty (no plan) state
-- `apps/web/src/features/workout/components/WorkoutPlanError.tsx` — extracted error state
-- `apps/web/src/features/workout/components/WorkoutWeekContent.tsx` — extracted week content (selector + progress + cards grid)
-- `apps/web/src/features/workout/hooks/useWorkoutPlanView.ts` — extracted view state management from WorkoutPlanScreen
-- `apps/web/src/features/workout/components/WorkoutPlanScreen.tsx` — refactored from 282 to 139 lines
-- `apps/web/src/features/workout/components/WeekSelector.tsx` — raw button replaced with Button
-- `apps/web/src/features/workout/components/DayCard.tsx` — raw button replaced with Button
-- `apps/web/src/features/workout/components/ExerciseItem.tsx` — raw button replaced with Button
-- `apps/web/e2e/visual-workouts.spec.ts` — new Playwright visual test
+- `apps/api/src/modules/workouts/dto/set-log.dto.ts` — input DTO for individual sets
+- `apps/api/src/modules/workouts/dto/exercise-log.dto.ts` — input DTO for exercise logs with nested sets
+- `apps/api/src/modules/workouts/dto/create-workout-log.dto.ts` — input DTO for logging a workout
+- `apps/api/src/modules/workouts/dto/workout-log-response.dto.ts` — response DTO for workout logs
+- `apps/api/src/modules/workouts/dto/workout-stats-response.dto.ts` — response DTO for stats (streaks, PRs)
+- `apps/api/src/modules/workouts/dto/personal-record.dto.ts` — response DTO for personal records
+- `apps/api/src/modules/workouts/workouts.controller.ts` — added 5 new logging endpoints
+- `apps/api/src/modules/workouts/workouts.service.ts` — added logging, history, delete, stats methods + streak/PR calculation
 
 ## Key Decisions
-- Extracted view state logic into useWorkoutPlanView hook to follow business-logic-in-hooks convention
-- Split WorkoutPlanScreen into 5 sub-components to stay under 150-line limit
-- Used Button variant ghost for DayCard wrapper to satisfy shadcn requirement while preserving custom card styling
-- Created basic Playwright visual test (auth-gated page captures redirect state)
+- Reused existing WorkoutLog Prisma model (no schema changes needed)
+- Streak calculation allows 1-day gaps (rest days) — gap of 2+ days breaks the streak
+- Personal records track max weight per exercise with reps at that weight
+- All queries scoped by userId to prevent IDOR
 
 ## Remaining Issues
-- Minor design deviation: video tutorial is a text link instead of play icon (non-blocking)
-- Playwright visual tests only capture unauthenticated state — full authenticated screenshots require API mock setup
+- None
