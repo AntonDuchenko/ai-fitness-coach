@@ -1,6 +1,6 @@
 # Pipeline Summary
 
-## Task: Task 2.5 — Workout Plan Generation (AI)
+## Task: Task 2.6 — Nutrition Plan Generation (AI)
 ## Final Status: SUCCESS
 
 ## Timeline
@@ -17,29 +17,20 @@
 |------|--------|
 | Component size (<150 lines) | PASS |
 | Business logic separated (hooks/services) | PASS |
-| shadcn/ui used (no raw HTML) | N/A (backend task) |
-| Semantic design tokens (no hardcoded hex) | N/A (backend task) |
-| Error/loading/empty states | N/A (backend task) |
-| Accessibility | N/A (backend task) |
+| shadcn/ui used (no raw HTML) | N/A (backend) |
+| Semantic design tokens (no hardcoded hex) | N/A (backend) |
+| Error/loading/empty states | N/A (backend) |
+| Accessibility | N/A (backend) |
 | TypeScript strict (no `any`) | PASS |
 
 ## Files Created/Modified
-
-### Created
-- `apps/api/src/modules/workouts/dto/workout-plan-response.dto.ts` — Response DTO with Swagger annotations
-
-### Modified
-- `apps/api/src/modules/ai/ai.service.ts` — Added `createJsonCompletion<T>()` method for structured JSON AI responses
-- `apps/api/src/modules/ai/ai.module.ts` — Added `forwardRef` for WorkoutsModule circular dependency
-- `apps/api/src/modules/workouts/workouts.service.ts` — Full implementation: `generatePlan()`, prompt builder, plan validation, `getActivePlan()`, `getPlanById()`, `getUserPlans()`
-- `apps/api/src/modules/workouts/workouts.controller.ts` — 4 endpoints: POST generate, GET plan, GET plans, GET plan/:id
-- `apps/api/src/modules/workouts/workouts.module.ts` — Added AiModule import via `forwardRef`
+- `apps/api/src/modules/nutrition/dto/nutrition-plan-response.dto.ts` — Response DTO with Swagger decorators
+- `apps/api/src/modules/nutrition/nutrition.service.ts` — Full generation logic: TDEE/macro calc, prompt building, AI call, validation, DB persistence
+- `apps/api/src/modules/nutrition/nutrition.controller.ts` — REST endpoints (generate, get plan/plans/plan/:id)
+- `apps/api/src/modules/nutrition/nutrition.module.ts` — Added AiModule import via forwardRef
 
 ## Key Decisions
-- **Generation in WorkoutsService**: Domain logic stays in domain module; AiService is a utility
-- **forwardRef**: Circular dependency (AiModule <-> WorkoutsModule) resolved with NestJS forwardRef
-- **createJsonCompletion**: Generic reusable method added to AiService — will be used by nutrition plan generation (Task 2.6)
-- **GPT-4o model**: Used for quality plan generation with temperature 0.8
-- **Plan deactivation**: Old active plans deactivated before creating new one
-- **Validation**: Thorough validation of AI-generated plan structure before saving to DB
-- **Error hierarchy**: 404 (no profile) → 422 (incomplete profile) → 502 (AI failure)
+- Used Mifflin-St Jeor equation for BMR calculation (most accurate for general population)
+- Goal-based macro splits: weight_loss (40/30/30), muscle_gain (30/45/25), default (30/40/30)
+- Cached TDEE/BMR/macros in UserProfile for reuse by context service and chat
+- Mirrored WorkoutsService pattern exactly for consistency

@@ -1,6 +1,6 @@
 {
-  "task": "Task 2.5",
-  "taskTitle": "Workout Plan Generation (AI)",
+  "task": "Task 2.6",
+  "taskTitle": "Nutrition Plan Generation (AI)",
   "phase": "summary",
   "status": "completed",
   "iterations": { "review": 1, "test": 1 },
