@@ -4,12 +4,16 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { ComponentProps } from "react";
-import { toast } from "sonner";
 import type { CalendarDaySlot } from "../types";
 import { ExerciseItem } from "./ExerciseItem";
 
 interface WorkoutDayDetailPanelProps {
   slot: CalendarDaySlot | null;
+  /** Active plan id — required to start a logged workout */
+  planId?: string;
+  /** ISO date key (yyyy-mm-dd) for draft storage */
+  dayKey?: string;
+  onStartWorkout?: () => void;
   className?: string;
 }
 
@@ -43,6 +47,9 @@ function statusLabel(status: CalendarDaySlot["status"]): string {
 
 export function WorkoutDayDetailPanel({
   slot,
+  planId,
+  dayKey,
+  onStartWorkout,
   className,
 }: WorkoutDayDetailPanelProps) {
   if (!slot) {
@@ -74,6 +81,8 @@ export function WorkoutDayDetailPanel({
 
   const w = slot.workout;
   const duration = w.duration ? `· ~${w.duration} min` : "";
+  const canStart =
+    Boolean(planId && dayKey && onStartWorkout) && w.exercises.length > 0;
 
   return (
     <div className={cn("flex min-h-0 flex-1 flex-col", className)}>
@@ -108,11 +117,8 @@ export function WorkoutDayDetailPanel({
           type="button"
           className="w-full"
           size="lg"
-          onClick={() =>
-            toast.message(
-              "Workout logging will be available in the next update.",
-            )
-          }
+          disabled={!canStart}
+          onClick={() => onStartWorkout?.()}
         >
           Start workout
         </Button>

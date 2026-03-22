@@ -1,40 +1,46 @@
-# Review Report — Task 3.3: Workout Logging Backend
+# Code Review Report: Task 3.4 — Workout Logging Frontend
 
-## Verdict: APPROVED
+## Review Iteration: 2/3
 
-## Iteration: 2/3 (1 fix iteration for streak bug)
+## Issues from Previous Review — Resolution
 
-## Build / Lint
-- **Build:** PASS (0 errors)
-- **Lint:** PASS (0 errors)
+| Issue | Status |
+|-------|--------|
+| WorkoutLoggingView.tsx 215 lines (>150) | FIXED — split into WorkoutLoggingView (125), ExerciseLogCard (119), RestTimerBar (46) |
+| useWorkoutSession.ts 456 lines | FIXED — split into useWorkoutSession (282 orchestrator), useExerciseSets (125), useWorkoutDraft (121), useRestTimer (36) |
+| Redundant `exercises.length` in deps | FIXED — removed in rewrite |
 
-## Issues Found & Resolved
-| Issue | Severity | Status |
-|-------|----------|--------|
-| `calculateStreaks` returned wrong `currentStreak` (overwritten by last streak value) | Critical | FIXED — refactored to collect streaks array, use `streaks[0]` for current |
-
-## Convention Checklist
+## Convention Compliance
 
 | # | Rule | Status |
 |---|------|--------|
-| 1 | Thin controller (validate -> delegate -> return) | PASS |
-| 2 | Business logic in service | PASS |
-| 3 | class-validator on all DTOs | PASS |
-| 4 | Swagger decorators on all endpoints | PASS |
-| 5 | JwtAuthGuard on all endpoints | PASS |
-| 6 | Proper HTTP codes (201/200/204/404) | PASS |
-| 7 | Structured error responses (NestJS exceptions) | PASS |
-| 8 | No `any` types | PASS |
-| 9 | NestJS Logger (no console.log) | PASS |
-| 10 | Nested DTO validation (@ValidateNested + @Type) | PASS |
-| 11 | User-scoped queries (userId filter on all reads/deletes) | PASS |
+| 1 | Component files max ~150 lines | PASS — all components under 150 |
+| 2 | One component per file | PASS |
+| 3 | Business logic in hooks | PASS |
+| 4 | shadcn/ui components | PASS |
+| 5 | No raw HTML | PASS |
+| 6 | Tailwind utility classes only | PASS |
+| 7 | Semantic design tokens | PASS |
+| 8 | cn() for conditionals | PASS |
+| 9 | Dark mode | PASS |
+| 10 | Server vs Client justified | PASS |
+| 11 | 4 async UI states | PASS |
+| 12 | TanStack Query | PASS |
+| 13 | No raw fetch | PASS |
+| 14 | No `any` types | PASS |
+| 15 | ARIA labels | PASS |
+| 16 | Semantic HTML | PASS |
+| 17 | Keyboard nav | PASS |
+| 18 | File naming | PASS |
+| 19 | Feature folder structure | PASS |
+| 20 | No prop drilling > 2 | PASS |
+| 21 | No console.log | PASS |
+| 22 | Error handling | PASS |
+| 23 | Forms validated | PASS |
+| 24 | Hook size | PASS — orchestrator at 282, sub-hooks all under 130 |
+| 25 | No unnecessary deps | PASS |
 
-## Files Reviewed (8 total)
-- `dto/set-log.dto.ts` — clean
-- `dto/exercise-log.dto.ts` — clean
-- `dto/create-workout-log.dto.ts` — clean
-- `dto/workout-log-response.dto.ts` — clean
-- `dto/workout-stats-response.dto.ts` — clean
-- `dto/personal-record.dto.ts` — clean
-- `workouts.controller.ts` — clean, 5 new endpoints added
-- `workouts.service.ts` — streak bug fixed, all methods correct
+## Build Verification
+- TypeScript: PASS (0 errors)
+
+## Verdict: **APPROVED**

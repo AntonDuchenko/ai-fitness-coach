@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -9,6 +10,7 @@ import { isPlanNotFound } from "../hooks/useWorkoutPlan";
 import { dayKey, useWorkoutPlanView } from "../hooks/useWorkoutPlanView";
 import { RegeneratePlanDialog } from "./RegeneratePlanDialog";
 import { WorkoutDayDetailPanel } from "./WorkoutDayDetailPanel";
+import { WorkoutSessionDialog } from "./WorkoutSessionDialog";
 import { WorkoutMobileHeader } from "./WorkoutMobileHeader";
 import { WorkoutPlanEmpty } from "./WorkoutPlanEmpty";
 import { WorkoutPlanError } from "./WorkoutPlanError";
@@ -17,6 +19,7 @@ import { WorkoutWeekContent } from "./WorkoutWeekContent";
 
 export function WorkoutPlanScreen() {
   const v = useWorkoutPlanView();
+  const [workoutSessionOpen, setWorkoutSessionOpen] = useState(false);
 
   if (v.isLoading) {
     return <WorkoutPlanSkeleton />;
@@ -105,6 +108,9 @@ export function WorkoutPlanScreen() {
           >
             <WorkoutDayDetailPanel
               slot={v.selectedSlot}
+              planId={v.plan.id}
+              dayKey={v.selectedDayKey ?? undefined}
+              onStartWorkout={() => setWorkoutSessionOpen(true)}
               className="h-full min-h-0"
             />
           </aside>
@@ -119,6 +125,18 @@ export function WorkoutPlanScreen() {
         durationWeeks={v.plan.durationWeeks}
       />
 
+      {v.selectedSlot?.workout ? (
+        <WorkoutSessionDialog
+          key={`${v.plan.id}-${v.selectedDayKey ?? ""}`}
+          open={workoutSessionOpen}
+          onOpenChange={setWorkoutSessionOpen}
+          planId={v.plan.id}
+          dayKey={v.selectedDayKey ?? ""}
+          workoutName={v.selectedSlot.workout.focus}
+          exercises={v.selectedSlot.workout.exercises}
+        />
+      ) : null}
+
       <Dialog
         open={v.mobileDetailOpen}
         onOpenChange={v.setMobileDetailOpen}
@@ -130,6 +148,9 @@ export function WorkoutPlanScreen() {
           <DialogTitle className="sr-only">Workout details</DialogTitle>
           <WorkoutDayDetailPanel
             slot={v.selectedSlot}
+            planId={v.plan.id}
+            dayKey={v.selectedDayKey ?? undefined}
+            onStartWorkout={() => setWorkoutSessionOpen(true)}
             className="min-h-0 flex-1"
           />
         </DialogContent>
