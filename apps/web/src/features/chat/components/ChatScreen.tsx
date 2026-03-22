@@ -58,7 +58,7 @@ export function ChatScreen() {
   const headerTitle = messages.length === 0 ? "New Chat" : title;
 
   return (
-    <div className="dark flex h-[100dvh] flex-col bg-background text-foreground lg:flex-row">
+    <div className="flex h-[100dvh] flex-col bg-background text-foreground lg:flex-row">
       <ChatSidebar
         className="hidden lg:flex"
         conversationTitle={title}

@@ -17,6 +17,7 @@ import { AuthModule } from "./modules/auth/auth.module";
 import { ChatModule } from "./modules/chat/chat.module";
 import { NutritionModule } from "./modules/nutrition/nutrition.module";
 import { PaymentsModule } from "./modules/payments/payments.module";
+import { PlanGenerationModule } from "./modules/plan-generation/plan-generation.module";
 import { UsersModule } from "./modules/users/users.module";
 import { WorkoutsModule } from "./modules/workouts/workouts.module";
 import { PrismaModule } from "./prisma/prisma.module";
@@ -50,6 +51,7 @@ import { PrismaModule } from "./prisma/prisma.module";
     AiModule,
     WorkoutsModule,
     NutritionModule,
+    PlanGenerationModule,
     PaymentsModule,
   ],
   controllers: [AppController],

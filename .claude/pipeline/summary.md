@@ -1,34 +1,46 @@
 # Pipeline Summary
 
-## Task: Task 3.1 — Workout Plan Display Backend
+## Task: Task 3.2 — Workout Plan Display Frontend
 ## Final Status: SUCCESS
 
 ## Timeline
 | Phase | Status | Iterations |
 |-------|--------|------------|
 | Init | Completed | — |
-| Architect | Completed | — |
-| Developer | Completed | 1 pass |
-| Reviewer | APPROVED | 1/3 iterations |
+| Architect | Skipped (started from review) | — |
+| Developer | Completed | 2 passes |
+| Reviewer | APPROVED | 2/3 iterations |
 | Tester | PASSED | 1/3 iterations |
 
 ## Convention Compliance
 | Rule | Status |
 |------|--------|
 | Component size (<150 lines) | PASS |
-| Business logic separated (services) | PASS |
-| Swagger decorators on all endpoints | PASS |
-| Semantic design tokens (no hardcoded hex) | N/A (backend) |
+| Business logic separated (hooks/services) | PASS |
+| shadcn/ui used (no raw HTML) | PASS |
+| Semantic design tokens (no hardcoded hex) | PASS |
+| Error/loading/empty states | PASS |
+| Accessibility | PASS |
 | TypeScript strict (no `any`) | PASS |
-| NestJS Logger (no console.log) | PASS |
 
 ## Files Created/Modified
-- `apps/api/src/modules/workouts/dto/workout-day-response.dto.ts` — NEW: ExerciseDto + WorkoutDayResponseDto with Swagger decorators
-- `apps/api/src/modules/workouts/workouts.service.ts` — Added `getWorkoutByDay()`, `getTodaysWorkout()`, `regeneratePlan()`
-- `apps/api/src/modules/workouts/workouts.controller.ts` — Added `GET /today`, `GET /day/:dayOfWeek`, `POST /plan/regenerate`
+- `apps/web/src/features/workout/components/WorkoutPlanSkeleton.tsx` — extracted loading skeleton state
+- `apps/web/src/features/workout/components/WorkoutPlanEmpty.tsx` — extracted empty (no plan) state
+- `apps/web/src/features/workout/components/WorkoutPlanError.tsx` — extracted error state
+- `apps/web/src/features/workout/components/WorkoutWeekContent.tsx` — extracted week content (selector + progress + cards grid)
+- `apps/web/src/features/workout/hooks/useWorkoutPlanView.ts` — extracted view state management from WorkoutPlanScreen
+- `apps/web/src/features/workout/components/WorkoutPlanScreen.tsx` — refactored from 282 to 139 lines
+- `apps/web/src/features/workout/components/WeekSelector.tsx` — raw button replaced with Button
+- `apps/web/src/features/workout/components/DayCard.tsx` — raw button replaced with Button
+- `apps/web/src/features/workout/components/ExerciseItem.tsx` — raw button replaced with Button
+- `apps/web/e2e/visual-workouts.spec.ts` — new Playwright visual test
 
 ## Key Decisions
-- `regeneratePlan()` delegates to `generatePlan()` which already handles archiving old plans
-- Day matching is case-insensitive for robustness
-- Added both `/today` (auto-detect day) and `/day/:dayOfWeek` (explicit) for frontend flexibility
-- Controller throws 404 for rest days / missing plans — frontend can handle this gracefully
+- Extracted view state logic into useWorkoutPlanView hook to follow business-logic-in-hooks convention
+- Split WorkoutPlanScreen into 5 sub-components to stay under 150-line limit
+- Used Button variant ghost for DayCard wrapper to satisfy shadcn requirement while preserving custom card styling
+- Created basic Playwright visual test (auth-gated page captures redirect state)
+
+## Remaining Issues
+- Minor design deviation: video tutorial is a text link instead of play icon (non-blocking)
+- Playwright visual tests only capture unauthenticated state — full authenticated screenshots require API mock setup

@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${poppins.variable} font-sans antialiased`}
+        className={`dark ${inter.variable} ${poppins.variable} font-sans antialiased`}
       >
         <Providers>
           <AuthProviderWrapper>{children}</AuthProviderWrapper>

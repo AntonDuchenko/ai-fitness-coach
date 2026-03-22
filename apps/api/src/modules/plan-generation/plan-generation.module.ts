@@ -1,9 +1,10 @@
 import { BullModule } from "@nestjs/bull";
-import { Module, forwardRef } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 import { ChatModule } from "../chat/chat.module";
 import { NutritionModule } from "../nutrition/nutrition.module";
 import { UsersModule } from "../users/users.module";
 import { WorkoutsModule } from "../workouts/workouts.module";
+import { OnboardingController } from "./onboarding.controller";
 import { PlanGenerationProcessor } from "./plan-generation.processor";
 import { PlanGenerationService } from "./plan-generation.service";
 
@@ -13,8 +14,9 @@ import { PlanGenerationService } from "./plan-generation.service";
     WorkoutsModule,
     NutritionModule,
     ChatModule,
-    forwardRef(() => UsersModule),
+    UsersModule,
   ],
+  controllers: [OnboardingController],
   providers: [PlanGenerationProcessor, PlanGenerationService],
   exports: [PlanGenerationService],
 })

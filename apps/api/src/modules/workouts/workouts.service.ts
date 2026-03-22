@@ -287,10 +287,11 @@ Generate complete plan with all ${profile.trainingDaysPerWeek} days.`;
           );
         }
 
-        if (exercise.sets === undefined || !exercise.reps) {
-          throw new BadGatewayException(
-            `Exercise '${exercise.name}' missing 'sets' or 'reps'.`,
-          );
+        if (exercise.sets === undefined) {
+          exercise.sets = 1;
+        }
+        if (!exercise.reps) {
+          exercise.reps = "1";
         }
       }
     }

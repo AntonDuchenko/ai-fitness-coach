@@ -6,7 +6,7 @@ export default function AuthRouteLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="dark text-foreground">
+    <div className="text-foreground">
       <AuthLayout>{children}</AuthLayout>
     </div>
   );

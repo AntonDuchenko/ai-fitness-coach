@@ -1,46 +1,36 @@
-# Review Report: Task 3.1 — Workout Plan Display Backend
+# Review Report — Task 3.2: Workout Plan Display Frontend
 
 ## Verdict: APPROVED
 
-## Iteration: 1/3
+## Iteration: 2/3
 
-## Files Reviewed
-1. `apps/api/src/modules/workouts/dto/workout-day-response.dto.ts` (NEW, 65 lines)
-2. `apps/api/src/modules/workouts/workouts.service.ts` (MODIFIED, 305 lines)
-3. `apps/api/src/modules/workouts/workouts.controller.ts` (MODIFIED, 179 lines)
+## Build / Lint
+- **Build:** PASS
+- **Lint:** PASS (no errors in workout files)
 
-## Automated Checks
-
-| Check | Result |
+## Previous Issues — Resolution
+| Issue | Status |
 |-------|--------|
-| TypeScript build | PASS (0 errors) |
-| Biome lint/format | PASS (0 errors) |
-| `any` types | PASS (0 found) |
+| WorkoutPlanScreen.tsx 282→139 lines | FIXED (extracted Skeleton, Empty, Error, WeekContent + hook) |
+| Raw `<button>` in WeekSelector | FIXED (uses `<Button variant="outline">`) |
+| Raw `<button>` in DayCard | FIXED (uses `<Button variant="ghost">`) |
+| Raw `<button>` in ExerciseItem | FIXED (uses `<Button variant="link">`) |
 
 ## Convention Checklist
 
 | # | Rule | Status |
 |---|------|--------|
-| 1 | File size (<150 lines) | PASS |
-| 2 | Business logic in services | PASS |
-| 3 | Swagger decorators on endpoints | PASS |
-| 4 | Auth guards | PASS |
-| 5 | Proper HTTP codes | PASS |
-| 6 | TypeScript strict (no `any`) | PASS |
-| 7 | NestJS Logger (no console.log) | PASS |
-| 8 | Thin controllers | PASS |
-| 9 | Route ordering (no conflicts) | PASS |
-| 10 | Build passes | PASS |
-| 11 | Lint passes | PASS |
+| 1 | Component size (<150 lines) | PASS — all files ≤139 lines |
+| 2 | Business logic in hooks | PASS — useWorkoutPlan + useWorkoutPlanView |
+| 3 | shadcn/ui (no raw HTML) | PASS — 0 raw buttons found |
+| 4 | Semantic tokens (no hardcoded hex) | PASS |
+| 5 | Error/loading/empty states | PASS |
+| 6 | Accessibility | PASS |
+| 7 | TypeScript strict (no `any`) | PASS |
+| 8 | TanStack Query for API calls | PASS |
+| 9 | File organization (features/) | PASS |
+| 10 | Mobile responsive | PASS |
+| 11 | Design match | PARTIAL (minor deviations noted, non-blocking) |
 
-## Acceptance Criteria
-
-| Criteria | Status |
-|----------|--------|
-| Can fetch current plan | PASS (existing) |
-| Can get today's workout | PASS (new) |
-| Can regenerate plan | PASS (new) |
-| Old plans archived | PASS (existing) |
-
-## Critical Issues: 0
-## Warnings: 0
+## Files (14 total)
+All under 150 lines. No critical issues remaining.
