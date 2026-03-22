@@ -51,6 +51,47 @@ export class AiService {
     }
   }
 
+  async createJsonCompletion<T = Record<string, unknown>>(
+    messages: ChatMessageDto[],
+    options?: {
+      model?: string;
+      temperature?: number;
+      maxTokens?: number;
+    },
+  ): Promise<T> {
+    return this.withRetry(async () => {
+      try {
+        const response = await this.openai.chat.completions.create({
+          model: options?.model || this.defaultModel,
+          messages: messages.map((m) => ({
+            role: m.role,
+            content: m.content,
+          })),
+          temperature: options?.temperature ?? 0.7,
+          max_tokens: options?.maxTokens,
+          response_format: { type: "json_object" },
+        });
+
+        const content = response.choices[0]?.message?.content;
+        if (!content) {
+          throw new BadGatewayException("OpenAI returned an empty response");
+        }
+
+        try {
+          return JSON.parse(content) as T;
+        } catch {
+          this.logger.error("Failed to parse JSON from OpenAI response");
+          throw new BadGatewayException(
+            "AI returned invalid JSON. Please try again.",
+          );
+        }
+      } catch (error) {
+        if (error instanceof HttpException) throw error;
+        throw this.mapOpenAiError(error);
+      }
+    });
+  }
+
   async createChatCompletion(
     messages: ChatMessageDto[],
     options?: {

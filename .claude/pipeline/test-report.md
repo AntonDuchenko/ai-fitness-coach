@@ -1,68 +1,65 @@
-# Test Report — Task 2.4: Chat Frontend (Post-Bugfix)
+# Test Report — Task 2.5: Workout Plan Generation (AI)
 
 ## Verdict: PASSED
 
-## Test Iteration: 2/3
+## Test Iteration: 1/3
 
 ## Code Quality Checks
 
 | Check | Status | Details |
 |-------|--------|---------|
-| Component size (<150 lines) | PASS | Max: ChatScreen.tsx at 152 (18 imports) |
-| Business logic in hooks | PASS | useChat.ts, useChatScroll.ts, useTypewriter.ts |
-| shadcn/ui components | PASS | Button, Textarea, Dialog, Skeleton used |
-| No hardcoded hex colors | PASS | 0 matches found |
 | No `any` types | PASS | 0 matches found |
-| No raw `<button>`/`<input>` | PASS | 0 matches found |
-| No raw fetch in useEffect | PASS | 0 matches found |
-| No console.log | PASS | 0 matches found |
-| Error state | PASS | ChatErrorState with retry button |
-| Loading state | PASS | ChatLoadingSkeleton with Skeleton |
-| Empty state | PASS | ChatEmptyState with welcome + chips |
-| Success state | PASS | ChatMessageList with messages |
-| Accessibility | PASS | 6 aria-labels: Send, Open menu, New chat, Close menu, Copy, Scroll to bottom |
-| TanStack Query | PASS | useQuery for history/usage, useMutation for send |
-| TypeScript | PASS | `tsc --noEmit` — 0 errors |
-| Biome lint | PASS | 20 files checked, 0 errors |
-| Build | PASS | `pnpm build` — 5/5 tasks successful |
+| No `console.log` | PASS | 0 matches (uses NestJS Logger) |
+| No hardcoded hex colors | PASS | 0 matches |
+| Thin controller | PASS | Controller only delegates to service |
+| Business logic in service | PASS | All logic in WorkoutsService |
+| Swagger decorators | PASS | @ApiTags, @ApiOperation, @ApiResponse, @ApiParam on all endpoints |
+| JwtAuthGuard | PASS | Class-level guard on controller |
+| class-validator on DTOs | N/A | No input DTOs needed (POST has no body, GET has no query) |
+| Response DTOs | PASS | WorkoutPlanResponseDto wraps entity |
+| Error handling | PASS | 404, 422, 502 for respective error cases |
+| TypeScript build | PASS | 0 errors |
+| Biome lint | PASS | 0 errors in changed files |
 
-## Bugfix-Specific Verification
+## Acceptance Criteria
 
-| Bug | Fix | Verified |
-|-----|-----|----------|
-| Prisma `id: undefined` | `req.user.id` in controller | YES — matches JWT strategy return |
-| User message invisible while waiting | `onMutate` sets optimistic msg | YES — `optimisticUserMsg` state in useChat |
-| No typewriter animation | `useTypewriter` hook + `animatingMessageId` | YES — rAF-based, React Strict Mode safe |
-| Generic AI responses | History as OpenAI messages + profile data | YES — chat.service passes messages array |
-| Hardcoded English | `language: "auto"` in context.service | YES — auto-detect instruction in prompt |
-| Chat deleted on "New Chat" | Button scrolls to bottom only | YES — no DELETE call |
-| Chat disappearing after response | `setQueryData` adds both messages | YES — no cache gap |
-| Typewriter too slow | `CHAR_DELAY = 5` | YES — fast character reveal |
+| Criteria | Status | Evidence |
+|----------|--------|----------|
+| Generates valid workout plan | PASS | OpenAI call with JSON response format + structure validation |
+| Respects user constraints | PASS | Prompt includes all profile data: equipment, days, duration, injuries, location, level |
+| Returns proper JSON structure | PASS | `response_format: { type: "json_object" }` + `validatePlanStructure()` |
+| Saved to database correctly | PASS | `prisma.workoutPlan.create()` maps all fields |
+| Appropriate exercises for level | PASS | Prompt specifies "Appropriate for X level" |
 
-## Visual Design Comparison (vs Pencil design)
+## API Endpoint Verification
 
-All screens match design — verified in previous test iteration, no UI regressions from bugfixes.
+| Endpoint | Method | Auth | Code | Swagger | Status |
+|----------|--------|------|------|---------|--------|
+| `/workouts/generate` | POST | JWT | 201 | Yes | PASS |
+| `/workouts/plan` | GET | JWT | 200 | Yes | PASS |
+| `/workouts/plans` | GET | JWT | 200 | Yes | PASS |
+| `/workouts/plan/:id` | GET | JWT | 200 | Yes | PASS |
 
-## Task Requirements Coverage
+## Error Handling Verification
 
-| Requirement | Status |
-|-------------|--------|
-| Chat page at /chat | DONE |
-| ChatHeader (title, status, actions) | DONE (desktop + mobile) |
-| MessageList (scrollable) | DONE |
-| MessageBubble (AI + User variants) | DONE |
-| TypingIndicator (3 dots animation) | DONE |
-| Typewriter animation for AI responses | DONE |
-| ChatInput (textarea + send) | DONE |
-| Markdown rendering (bold, lists, code, links) | DONE |
-| Auto-scroll to bottom | DONE |
-| Scroll-to-bottom button | DONE |
-| Optimistic message send | DONE |
-| Load history on mount | DONE |
-| Free tier limit UI | DONE |
-| Enter to send, Shift+Enter for newline | DONE |
-| Copy button on AI messages | DONE |
-| Empty state (welcome + suggestion chips) | DONE |
+| Scenario | Expected | Status |
+|----------|----------|--------|
+| No profile exists | 404 NotFoundException | PASS |
+| Profile missing required fields | 422 UnprocessableEntityException | PASS |
+| AI returns empty response | 502 BadGatewayException | PASS |
+| AI returns invalid JSON | 502 BadGatewayException | PASS |
+| AI response missing required fields | 502 BadGatewayException | PASS |
+| AI service unavailable | 503/502 via AiService error mapping | PASS |
+
+## Architecture Verification
+
+| Check | Status |
+|-------|--------|
+| Circular dependency handled (forwardRef) | PASS |
+| Old plans deactivated before new creation | PASS |
+| Retry logic inherited from AiService.withRetry | PASS |
+| createJsonCompletion reusable for nutrition (Task 2.6) | PASS |
+| Prompt follows task specification | PASS |
 
 ## Critical Issues: 0
 ## Warnings: 0

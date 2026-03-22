@@ -1,71 +1,110 @@
-# Architect Plan — Task 2.3: Chat Backend
+# Architect Plan — Task 2.5: Workout Plan Generation (AI)
 
 ## Overview
-Implement the chat backend: send messages with AI response, conversation history, clear conversation, and usage tracking. Free tier limited to 5 messages/day; premium unlimited.
+Implement AI-powered workout plan generation. The system takes a user's profile (goals, equipment, schedule, fitness level, injuries) and calls OpenAI to generate a personalized multi-day workout plan in structured JSON. The plan is saved to the database and returned.
 
 ## Existing Infrastructure
-- `ChatModule` — empty scaffold (controller + service)
-- `AiService.createChatCompletion()` — calls OpenAI with retry logic
-- `ContextService.buildContext()` + `buildSystemPrompt()` — builds AI context from user profile/history
-- `UsersService.findById()` — fetches user (includes `isPremium`, `messagesToday`, `messagesResetAt`)
-- Prisma `ChatMessage` model — `id, userId, role, content, contextUsed, model, tokens, cost, createdAt`
-- Prisma `User` model — has `isPremium`, `messagesToday`, `messagesResetAt` fields
+- `AiService.createChatCompletion()` — calls OpenAI with retry logic, error mapping
+- `ContextService` — builds AI context from user profile
+- `WorkoutsService` — has `getCurrentPlan(userId)`, used by ContextService
+- `WorkoutsModule` — registered in AppModule, exports WorkoutsService
+- `WorkoutsController` — empty scaffold with `@ApiTags("Workouts")`
+- Prisma `WorkoutPlan` model — `id, userId, name, weeklySchedule (Json), startDate, durationWeeks, progressionScheme, deloadWeek, notes, isActive`
+- Prisma `UserProfile` model — has all profile fields needed for prompt building
+- `AiModule` imports WorkoutsModule and NutritionModule, exports AiService + ContextService
 
-## Files to Create
+## Architecture Decisions
 
-### 1. DTOs (`apps/api/src/modules/chat/dto/`)
+### Where to put generation logic
+The workout plan **generation** logic belongs in `WorkoutsService` since it's workout domain logic. `WorkoutsService` will depend on `AiService` for the OpenAI call. This keeps AI as a utility and domain logic in the domain module.
 
-**send-message.dto.ts**
-- `SendMessageDto` — `{ message: string }` with `@IsString()`, `@IsNotEmpty()`, `@MinLength(1)`, `@MaxLength(5000)`
+### Module dependency
+`WorkoutsModule` needs to import `AiModule` to get `AiService`. Currently `AiModule` imports `WorkoutsModule` (for ContextService). This creates a circular dependency.
 
-**chat-message-response.dto.ts**
-- `ChatMessageResponseDto` — `{ id, role, content, model?, tokens?, createdAt }`
+**Solution:** Extract the plan generation prompt building into `WorkoutsService` directly (no ContextService needed — the prompt is workout-specific, not chat-specific). Use `forwardRef` to break the circular dependency between AiModule and WorkoutsModule, OR better: have WorkoutsModule import AiModule's `AiService` directly via a shared approach. Since `AiModule` already exports `AiService`, we can use `forwardRef(() => AiModule)` in WorkoutsModule.
 
-**send-message-response.dto.ts**
-- `SendMessageResponseDto` — `{ userMessage: ChatMessageResponseDto, aiMessage: ChatMessageResponseDto }`
+### JSON response handling
+Use `response_format: { type: 'json_object' }` in the OpenAI call. Add a dedicated method in `AiService` for JSON completions: `createJsonCompletion()`. Add retry on JSON parse failure (up to 2 retries).
 
-**chat-history-query.dto.ts**
-- `ChatHistoryQueryDto` — `{ limit?: number (default 50, max 100), offset?: number (default 0) }`
+## Files to Create/Modify
 
-**chat-usage-response.dto.ts**
-- `ChatUsageResponseDto` — `{ messagesUsedToday: number, dailyLimit: number, isPremium: boolean, remaining: number }`
+### 1. New: `apps/api/src/modules/workouts/dto/generate-plan-response.dto.ts`
+Response DTO for the generated workout plan:
+- `GeneratePlanResponseDto` — `{ id, name, weeklySchedule, durationWeeks, progressionScheme, deloadWeek, notes, startDate, isActive, createdAt }`
 
-### 2. Service (`apps/api/src/modules/chat/chat.service.ts`)
+### 2. New: `apps/api/src/modules/workouts/dto/workout-plan-response.dto.ts`
+Shared DTO for returning a workout plan:
+- `WorkoutPlanResponseDto` — same structure, reusable for GET endpoints
 
-Methods:
-- `sendMessage(userId, message)` — check limit -> save user msg -> build context -> select model -> call AI -> save AI msg -> update usage -> return both
-- `getHistory(userId, limit, offset)` — paginated history
-- `clearConversation(userId)` — delete all + invalidate cache
-- `getUsage(userId)` — today's count and limits
-- `private checkAndResetDailyLimit(userId)` — lazy reset if new day
-- `private selectModel(message)` — heuristic per task spec
-- `private saveMessage(userId, role, content, metadata?)` — save to DB
-- `private updateUsageTracking(userId)` — increment messagesToday
+### 3. Modify: `apps/api/src/modules/ai/ai.service.ts`
+Add `createJsonCompletion()` method:
+- Same as `createChatCompletion()` but adds `response_format: { type: 'json_object' }`
+- Parses JSON from response, retries if parse fails
+- Returns parsed object (typed as `T` generic)
 
-Dependencies: PrismaService, AiService, ContextService, UsersService
+### 4. Modify: `apps/api/src/modules/workouts/workouts.service.ts`
+Add methods:
+- `generatePlan(userId: string)` — main orchestration:
+  1. Fetch user profile from Prisma
+  2. Validate profile exists and has required fields
+  3. Build workout prompt via `buildWorkoutPlanPrompt()`
+  4. Call `AiService.createJsonCompletion()` with GPT-4o and temperature 0.8
+  5. Validate the response structure
+  6. Deactivate any existing active plan
+  7. Save new plan to DB with `isActive: true`, `startDate: now`
+  8. Return saved plan
+- `buildWorkoutPlanPrompt(profile: UserProfile)` — builds the prompt per task spec
+- `validatePlanStructure(data: unknown)` — validates JSON has required fields
+- `getActivePlan(userId: string)` — get current active plan (rename from getCurrentPlan for clarity, keep getCurrentPlan as alias)
+- `getPlanById(userId: string, planId: string)` — get specific plan
+- `getUserPlans(userId: string)` — list all plans for user
 
-### 3. Controller (`apps/api/src/modules/chat/chat.controller.ts`)
+### 5. Modify: `apps/api/src/modules/workouts/workouts.controller.ts`
+Add endpoints:
+- `POST /workouts/generate` — trigger plan generation, 201 response
+- `GET /workouts/plan` — get current active plan, 200 response
+- `GET /workouts/plans` — list all plans, 200 response
+- `GET /workouts/plan/:id` — get specific plan, 200 response
 
-`@UseGuards(JwtAuthGuard)` at class level. Extract userId from JWT.
+All guarded with `JwtAuthGuard`, Swagger-decorated.
 
-- `POST /chat/send` — body: SendMessageDto -> 201 SendMessageResponseDto
-- `GET /chat/history` — query: ChatHistoryQueryDto -> 200 ChatMessageResponseDto[]
-- `DELETE /chat/clear` — 204 No Content
-- `GET /chat/usage` — 200 ChatUsageResponseDto
+### 6. Modify: `apps/api/src/modules/workouts/workouts.module.ts`
+- Import `AiModule` (via `forwardRef`)
+- Inject `AiService` into WorkoutsService
 
-### 4. Module update (`chat.module.ts`)
+## Prompt Design
+The prompt follows the task spec exactly — includes user profile data (age, gender, goal, experience, training days, session duration, equipment, injuries) and requests a structured JSON response with weekly schedule, exercises (with sets/reps/rest/notes/alternatives), progression scheme, and deload week.
 
-Import: AiModule, UsersModule
+Key additions to the spec prompt:
+- System message establishing AI as a certified trainer
+- Explicit instruction to return ONLY valid JSON (no markdown wrapping)
+- Use `max_tokens: 4000` for complete plans
+
+## Validation
+After receiving AI response:
+- Verify `name` is string
+- Verify `weeklySchedule` is array with correct number of days
+- Verify each day has `dayOfWeek`, `focus`, `exercises` array
+- Verify each exercise has `name`, `muscleGroup`, `sets`, `reps`
+- If validation fails, throw `BadGatewayException`
+
+## Error Handling
+- Profile not found → 404 `NotFoundException`
+- Profile incomplete (missing critical fields) → 422 `UnprocessableEntityException`
+- AI service failure → 502 `BadGatewayException` (from AiService)
+- Invalid JSON from AI → 502 `BadGatewayException` with retry
 
 ## Implementation Order
-1. Create all DTOs
-2. Implement ChatService with all methods
-3. Implement ChatController with all endpoints
-4. Update ChatModule imports
+1. Add `createJsonCompletion()` to AiService
+2. Create response DTOs
+3. Implement WorkoutsService methods (prompt builder, validator, generatePlan)
+4. Implement WorkoutsController endpoints
+5. Update WorkoutsModule imports
 
 ## Convention Compliance
-- Thin controller, all logic in service
-- class-validator on all DTOs, Swagger on every endpoint
-- HTTP codes: 201, 200, 204, 403
-- JwtAuthGuard for auth
-- No `any` types
+- Thin controller — all logic in WorkoutsService
+- class-validator on DTOs, Swagger on every endpoint
+- HTTP codes: 201 (generate), 200 (get), 404 (not found), 422 (validation)
+- JwtAuthGuard on all endpoints
+- No `any` types — use generics for JSON completion
+- Proper Logger usage (NestJS Logger)
