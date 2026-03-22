@@ -17,7 +17,16 @@ export class PlanGenerationService {
 
   async triggerPlanGeneration(userId: string): Promise<string> {
     const job = await Promise.race([
-      this.queue.add("generate-plans", { userId }),
+      this.queue.add(
+        "generate-plans",
+        { userId },
+        {
+          attempts: 3,
+          backoff: { type: "exponential", delay: 5000 },
+          removeOnComplete: true,
+          removeOnFail: false,
+        },
+      ),
       new Promise<never>((_, reject) =>
         setTimeout(
           () => reject(new Error("Redis queue timeout")),

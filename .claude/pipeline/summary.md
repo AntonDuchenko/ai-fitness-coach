@@ -1,6 +1,6 @@
 # Pipeline Summary
 
-## Task: Task 2.6 — Nutrition Plan Generation (AI)
+## Task: Task 2.7 — Plan Generation in Onboarding
 ## Final Status: SUCCESS
 
 ## Timeline
@@ -16,21 +16,19 @@
 | Rule | Status |
 |------|--------|
 | Component size (<150 lines) | PASS |
-| Business logic separated (hooks/services) | PASS |
-| shadcn/ui used (no raw HTML) | N/A (backend) |
-| Semantic design tokens (no hardcoded hex) | N/A (backend) |
-| Error/loading/empty states | N/A (backend) |
-| Accessibility | N/A (backend) |
+| Business logic separated (services) | PASS |
 | TypeScript strict (no `any`) | PASS |
+| NestJS Logger (no console.log) | PASS |
 
-## Files Created/Modified
-- `apps/api/src/modules/nutrition/dto/nutrition-plan-response.dto.ts` — Response DTO with Swagger decorators
-- `apps/api/src/modules/nutrition/nutrition.service.ts` — Full generation logic: TDEE/macro calc, prompt building, AI call, validation, DB persistence
-- `apps/api/src/modules/nutrition/nutrition.controller.ts` — REST endpoints (generate, get plan/plans/plan/:id)
-- `apps/api/src/modules/nutrition/nutrition.module.ts` — Added AiModule import via forwardRef
+## Files Modified
+- `apps/api/src/modules/plan-generation/plan-generation.processor.ts` — replaced stub with real AI service calls + failure handler
+- `apps/api/src/modules/plan-generation/plan-generation.service.ts` — added retry config (3 attempts, exponential backoff)
+- `apps/api/src/modules/plan-generation/plan-generation.module.ts` — imported WorkoutsModule, NutritionModule, ChatModule, UsersModule
+- `apps/api/src/modules/chat/chat.service.ts` — added sendWelcomeMessage() and sendErrorMessage()
+- `apps/api/src/modules/users/users.module.ts` — forwardRef for circular dependency
 
 ## Key Decisions
-- Used Mifflin-St Jeor equation for BMR calculation (most accurate for general population)
-- Goal-based macro splits: weight_loss (40/30/30), muscle_gain (30/45/25), default (30/40/30)
-- Cached TDEE/BMR/macros in UserProfile for reuse by context service and chat
-- Mirrored WorkoutsService pattern exactly for consistency
+- Used `@OnQueueFailed` decorator to detect final retry exhaustion rather than custom retry logic
+- Exponential backoff (5s base) gives AI services time to recover between attempts
+- Welcome message fetches fresh profile data to include accurate calories/macros from the just-generated nutrition plan
+- Error message saved to chat so user sees it when they open the app

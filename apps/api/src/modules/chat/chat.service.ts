@@ -114,6 +114,51 @@ export class ChatService {
     });
   }
 
+  async sendWelcomeMessage(userId: string): Promise<void> {
+    const profile = await this.prisma.userProfile.findUnique({
+      where: { userId },
+    });
+
+    const name = profile
+      ? await this.prisma.user
+          .findUnique({ where: { id: userId }, select: { name: true } })
+          .then((u) => u?.name)
+      : null;
+
+    const greeting = name || "there";
+    const goal = profile?.primaryGoal?.replace(/_/g, " ") ?? "your goals";
+    const days = profile?.trainingDaysPerWeek ?? 3;
+    const calories = profile?.targetCalories
+      ? Math.round(profile.targetCalories)
+      : null;
+
+    const caloriesLine = calories
+      ? `\n* **Nutrition plan** with ${calories} calories and balanced macros`
+      : "\n* **Personalized nutrition plan** with balanced macros";
+
+    const message = `Hi ${greeting}! 👋
+
+I'm your AI fitness coach, and I've just created personalized workout and nutrition plans for you based on your profile.
+
+Here's what I've prepared:
+* **${days}-day workout plan** targeting ${goal}${caloriesLine}
+* **24/7 support** - ask me anything!
+
+Ready to start? Check out your plans in the dashboard, or ask me any questions you have!`;
+
+    await this.saveMessage(userId, "assistant", message);
+    this.logger.log(`Welcome message sent for user ${userId}`);
+  }
+
+  async sendErrorMessage(userId: string): Promise<void> {
+    const message = `Hi there! 👋
+
+I ran into an issue generating your personalized plans. Don't worry — you can try again from your dashboard, or just ask me in the chat and I'll help you get set up!`;
+
+    await this.saveMessage(userId, "assistant", message);
+    this.logger.log(`Error notification message sent for user ${userId}`);
+  }
+
   private async checkAndResetDailyLimit(userId: string): Promise<number> {
     const user = await this.usersService.findById(userId);
     if (!user) return 0;
