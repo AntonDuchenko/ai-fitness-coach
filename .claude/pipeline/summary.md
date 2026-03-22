@@ -1,6 +1,6 @@
 # Pipeline Summary
 
-## Task: Task 2.7 — Plan Generation in Onboarding
+## Task: Task 3.1 — Workout Plan Display Backend
 ## Final Status: SUCCESS
 
 ## Timeline
@@ -17,18 +17,18 @@
 |------|--------|
 | Component size (<150 lines) | PASS |
 | Business logic separated (services) | PASS |
+| Swagger decorators on all endpoints | PASS |
+| Semantic design tokens (no hardcoded hex) | N/A (backend) |
 | TypeScript strict (no `any`) | PASS |
 | NestJS Logger (no console.log) | PASS |
 
-## Files Modified
-- `apps/api/src/modules/plan-generation/plan-generation.processor.ts` — replaced stub with real AI service calls + failure handler
-- `apps/api/src/modules/plan-generation/plan-generation.service.ts` — added retry config (3 attempts, exponential backoff)
-- `apps/api/src/modules/plan-generation/plan-generation.module.ts` — imported WorkoutsModule, NutritionModule, ChatModule, UsersModule
-- `apps/api/src/modules/chat/chat.service.ts` — added sendWelcomeMessage() and sendErrorMessage()
-- `apps/api/src/modules/users/users.module.ts` — forwardRef for circular dependency
+## Files Created/Modified
+- `apps/api/src/modules/workouts/dto/workout-day-response.dto.ts` — NEW: ExerciseDto + WorkoutDayResponseDto with Swagger decorators
+- `apps/api/src/modules/workouts/workouts.service.ts` — Added `getWorkoutByDay()`, `getTodaysWorkout()`, `regeneratePlan()`
+- `apps/api/src/modules/workouts/workouts.controller.ts` — Added `GET /today`, `GET /day/:dayOfWeek`, `POST /plan/regenerate`
 
 ## Key Decisions
-- Used `@OnQueueFailed` decorator to detect final retry exhaustion rather than custom retry logic
-- Exponential backoff (5s base) gives AI services time to recover between attempts
-- Welcome message fetches fresh profile data to include accurate calories/macros from the just-generated nutrition plan
-- Error message saved to chat so user sees it when they open the app
+- `regeneratePlan()` delegates to `generatePlan()` which already handles archiving old plans
+- Day matching is case-insensitive for robustness
+- Added both `/today` (auto-detect day) and `/day/:dayOfWeek` (explicit) for frontend flexibility
+- Controller throws 404 for rest days / missing plans — frontend can handle this gracefully

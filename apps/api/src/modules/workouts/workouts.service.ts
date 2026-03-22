@@ -8,6 +8,7 @@ import {
 import type { UserProfile, WorkoutPlan } from "@prisma/client";
 import { PrismaService } from "../../prisma/prisma.service";
 import { AiService } from "../ai/ai.service";
+import { WorkoutDayResponseDto } from "./dto/workout-day-response.dto";
 import { WorkoutPlanResponseDto } from "./dto/workout-plan-response.dto";
 
 interface GeneratedExercise {
@@ -143,6 +144,33 @@ export class WorkoutsService {
     });
 
     return plans.map((plan) => new WorkoutPlanResponseDto(plan));
+  }
+
+  async getWorkoutByDay(
+    userId: string,
+    dayOfWeek: string,
+  ): Promise<WorkoutDayResponseDto | null> {
+    const plan = await this.getCurrentPlan(userId);
+    if (!plan) return null;
+
+    const schedule = plan.weeklySchedule as unknown as GeneratedWorkoutDay[];
+    const workout = schedule.find(
+      (w) => w.dayOfWeek.toLowerCase() === dayOfWeek.toLowerCase(),
+    );
+
+    return workout ? new WorkoutDayResponseDto(workout) : null;
+  }
+
+  async getTodaysWorkout(
+    userId: string,
+  ): Promise<WorkoutDayResponseDto | null> {
+    const today = new Date().toLocaleDateString("en-US", { weekday: "long" });
+    return this.getWorkoutByDay(userId, today);
+  }
+
+  async regeneratePlan(userId: string): Promise<WorkoutPlanResponseDto> {
+    this.logger.log(`Regenerating workout plan for user ${userId}`);
+    return this.generatePlan(userId);
   }
 
   private buildWorkoutPlanPrompt(profile: UserProfile): string {

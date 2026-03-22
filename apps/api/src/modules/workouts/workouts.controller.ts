@@ -3,6 +3,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
   Param,
   Post,
   Request,
@@ -16,6 +17,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../../common/guards/jwt-auth.guard";
+import { WorkoutDayResponseDto } from "./dto/workout-day-response.dto";
 import { WorkoutPlanResponseDto } from "./dto/workout-plan-response.dto";
 import { WorkoutsService } from "./workouts.service";
 
@@ -84,5 +86,93 @@ export class WorkoutsController {
     @Param("id") planId: string,
   ): Promise<WorkoutPlanResponseDto> {
     return this.workoutsService.getPlanById(req.user.id, planId);
+  }
+
+  @Get("today")
+  @ApiOperation({ summary: "Get today's workout from the active plan" })
+  @ApiResponse({
+    status: 200,
+    description: "Today's workout",
+    type: WorkoutDayResponseDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: "No active plan or no workout scheduled for today",
+  })
+  async getTodaysWorkout(
+    @Request() req: { user: { id: string } },
+  ): Promise<WorkoutDayResponseDto> {
+    const workout = await this.workoutsService.getTodaysWorkout(req.user.id);
+
+    if (!workout) {
+      throw new NotFoundException(
+        "No workout scheduled for today. It may be a rest day or you have no active plan.",
+      );
+    }
+
+    return workout;
+  }
+
+  @Get("day/:dayOfWeek")
+  @ApiOperation({
+    summary: "Get workout for a specific day of the week",
+  })
+  @ApiParam({
+    name: "dayOfWeek",
+    description: "Day of the week",
+    enum: [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ],
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Workout for the specified day",
+    type: WorkoutDayResponseDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: "No active plan or no workout for that day",
+  })
+  async getWorkoutByDay(
+    @Request() req: { user: { id: string } },
+    @Param("dayOfWeek") dayOfWeek: string,
+  ): Promise<WorkoutDayResponseDto> {
+    const workout = await this.workoutsService.getWorkoutByDay(
+      req.user.id,
+      dayOfWeek,
+    );
+
+    if (!workout) {
+      throw new NotFoundException(
+        `No workout scheduled for ${dayOfWeek}. It may be a rest day or you have no active plan.`,
+      );
+    }
+
+    return workout;
+  }
+
+  @Post("plan/regenerate")
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({
+    summary: "Regenerate workout plan (archives current plan)",
+  })
+  @ApiResponse({
+    status: 201,
+    description: "New workout plan generated, old plan archived",
+    type: WorkoutPlanResponseDto,
+  })
+  @ApiResponse({ status: 404, description: "User profile not found" })
+  @ApiResponse({ status: 422, description: "Profile incomplete" })
+  @ApiResponse({ status: 502, description: "AI service error" })
+  async regeneratePlan(
+    @Request() req: { user: { id: string } },
+  ): Promise<WorkoutPlanResponseDto> {
+    return this.workoutsService.regeneratePlan(req.user.id);
   }
 }

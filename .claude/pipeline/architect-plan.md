@@ -1,46 +1,66 @@
-# Architect Plan: Task 2.7 — Plan Generation in Onboarding
+# Architect Plan: Task 3.1 — Workout Plan Display Backend
 
 ## Overview
-Replace the stub `PlanGenerationProcessor` with real AI plan generation that calls WorkoutsService, NutritionService, and ChatService during onboarding.
+Add missing endpoints to the existing Workouts module to support the frontend workout display: get today's workout by day of week, and an explicit regenerate endpoint.
 
-## Changes Required
+## Gap Analysis
+The workouts module already has:
+- `POST /workouts/generate` — generates plan, archives old ones
+- `GET /workouts/plan` — gets active plan
+- `GET /workouts/plan/:id` — gets specific plan
+- `GET /workouts/plans` — lists all plans
+- `getCurrentPlan()`, `getActivePlan()`, `getPlanById()`, `getUserPlans()`
 
-### 1. Update `PlanGenerationModule` (plan-generation.module.ts)
-- Import `WorkoutsModule`, `NutritionModule`, `ChatModule`, `UsersModule` using `forwardRef` where needed
-- These modules export their services which the processor needs
+**Missing per Task 3.1:**
+1. `GET /workouts/day/:dayOfWeek` — get a specific day's workout from the active plan
+2. `POST /workouts/plan/regenerate` — explicit regenerate (alias for generate, semantic clarity)
+3. `getTodaysWorkout(userId, dayOfWeek)` service method
+4. `WorkoutDayResponseDto` — typed response DTO for a single workout day
 
-### 2. Update `PlanGenerationProcessor` (plan-generation.processor.ts)
-- Inject `WorkoutsService`, `NutritionService`, `ChatService`, `UsersService`
-- Replace setTimeout stubs with real calls:
-  - Step 1: `workoutsService.generatePlan(userId)` (progress 30%)
-  - Step 2: `nutritionService.generatePlan(userId)` (progress 60%)
-  - Step 3: `chatService.sendWelcomeMessage(userId)` (progress 90%)
-  - Step 4: `usersService.setOnboardingComplete(userId)` (progress 100%)
-- Add proper error logging per step
-- Remove the old simulated loop
+## Implementation Steps
 
-### 3. Add `sendWelcomeMessage()` to `ChatService` (chat.service.ts)
-- New public method that fetches user profile and creates a welcome assistant message
-- Uses the private `saveMessage()` method already available
-- Message content personalized with profile data (training days, primary goal, calories)
+### 1. Create `WorkoutDayResponseDto` (`dto/workout-day-response.dto.ts`)
+- Fields: `dayOfWeek`, `focus`, `duration`, `exercises` (typed array)
+- Nested `ExerciseDto` class with Swagger decorators
+- Constructor that maps from the JSON weeklySchedule entry
 
-### 4. Configure Bull retry logic (plan-generation.service.ts)
-- Pass job options: `attempts: 3`, `backoff: { type: 'exponential', delay: 5000 }`
-- On final failure (all retries exhausted), log error and save a failure chat message
+### 2. Add `getTodaysWorkout()` to `WorkoutsService`
+```typescript
+async getTodaysWorkout(userId: string, dayOfWeek?: string): Promise<WorkoutDayResponseDto | null> {
+  const plan = await this.getCurrentPlan(userId);
+  if (!plan) return null;
 
-### 5. Handle final failure in processor
-- Add `@OnQueueFailed` handler to detect when all retries exhausted
-- Save error message to chat and log
+  const targetDay = dayOfWeek || new Date().toLocaleDateString('en-US', { weekday: 'long' });
+  const schedule = plan.weeklySchedule as GeneratedWorkoutDay[];
+  const workout = schedule.find(w => w.dayOfWeek.toLowerCase() === targetDay.toLowerCase());
+
+  return workout ? new WorkoutDayResponseDto(workout) : null;
+}
+```
+
+### 3. Add `regeneratePlan()` to `WorkoutsService`
+- Delegates to `generatePlan()` — same behavior, explicit name for semantic clarity
+
+### 4. Add controller endpoints
+- `GET /workouts/day/:dayOfWeek` → calls `getTodaysWorkout()`
+  - Returns 200 with workout day data, or 404 if no plan or no workout for that day
+  - Swagger: `@ApiParam` for dayOfWeek with enum of weekday names
+- `POST /workouts/plan/regenerate` → calls `regeneratePlan()`
+  - Returns 201 with new plan
+  - Swagger decorators matching existing generate endpoint
+
+### 5. Add `GET /workouts/today` convenience endpoint
+- No params, auto-resolves current day of week
+- Returns workout for today or 404 with "Rest day" message
+
+## Files to Create
+1. `apps/api/src/modules/workouts/dto/workout-day-response.dto.ts`
 
 ## Files to Modify
-1. `apps/api/src/modules/plan-generation/plan-generation.module.ts`
-2. `apps/api/src/modules/plan-generation/plan-generation.processor.ts`
-3. `apps/api/src/modules/plan-generation/plan-generation.service.ts`
-4. `apps/api/src/modules/chat/chat.service.ts`
+1. `apps/api/src/modules/workouts/workouts.service.ts`
+2. `apps/api/src/modules/workouts/workouts.controller.ts`
 
 ## No Changes Needed
-- Schema, Frontend, Users module, Workout/Nutrition services
-
-## Circular Dependency
-- `UsersModule` imports `PlanGenerationModule` already
-- `PlanGenerationModule` needs `UsersModule` → use `forwardRef`
+- Schema (WorkoutPlan model already has weeklySchedule JSON)
+- Module file (no new imports needed)
+- Frontend (Task 3.2)
