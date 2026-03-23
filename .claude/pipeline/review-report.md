@@ -1,42 +1,37 @@
-# Review Report: Task 4.2 — Nutrition Plan Display Frontend
+# Review Report: Task 4.3 — Recipe Generator (AI)
 
-## Verdict: NEEDS_CHANGES
+## Verdict: APPROVED
 
-## Critical Issues
+## Summary
+Backend-only task implementing `POST /nutrition/recipe/generate` endpoint with AI-powered recipe generation, macro validation, and Redis caching.
 
-### 1. `NutritionPlanScreen.tsx` exceeds 150-line limit (259 lines)
-- Contains 3 inline sub-components: `NutritionPlanSkeleton`, `NutritionPlanEmpty`, `NutritionPlanError`
-- **Fix:** Extract these 3 components into separate files or a single `NutritionPlanStates.tsx` file
+## Files Changed
+- `apps/api/src/modules/nutrition/dto/generate-recipe.dto.ts` (NEW)
+- `apps/api/src/modules/nutrition/nutrition.controller.ts` (MODIFIED)
+- `apps/api/src/modules/nutrition/nutrition.service.ts` (MODIFIED)
 
-### 2. `DayMealsPanel.tsx` exceeds 150-line limit (173 lines)
-- The DailyTotals summary section and day navigation are embedded inline
-- **Fix:** Extract the daily summary section (lines 95-127) into a `DailySummary` component
+## Checklist
 
-## Medium Issues
+| Rule | Status | Notes |
+|------|--------|-------|
+| Thin controller | PASS | Controller only validates + delegates to service |
+| class-validator on DTOs | PASS | All fields have proper decorators, @IsIn, @Min, @Max |
+| Swagger decorators | PASS | @ApiOperation, @ApiResponse, @ApiBody, @ApiProperty all present |
+| JwtAuthGuard | PASS | Applied at controller class level |
+| HTTP codes | PASS | 201 for generation |
+| Service handles business logic | PASS | All logic in NutritionService |
+| No `any` types | PASS | |
+| Structured error responses | PASS | NestJS exceptions used |
+| Logger used | PASS | Logger.log and Logger.warn for all operations |
+| GPT-4o-mini model | PASS | Per task spec for cost efficiency |
+| Macro validation (10%) | PASS | logMacroAccuracy checks all 4 macros |
+| Redis caching | PASS | 1hr TTL, normalized cache key, graceful failure |
+| Recipe structure validation | PASS | validateRecipeStructure reused from existing code |
+| Profile fallback | PASS | Falls back to profile restrictions/disliked if not in DTO |
+| Build passes | PASS | 0 TypeScript issues |
+| Lint passes | PASS | Biome clean |
 
-### 3. Day navigation label is static
-- The "Today · Day 1" button always shows "Day 1" regardless of `selectedDay` value
-- **Fix:** Show the actual selected day: `Today · Day ${selectedDay}` or just `Day ${selectedDay}`
-
-### 4. Hardcoded grocery cost estimate
-- `GroceryListPanel.tsx:111` shows `$18.40` as a static value
-- Acceptable for MVP placeholder but should be noted
-
-### 5. Select empty string value in RecipesPanel
-- `RecipesPanel.tsx:55` uses `value=""` for "All meal types" SelectItem — Radix Select may not handle empty string values correctly
-- **Fix:** Use a sentinel value like `"all"` and map it back to empty string in the handler
-
-## Passing Checks
-
-| Rule | Status |
-|------|--------|
-| No hardcoded hex colors | PASS |
-| shadcn/ui used (no raw HTML) | PASS |
-| Business logic in hooks | PASS |
-| TanStack Query for all API calls | PASS |
-| Semantic design tokens | PASS |
-| 4 async UI states (loading/error/empty/success) | PASS |
-| Accessibility (ARIA labels, semantic HTML) | PASS |
-| TypeScript strict (no `any`) | PASS |
-| Build passes | PASS |
-| Lint passes (nutrition files) | PASS |
+## Notes
+- Service file is ~793 lines total (was ~588 before). Large but acceptable for this phase. Future refactoring into a RecipeService could be considered post-MVP.
+- Redis connection is lazy-initialized and gracefully handles failures (degrades to no-cache).
+- Macro accuracy is logged as warnings, not errors — AI approximations are expected.

@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
@@ -11,6 +12,7 @@ import {
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
+  ApiBody,
   ApiOperation,
   ApiParam,
   ApiQuery,
@@ -18,6 +20,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../../common/guards/jwt-auth.guard";
+import { GenerateRecipeDto } from "./dto/generate-recipe.dto";
 import { NutritionPlanResponseDto } from "./dto/nutrition-plan-response.dto";
 import { RecipeRequestQueryDto } from "./dto/recipe-request-query.dto";
 import { RecipeResponseDto } from "./dto/recipe-response.dto";
@@ -109,6 +112,27 @@ export class NutritionController {
     @Request() req: { user: { id: string } },
   ): Promise<NutritionPlanResponseDto> {
     return this.nutritionService.regeneratePlan(req.user.id);
+  }
+
+  @Post("recipe/generate")
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({
+    summary: "Generate a single recipe matching specific macro targets",
+  })
+  @ApiBody({ type: GenerateRecipeDto })
+  @ApiResponse({
+    status: 201,
+    description: "Recipe generated successfully",
+    type: RecipeResponseDto,
+  })
+  @ApiResponse({ status: 400, description: "Invalid request body" })
+  @ApiResponse({ status: 404, description: "User profile not found" })
+  @ApiResponse({ status: 502, description: "AI service error" })
+  async generateRecipe(
+    @Request() req: { user: { id: string } },
+    @Body() dto: GenerateRecipeDto,
+  ): Promise<RecipeResponseDto> {
+    return this.nutritionService.generateRecipe(req.user.id, dto);
   }
 
   @Get("recipes")

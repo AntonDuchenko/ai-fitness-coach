@@ -1,13 +1,18 @@
+import { createHash } from "node:crypto";
 import {
   BadGatewayException,
   Injectable,
   Logger,
   NotFoundException,
+  OnModuleDestroy,
   UnprocessableEntityException,
 } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import type { NutritionPlan, UserProfile } from "@prisma/client";
+import Redis from "ioredis";
 import { PrismaService } from "../../prisma/prisma.service";
 import { AiService } from "../ai/ai.service";
+import type { GenerateRecipeDto } from "./dto/generate-recipe.dto";
 import { NutritionPlanResponseDto } from "./dto/nutrition-plan-response.dto";
 import { RecipeResponseDto } from "./dto/recipe-response.dto";
 
@@ -71,14 +76,39 @@ interface Macros {
   fat: number;
 }
 
+const RECIPE_CACHE_TTL = 3600; // 1 hour in seconds
+
 @Injectable()
-export class NutritionService {
+export class NutritionService implements OnModuleDestroy {
   private readonly logger = new Logger(NutritionService.name);
+  private redis: Redis | null = null;
 
   constructor(
     private readonly prisma: PrismaService,
     private readonly aiService: AiService,
+    private readonly configService: ConfigService,
   ) {}
+
+  onModuleDestroy(): void {
+    this.redis?.disconnect();
+  }
+
+  private getRedis(): Redis {
+    if (!this.redis) {
+      const url =
+        this.configService.get<string>("redis.url") ?? "redis://localhost:6379";
+      this.redis = new Redis(url, {
+        lazyConnect: true,
+        maxRetriesPerRequest: 1,
+      });
+      this.redis.on("error", (err) => {
+        this.logger.warn(
+          `Redis connection error (recipe cache): ${err.message}`,
+        );
+      });
+    }
+    return this.redis;
+  }
 
   async generatePlan(userId: string): Promise<NutritionPlanResponseDto> {
     const profile = await this.prisma.userProfile.findUnique({
@@ -203,6 +233,58 @@ export class NutritionService {
   async regeneratePlan(userId: string): Promise<NutritionPlanResponseDto> {
     this.logger.log(`Regenerating nutrition plan for user ${userId}`);
     return this.generatePlan(userId);
+  }
+
+  async generateRecipe(
+    userId: string,
+    dto: GenerateRecipeDto,
+  ): Promise<RecipeResponseDto> {
+    const profile = await this.prisma.userProfile.findUnique({
+      where: { userId },
+    });
+
+    if (!profile) {
+      throw new NotFoundException(
+        "User profile not found. Complete onboarding first.",
+      );
+    }
+
+    const cacheKey = this.buildRecipeCacheKey(dto);
+    const cached = await this.getCachedRecipe(cacheKey);
+    if (cached) {
+      this.logger.log(`Recipe cache hit for key ${cacheKey}`);
+      return cached;
+    }
+
+    const prompt = this.buildRecipeGeneratePrompt(dto, profile);
+
+    this.logger.log(
+      `Generating recipe for user ${userId} (${dto.mealType}, ${dto.calories}kcal)`,
+    );
+
+    const data = await this.aiService.createJsonCompletion<GeneratedRecipe>(
+      [
+        {
+          role: "system",
+          content:
+            "You are a certified nutritionist and chef. Generate a single recipe as valid JSON only. No markdown, no explanations outside the JSON structure.",
+        },
+        { role: "user", content: prompt },
+      ],
+      {
+        model: "gpt-4o-mini",
+        temperature: 0.9,
+        maxTokens: 2000,
+      },
+    );
+
+    this.validateRecipeStructure(data);
+    this.logMacroAccuracy(dto, data);
+
+    const result = new RecipeResponseDto(data);
+    await this.setCachedRecipe(cacheKey, result);
+
+    return result;
   }
 
   async searchRecipes(
@@ -554,35 +636,157 @@ Generate exactly 3 recipes.`;
     }
 
     for (const recipe of data.recipes) {
-      if (!recipe.name || typeof recipe.name !== "string") {
-        throw new BadGatewayException("AI generated recipe missing 'name'.");
-      }
+      this.validateRecipeStructure(recipe);
+    }
+  }
 
-      if (
-        recipe.calories === undefined ||
-        recipe.protein === undefined ||
-        recipe.carbs === undefined ||
-        recipe.fat === undefined
-      ) {
-        throw new BadGatewayException(
-          `Recipe '${recipe.name}' missing macro information.`,
+  private validateRecipeStructure(recipe: GeneratedRecipe): void {
+    if (!recipe.name || typeof recipe.name !== "string") {
+      throw new BadGatewayException("AI generated recipe missing 'name'.");
+    }
+
+    if (
+      recipe.calories === undefined ||
+      recipe.protein === undefined ||
+      recipe.carbs === undefined ||
+      recipe.fat === undefined
+    ) {
+      throw new BadGatewayException(
+        `Recipe '${recipe.name}' missing macro information.`,
+      );
+    }
+
+    if (!Array.isArray(recipe.ingredients) || recipe.ingredients.length === 0) {
+      throw new BadGatewayException(
+        `Recipe '${recipe.name}' missing ingredients.`,
+      );
+    }
+
+    if (!recipe.instructions) {
+      throw new BadGatewayException(
+        `Recipe '${recipe.name}' missing instructions.`,
+      );
+    }
+  }
+
+  private buildRecipeGeneratePrompt(
+    dto: GenerateRecipeDto,
+    profile: UserProfile,
+  ): string {
+    const restrictions =
+      dto.restrictions?.join(", ") ||
+      (Array.isArray(profile.dietaryRestrictions)
+        ? (profile.dietaryRestrictions as string[]).join(", ")
+        : "None");
+
+    const disliked =
+      dto.disliked?.join(", ") ||
+      (Array.isArray(profile.dislikedFoods)
+        ? (profile.dislikedFoods as string[]).join(", ")
+        : "None");
+
+    const cookingLevel = dto.cookingLevel ?? profile.cookingLevel ?? "regular";
+    const maxPrepTime = dto.maxPrepTime || 30;
+
+    return `Generate a ${dto.mealType} recipe with these requirements:
+
+Target Macros:
+- Calories: ${dto.calories} kcal (±50)
+- Protein: ${dto.protein}g (±5g)
+- Carbs: ${dto.carbs}g (±10g)
+- Fat: ${dto.fat}g (±5g)
+
+Restrictions:
+- Dietary: ${restrictions}
+- Disliked: ${disliked}
+- Cooking level: ${cookingLevel}
+- Prep time: <${maxPrepTime} minutes
+
+Return JSON:
+{
+  "name": "Recipe name",
+  "mealType": "${dto.mealType}",
+  "servings": 1,
+  "prepTime": 10,
+  "cookTime": 15,
+  "difficulty": "easy",
+  "calories": ${dto.calories},
+  "protein": ${dto.protein},
+  "carbs": ${dto.carbs},
+  "fat": ${dto.fat},
+  "ingredients": [
+    { "amount": 80, "unit": "g", "name": "oats" }
+  ],
+  "instructions": "Step 1...\\nStep 2..."
+}
+
+Generate exactly 1 recipe. Match the target macros as closely as possible.`;
+  }
+
+  private logMacroAccuracy(
+    dto: GenerateRecipeDto,
+    recipe: GeneratedRecipe,
+  ): void {
+    const checks = [
+      { name: "calories", target: dto.calories, actual: recipe.calories },
+      { name: "protein", target: dto.protein, actual: recipe.protein },
+      { name: "carbs", target: dto.carbs, actual: recipe.carbs },
+      { name: "fat", target: dto.fat, actual: recipe.fat },
+    ];
+
+    for (const { name, target, actual } of checks) {
+      if (target === 0) continue;
+      const deviation = Math.abs(actual - target) / target;
+      if (deviation > 0.1) {
+        this.logger.warn(
+          `Recipe '${recipe.name}' ${name} deviation: ${(deviation * 100).toFixed(1)}% (target=${target}, actual=${actual})`,
         );
       }
+    }
+  }
 
-      if (
-        !Array.isArray(recipe.ingredients) ||
-        recipe.ingredients.length === 0
-      ) {
-        throw new BadGatewayException(
-          `Recipe '${recipe.name}' missing ingredients.`,
-        );
-      }
+  private buildRecipeCacheKey(dto: GenerateRecipeDto): string {
+    const normalized = {
+      mealType: dto.mealType,
+      calories: dto.calories,
+      protein: dto.protein,
+      carbs: dto.carbs,
+      fat: dto.fat,
+      restrictions: [...(dto.restrictions || [])].sort(),
+      disliked: [...(dto.disliked || [])].sort(),
+      cookingLevel: dto.cookingLevel || "",
+      maxPrepTime: dto.maxPrepTime || 30,
+    };
+    const hash = createHash("md5")
+      .update(JSON.stringify(normalized))
+      .digest("hex");
+    return `recipe:generate:${hash}`;
+  }
 
-      if (!recipe.instructions) {
-        throw new BadGatewayException(
-          `Recipe '${recipe.name}' missing instructions.`,
-        );
-      }
+  private async getCachedRecipe(
+    key: string,
+  ): Promise<RecipeResponseDto | null> {
+    try {
+      const redis = this.getRedis();
+      const data = await redis.get(key);
+      if (!data) return null;
+      const parsed = JSON.parse(data) as GeneratedRecipe;
+      return new RecipeResponseDto(parsed);
+    } catch {
+      this.logger.warn("Redis cache read failed, proceeding without cache");
+      return null;
+    }
+  }
+
+  private async setCachedRecipe(
+    key: string,
+    recipe: RecipeResponseDto,
+  ): Promise<void> {
+    try {
+      const redis = this.getRedis();
+      await redis.set(key, JSON.stringify(recipe), "EX", RECIPE_CACHE_TTL);
+    } catch {
+      this.logger.warn("Redis cache write failed");
     }
   }
 }
