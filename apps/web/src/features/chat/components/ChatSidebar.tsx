@@ -2,7 +2,9 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Plus } from "lucide-react";
+import { Dumbbell, LayoutDashboard, Plus } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface ChatSidebarProps {
   conversationTitle: string;
@@ -23,6 +25,13 @@ export function ChatSidebar({
   onNewChat,
   className,
 }: ChatSidebarProps) {
+  const pathname = usePathname();
+
+  const appNav = [
+    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/dashboard/workouts", label: "Workouts", icon: Dumbbell },
+  ] as const;
+
   return (
     <aside
       className={cn(
@@ -47,6 +56,33 @@ export function ChatSidebar({
           <Plus className="size-4" />
         </Button>
       </div>
+      <div className="h-px w-full bg-sidebar-border" />
+      <nav
+        className="flex flex-col gap-1 px-2 py-2"
+        aria-label="App navigation"
+      >
+        {appNav.map(({ href, label, icon: Icon }) => {
+          const active =
+            href === "/dashboard/workouts"
+              ? pathname?.startsWith("/dashboard/workouts")
+              : pathname === "/dashboard" || pathname === "/dashboard/";
+          return (
+            <Link
+              key={href}
+              href={href}
+              className={cn(
+                "flex h-11 items-center gap-2 rounded-lg px-3 text-[13px] transition-colors",
+                active
+                  ? "bg-sidebar-accent text-sidebar-foreground"
+                  : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-foreground",
+              )}
+            >
+              <Icon className="size-4 shrink-0 opacity-90" aria-hidden />
+              {label}
+            </Link>
+          );
+        })}
+      </nav>
       <div className="h-px w-full bg-sidebar-border" />
       <div className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto px-2 py-3">
         {hasMessages ? (

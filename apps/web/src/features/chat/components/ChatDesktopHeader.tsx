@@ -1,6 +1,9 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { LayoutDashboard } from "lucide-react";
+import Link from "next/link";
 
 interface ChatDesktopHeaderProps {
   title: string;
@@ -24,6 +27,18 @@ export function ChatDesktopHeader({
           <span>AI Online</span>
         </div>
       </div>
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        className="shrink-0 gap-2"
+        asChild
+      >
+        <Link href="/dashboard">
+          <LayoutDashboard className="size-4" aria-hidden />
+          Dashboard
+        </Link>
+      </Button>
       {usageLabel ? (
         <div
           className={cn(

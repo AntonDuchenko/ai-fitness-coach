@@ -1,13 +1,13 @@
 # Pipeline Summary
 
-## Task: Task 3.4 — Workout Logging Frontend
+## Task: Task 3.5 — Dashboard "Today's Workout" Widget
 ## Final Status: SUCCESS
 
 ## Timeline
 | Phase | Status | Iterations |
 |-------|--------|------------|
 | Init | Completed | — |
-| Architect | Completed | — |
+| Architect | Skipped (resumed from review) | — |
 | Developer | Completed | 2 passes |
 | Reviewer | APPROVED | 2/3 iterations |
 | Tester | PASSED | 1/3 iterations |
@@ -24,32 +24,18 @@
 | TypeScript strict (no `any`) | PASS |
 
 ## Files Created/Modified
-- `components/WorkoutSessionDialog.tsx` — full-screen dialog orchestrating the 3 session steps
-- `components/WorkoutLoggingView.tsx` — main logging layout (header, progress bar, nav)
-- `components/ExerciseLogCard.tsx` — exercise card with collapsible last-time info + set table
-- `components/RestTimerBar.tsx` — rest countdown timer bar with skip
-- `components/SetLogger.tsx` — set logging table with weight +/- steppers, reps, RPE, checkbox
-- `components/WorkoutCompleteForm.tsx` — completion summary, star rating, notes, save
-- `components/WorkoutSuccessView.tsx` — success state with XP badge, level up, streak
-- `hooks/useWorkoutSession.ts` — session orchestrator composing sub-hooks
-- `hooks/useExerciseSets.ts` — set state management (update, bump weights, same as last time)
-- `hooks/useWorkoutDraft.ts` — localStorage draft persistence (save every 30s, restore on reopen)
-- `hooks/useRestTimer.ts` — rest countdown timer
-- `hooks/useLogWorkoutMutation.ts` — POST /workouts/log mutation
-- `hooks/useWorkoutLogsQuery.ts` — GET /workouts/logs query
-- `hooks/useWorkoutStatsQuery.ts` — GET /workouts/stats query
-- `utils/workoutLogHelpers.ts` — pure utilities (parsing, volume, XP, levels, previous sets)
-- `workoutLog.types.ts` — type definitions (SessionSet, LoggedExercise, payloads, responses)
-- `components/WorkoutDayDetailPanel.tsx` — added "Start workout" button
-- `components/WorkoutPlanScreen.tsx` — integrated WorkoutSessionDialog
+- `components/TodaysWorkoutLoading.tsx` — NEW: skeleton loading state
+- `components/TodaysWorkoutError.tsx` — NEW: error state with retry
+- `components/TodaysWorkoutNoPlan.tsx` — NEW: empty state CTA
+- `components/TodaysWorkoutRest.tsx` — NEW: rest day card
+- `components/TodaysWorkoutCompleted.tsx` — NEW: completed workout card
+- `components/TodaysWorkoutScheduled.tsx` — NEW: scheduled workout card
+- `components/TodaysWorkoutWidget.tsx` — REFACTORED: thin orchestrator (261 to 59 lines)
 
 ## Key Decisions
-- Session hook pattern: one orchestrator (useWorkoutSession) composing 3 focused sub-hooks
-- Auto-save draft to localStorage every 30s with version-based restore
-- "Same as last time" searches previous workout logs for matching exercise name
-- Rest timer starts automatically when checking off a set
-- XP/level calculation: base 36 + 9/exercise + volume/400; level = floor(total/6) + 1
-- Success view shows XP, level-up notification, and current streak from backend stats
+- Split TodaysWorkoutWidget from 261 lines into 7 files to comply with 150-line convention
+- Each subcomponent is self-contained with own imports and props interface
+- TodaysWorkoutCompleted receives `showLogAgain: boolean` for cleaner interface
 
 ## Remaining Issues
-- None
+- None (minor cosmetic difference in completed card button styling noted but non-blocking)

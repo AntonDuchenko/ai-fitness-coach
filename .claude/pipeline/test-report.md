@@ -1,67 +1,69 @@
-# Test Report — Task 3.4: Workout Logging Frontend
+# Test Report: Task 3.5 — Dashboard "Today's Workout" Widget
 
-## Verdict: PASSED
+## Verdict: **PASSED**
 
 ## Iteration: 1/3
 
-## Code Quality Checks
+## Acceptance Criteria
 
-| Check | Status | Notes |
-|-------|--------|-------|
-| Component size (<150 lines) | PASS | All components under 150 lines |
-| Business logic separated (hooks/services) | PASS | 6 hooks, 7 presentational components |
-| shadcn/ui used (no raw HTML) | PASS | Dialog, Button, Card, Badge, Input, Select, Checkbox, Collapsible, Label, Textarea |
-| Semantic design tokens (no hardcoded hex) | PASS | No hex colors found |
-| Error/loading/empty states | PASS | Empty exercises, loading logs, error toast, success view |
-| Accessibility | PASS | ARIA labels, sr-only titles, semantic HTML |
-| TypeScript strict (no `any`) | PASS | Uses `unknown` where appropriate |
-| No console.log | PASS | |
-| TanStack Query | PASS | useQuery + useMutation for all API calls |
-| Build (tsc --noEmit) | PASS | 0 errors |
+| Criteria | Status | Notes |
+|----------|--------|-------|
+| Shows correct workout for today | PASS | `useTodaysWorkoutQuery` fetches `/workouts/today`, `useTodaysWorkoutWidget` derives correct status |
+| Displays preview of exercises | PASS | First 3 exercises shown with `formatPreviewLine` |
+| Launches workout logger | PASS | `onStartWorkout` opens `WorkoutSessionDialog` |
+| Handles rest days | PASS | `TodaysWorkoutRest` shows recovery tips, green border |
+| Handles completed workouts | PASS | `TodaysWorkoutCompleted` shows checkmark, duration, "Log again" option |
 
 ## Design Compliance (Pencil comparison)
 
-| Screen | Design Node | Status | Notes |
-|--------|-------------|--------|-------|
-| Workout Log | rdXZI | PASS | Header, progress bar, exercise card, set table, quick actions, rest timer, nav — all match |
-| Workout Complete | jRK2A | PASS | Trophy, title, stats grid, star rating, notes, save button — all match (subtitle text fixed) |
-| Success | PQ0Gj | PASS | "Saved!" title, XP badge, success alert, level up, streak, emoji — all match. Implementation adds needed "Done" button |
+| Element | Design | Implementation | Match |
+|---------|--------|----------------|-------|
+| Scheduled card layout | Exercise preview, duration, buttons | Matches design | YES |
+| Scheduled "Start Workout" button | Primary blue | `<Button>` (primary default) | YES |
+| Scheduled "View full plan" link | Blue text link | `text-primary` link | YES |
+| Rest card green border | Green accent | `border-success/50` | YES |
+| Rest card tips list | Bullet list | `<ul>` with 3 tips | YES |
+| Rest card "View week plan" | Outline button | `variant="outline"` | YES |
+| Completed card blue border | Blue accent | `border-primary/50` | YES |
+| Completed checkmark + duration | Checkmark, "42 min" | CheckCircle2 icon, duration | YES |
+| Completed "View workout log" | Primary blue (bottom-right) | Ghost (bottom-left) | MINOR DIFF |
 
-## Acceptance Criteria
+## Code Quality Checks
 
-- [x] Can log all sets for each exercise (SetLogger with weight/reps/RPE inputs)
-- [x] Navigation works (prev/next exercise buttons)
-- [x] Previous workout data shown ("Last time" collapsible)
-- [x] Quick actions work (+2.5kg, +5kg, Same as last time)
-- [x] Workout saves correctly (useLogWorkoutMutation → POST /workouts/log)
-- [x] Success animation shows (XP badge, level up, streak, emoji)
-- [x] Draft auto-saves (localStorage every 30s, restored on reopen)
-- [x] Mobile responsive (full-screen dialog, h-[100dvh])
+| Check | Status | Details |
+|-------|--------|---------|
+| Component size (<150 lines) | PASS | Max 85 lines (TodaysWorkoutCompleted) |
+| Business logic separated | PASS | All API calls in hooks, components pure presentational |
+| shadcn/ui usage | PASS | Card, Button, Skeleton; no raw HTML equivalents |
+| Semantic design tokens | PASS | No hardcoded hex colors |
+| Error/loading/empty states | PASS | 6 states: loading, error, no-plan, rest, completed, scheduled |
+| Accessibility | PASS | aria-hidden on icons, aria-labelledby, semantic HTML |
+| TypeScript strict (no `any`) | PASS | |
+| TanStack Query | PASS | useQuery for all API calls |
+| No console.log | PASS | |
 
-## Files Verified (17 total)
+## Build Verification
+- Build: PASS
+- Lint: PASS (no errors in task files)
+
+## Files Verified (11 total)
 
 ### Components (7):
-- WorkoutSessionDialog.tsx (81 lines) — orchestrates session dialog
-- WorkoutLoggingView.tsx (125 lines) — main logging layout
-- ExerciseLogCard.tsx (119 lines) — exercise card with collapsible + set table
-- RestTimerBar.tsx (46 lines) — rest countdown bar
-- SetLogger.tsx (131 lines) — set logging table with inputs
-- WorkoutCompleteForm.tsx (126 lines) — completion summary + rating
-- WorkoutSuccessView.tsx (62 lines) — success state with XP/streak
+- TodaysWorkoutWidget.tsx (59 lines) — orchestrator
+- TodaysWorkoutLoading.tsx (27 lines) — skeleton state
+- TodaysWorkoutError.tsx (26 lines) — error with retry
+- TodaysWorkoutNoPlan.tsx (23 lines) — empty state CTA
+- TodaysWorkoutRest.tsx (53 lines) — rest day card
+- TodaysWorkoutCompleted.tsx (85 lines) — completed workout card
+- TodaysWorkoutScheduled.tsx (78 lines) — scheduled workout card
 
-### Hooks (6):
-- useWorkoutSession.ts (282 lines) — session orchestrator
-- useExerciseSets.ts (125 lines) — set state management
-- useWorkoutDraft.ts (121 lines) — localStorage draft persistence
-- useRestTimer.ts (36 lines) — rest countdown timer
-- useLogWorkoutMutation.ts (26 lines) — POST mutation
-- useWorkoutLogsQuery.ts (17 lines) — logs query
-- useWorkoutStatsQuery.ts (14 lines) — stats query
+### Hooks (2):
+- useTodaysWorkoutWidget.ts (102 lines) — state derivation + orchestration
+- useTodaysWorkoutQuery.ts (27 lines) — API query
 
-### Supporting:
-- workoutLog.types.ts (63 lines) — type definitions
-- workoutLogHelpers.ts (94 lines) — pure utility functions
+### Supporting (2):
+- todayLog.ts (24 lines) — date utility
+- dashboard/page.tsx (95 lines) — dashboard page integration
 
-### Modified:
-- WorkoutDayDetailPanel.tsx — added "Start workout" button
-- WorkoutPlanScreen.tsx — integrated WorkoutSessionDialog
+## Minor Observation
+"View workout log" button in completed state uses ghost variant (bottom-left) instead of primary (bottom-right) as shown in the Pencil design. Cosmetic only — can be adjusted in a follow-up.

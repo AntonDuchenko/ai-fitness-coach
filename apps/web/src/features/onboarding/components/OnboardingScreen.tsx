@@ -66,7 +66,7 @@ export function OnboardingScreen() {
         error={error instanceof Error ? error : null}
         onComplete={() => {
           handleComplete();
-          router.push("/");
+          router.push("/dashboard");
         }}
         onRetry={() => {
           window.location.reload();

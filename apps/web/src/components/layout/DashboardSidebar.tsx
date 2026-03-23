@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const nav = [
+  { href: "/dashboard", label: "Home" },
   { href: "/dashboard/workouts", label: "Workouts" },
   { href: "/chat", label: "AI Chat" },
 ] as const;
@@ -48,7 +49,9 @@ export function DashboardSidebar({ className }: DashboardSidebarProps) {
           const active =
             href === "/dashboard/workouts"
               ? pathname?.startsWith("/dashboard/workouts")
-              : pathname === href;
+              : href === "/dashboard"
+                ? pathname === "/dashboard" || pathname === "/dashboard/"
+                : pathname === href;
           return (
             <Link
               key={href}

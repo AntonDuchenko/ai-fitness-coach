@@ -29944,13 +29944,18 @@
           "height": "fit_content",
           "descendants": {
             "SuTq8": {
-              "width": "fill_container"
+              "width": "fill_container",
+              "height": "fit_content"
             },
             "aiLkM": {
-              "content": "Bench Press"
+              "content": "Bench Press",
+              "x": 24,
+              "y": 24
             },
             "kbM4z": {
-              "content": "4 sets · Rest 90s · Barbell"
+              "content": "4 sets · Rest 90s · Barbell",
+              "x": 24,
+              "y": 55
             },
             "0X04O": {
               "type": "frame",
@@ -29972,11 +29977,18 @@
                   "name": "lastA",
                   "x": 24,
                   "y": 12,
+                  "height": "fit_content",
                   "descendants": {
+                    "XZC5M": {
+                      "x": 16,
+                      "y": 14
+                    },
                     "zvA2I": {
                       "content": "Last time: 80kg × 8, 8, 7, 6",
                       "textGrowth": "fixed-width",
-                      "width": "fill_container"
+                      "width": "fill_container",
+                      "x": 46,
+                      "y": 14.5
                     }
                   }
                 },
@@ -30359,10 +30371,18 @@
                           "name": "ck1",
                           "x": 256,
                           "y": 11,
+                          "width": "fit_content",
+                          "height": "fit_content",
                           "descendants": {
+                            "LUN8r": {
+                              "x": 3,
+                              "y": 3
+                            },
                             "loQlS": {
                               "content": " ",
-                              "fontSize": 1
+                              "fontSize": 1,
+                              "x": 28,
+                              "y": 8.5
                             }
                           }
                         }
@@ -30608,10 +30628,13 @@
                           "width": "fit_content",
                           "x": 256,
                           "y": 11,
+                          "height": "fit_content",
                           "descendants": {
                             "1jMEA": {
                               "content": " ",
-                              "fontSize": 1
+                              "fontSize": 1,
+                              "x": 28,
+                              "y": 8.5
                             }
                           }
                         }
@@ -30856,10 +30879,14 @@
                           "name": "ck3",
                           "x": 256,
                           "y": 11,
+                          "width": "fit_content",
+                          "height": "fit_content",
                           "descendants": {
                             "1jMEA": {
                               "content": " ",
-                              "fontSize": 1
+                              "fontSize": 1,
+                              "x": 28,
+                              "y": 8.5
                             }
                           }
                         }
@@ -31104,10 +31131,14 @@
                           "name": "ck4",
                           "x": 256,
                           "y": 11,
+                          "width": "fit_content",
+                          "height": "fit_content",
                           "descendants": {
                             "1jMEA": {
                               "content": " ",
-                              "fontSize": 1
+                              "fontSize": 1,
+                              "x": 28,
+                              "y": 8.5
                             }
                           }
                         }
@@ -31119,10 +31150,13 @@
             },
             "kxJDl": {
               "width": "fill_container(390)",
-              "enabled": false
+              "enabled": false,
+              "height": "fit_content"
             },
             "aBe89": {
-              "x": 284
+              "x": 284,
+              "width": "fit_content",
+              "height": "fit_content"
             }
           }
         },
@@ -31146,9 +31180,12 @@
               "name": "q1",
               "width": "fit_content",
               "x": 20,
+              "height": "fit_content",
               "descendants": {
                 "JAExE": {
-                  "content": "+2.5 kg"
+                  "content": "+2.5 kg",
+                  "x": 24,
+                  "y": 12
                 }
               }
             },
@@ -31159,9 +31196,12 @@
               "name": "q2",
               "width": "fit_content",
               "x": 127,
+              "height": "fit_content",
               "descendants": {
                 "JAExE": {
-                  "content": "+5 kg"
+                  "content": "+5 kg",
+                  "x": 24,
+                  "y": 12
                 }
               }
             },
@@ -31172,9 +31212,12 @@
               "name": "q3",
               "width": "fit_content",
               "x": 221,
+              "height": "fit_content",
               "descendants": {
                 "nlrgf": {
-                  "content": "Same as last time"
+                  "content": "Same as last time",
+                  "x": 24,
+                  "y": 12
                 }
               }
             }
@@ -31231,9 +31274,12 @@
               "width": "fit_content",
               "x": 292,
               "y": 10,
+              "height": "fit_content",
               "descendants": {
                 "FeatU": {
-                  "content": "Skip"
+                  "content": "Skip",
+                  "x": 24,
+                  "y": 12
                 }
               }
             }
@@ -31262,9 +31308,12 @@
               "name": "prevB",
               "x": 20,
               "y": 8,
+              "height": "fit_content",
               "descendants": {
                 "FeatU": {
-                  "content": "← Previous"
+                  "content": "← Previous",
+                  "x": 24,
+                  "y": 12
                 }
               }
             },
@@ -31276,9 +31325,12 @@
               "name": "nextB",
               "x": 200,
               "y": 8,
+              "height": "fit_content",
               "descendants": {
                 "94TL2": {
-                  "content": "Next exercise →"
+                  "content": "Next exercise →",
+                  "x": 24,
+                  "y": 12
                 }
               }
             }
@@ -31590,10 +31642,13 @@
             "tKNDn": {
               "width": "fill_container",
               "x": 24,
-              "y": 27
+              "y": 27,
+              "height": "fit_content"
             },
             "f8AfT": {
-              "content": "Felt strong on bench today…"
+              "content": "Felt strong on bench today…",
+              "x": 14,
+              "y": 10
             }
           }
         },
@@ -31613,7 +31668,9 @@
           "y": 389,
           "descendants": {
             "94TL2": {
-              "content": "Save workout"
+              "content": "Save workout",
+              "x": 24,
+              "y": 12
             }
           }
         }
@@ -31659,9 +31716,13 @@
           "name": "badgeXp",
           "x": 161.5,
           "y": 89,
+          "width": "fit_content",
+          "height": "fit_content",
           "descendants": {
             "lfkHP": {
-              "content": "+54 XP"
+              "content": "+54 XP",
+              "x": 12,
+              "y": 4
             }
           }
         },
@@ -31673,11 +31734,18 @@
           "name": "alS",
           "x": 24,
           "y": 128,
+          "height": "fit_content",
           "descendants": {
+            "3sz6e": {
+              "x": 16,
+              "y": 14
+            },
             "dE0Qm": {
               "content": "Workout saved. Your stats are updated.",
               "textGrowth": "fixed-width",
-              "width": "fill_container"
+              "width": "fill_container",
+              "x": 46,
+              "y": 14.5
             }
           }
         },
@@ -31732,6 +31800,522 @@
           "fontFamily": "Inter",
           "fontSize": 28,
           "fontWeight": "normal"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "HSpuc",
+      "x": 11910,
+      "y": 0,
+      "name": "Task 3.5 — Today's Workout widget",
+      "theme": {
+        "mode": "dark"
+      },
+      "width": 1300,
+      "fill": "$--background",
+      "layout": "vertical",
+      "gap": 24,
+      "padding": 40,
+      "children": [
+        {
+          "type": "text",
+          "id": "rinUD",
+          "name": "ttl",
+          "fill": "$--foreground",
+          "content": "Task 3.5 · Today's Workout (dashboard widget)",
+          "fontFamily": "Poppins",
+          "fontSize": 22,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "8sp62",
+          "name": "sub",
+          "fill": "$--muted-foreground",
+          "textGrowth": "fixed-width",
+          "width": "fill_container",
+          "content": "Three states: scheduled session, rest day, completed workout",
+          "fontFamily": "Inter",
+          "fontSize": 13,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "NMKNA",
+          "name": "row",
+          "width": "fill_container",
+          "height": 320,
+          "gap": 20,
+          "children": [
+            {
+              "id": "YA8ka",
+              "type": "ref",
+              "ref": "0sIaq",
+              "width": "fill_container",
+              "theme": {
+                "mode": "dark"
+              },
+              "name": "w1",
+              "height": "fill_container",
+              "descendants": {
+                "SuTq8": {
+                  "width": "fill_container"
+                },
+                "aiLkM": {
+                  "content": "Upper Body Power"
+                },
+                "kbM4z": {
+                  "content": "Scheduled · 6:30 PM"
+                },
+                "0X04O": {
+                  "type": "frame",
+                  "id": "xmEvn",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": [
+                    12,
+                    24
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "MqE0I",
+                      "fill": "$--foreground",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Preview\n1. Bench press — 4×8\n2. Barbell row — 3×10\n3. Overhead press — 3×8",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Di0v3",
+                      "fill": "$--primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "View full plan",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                "kxJDl": {
+                  "width": "fill_container",
+                  "y": 243
+                },
+                "aBe89": {
+                  "width": "fit_content",
+                  "x": 226.33333333333331
+                },
+                "aBe89/94TL2": {
+                  "content": "Start Workout"
+                }
+              }
+            },
+            {
+              "id": "3CSIS",
+              "type": "ref",
+              "ref": "0sIaq",
+              "width": "fill_container",
+              "theme": {
+                "mode": "dark"
+              },
+              "name": "w2",
+              "height": "fill_container",
+              "x": 413.3333333333333,
+              "stroke": {
+                "align": "inside",
+                "thickness": 2,
+                "fill": "$--success"
+              },
+              "descendants": {
+                "SuTq8": {
+                  "width": "fill_container",
+                  "height": "fit_content",
+                  "x": 0,
+                  "y": 0
+                },
+                "aiLkM": {
+                  "content": "Rest & recovery"
+                },
+                "kbM4z": {
+                  "content": "Recovery day — no session"
+                },
+                "0X04O": {
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "x": 0,
+                  "y": 84,
+                  "layout": "vertical",
+                  "gap": 10
+                },
+                "eJuwh": {
+                  "content": "Tips\n• Stay hydrated\n• Light walk or mobility\n• Prioritize sleep",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "fill": "$--muted-foreground",
+                  "fontFamily": "Inter",
+                  "fontSize": 13
+                },
+                "kxJDl": {
+                  "width": "fill_container",
+                  "y": 243,
+                  "height": "fit_content",
+                  "x": 0,
+                  "children": [
+                    {
+                      "id": "u4oEX",
+                      "type": "ref",
+                      "ref": "aGtaD",
+                      "descendants": {
+                        "nlrgf": {
+                          "content": "View week plan"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "4TKFM",
+              "type": "ref",
+              "ref": "0sIaq",
+              "width": "fill_container",
+              "theme": {
+                "mode": "dark"
+              },
+              "name": "w3",
+              "height": "fill_container",
+              "x": 826.6666666666666,
+              "stroke": {
+                "align": "inside",
+                "thickness": 1,
+                "fill": "$--primary"
+              },
+              "descendants": {
+                "SuTq8": {
+                  "width": "fill_container",
+                  "height": "fit_content",
+                  "x": 0,
+                  "y": 0
+                },
+                "aiLkM": {
+                  "content": "Push day"
+                },
+                "kbM4z": {
+                  "content": "✓ Completed today · 42 min"
+                },
+                "0X04O": {
+                  "type": "frame",
+                  "id": "j1ksC",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": [
+                    12,
+                    24
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "DdXh9",
+                      "fill": "$--muted-foreground",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "You're all set — workout saved to your log.",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Z3Vcf",
+                      "fill": "$--muted-foreground",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Log session again if you trained outside the app",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                "kxJDl": {
+                  "width": "fill_container",
+                  "y": 243,
+                  "height": "fit_content",
+                  "x": 0
+                },
+                "aBe89": {
+                  "width": "fit_content",
+                  "x": 203.33333333333331
+                },
+                "aBe89/94TL2": {
+                  "content": "View workout log"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "A1efC",
+      "x": 11910,
+      "y": 517,
+      "name": "Task 3.5 — Today's Workout (mobile)",
+      "theme": {
+        "mode": "dark"
+      },
+      "width": 390,
+      "fill": "$--background",
+      "layout": "vertical",
+      "gap": 16,
+      "padding": 20,
+      "children": [
+        {
+          "type": "text",
+          "id": "V6EW3",
+          "name": "ttlM",
+          "fill": "$--foreground",
+          "content": "Today's Workout · mobile",
+          "fontFamily": "Poppins",
+          "fontSize": 18,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "waiFA",
+          "name": "subM",
+          "fill": "$--muted-foreground",
+          "textGrowth": "fixed-width",
+          "width": "fill_container",
+          "content": "Three states (stacked)",
+          "fontFamily": "Inter",
+          "fontSize": 12,
+          "fontWeight": "normal"
+        },
+        {
+          "id": "kRfHG",
+          "type": "ref",
+          "ref": "0sIaq",
+          "width": "fill_container",
+          "height": 320,
+          "name": "m1",
+          "theme": {
+            "mode": "dark"
+          },
+          "descendants": {
+            "SuTq8": {
+              "width": "fill_container"
+            },
+            "aiLkM": {
+              "content": "Upper Body Power"
+            },
+            "kbM4z": {
+              "content": "Scheduled · 6:30 PM"
+            },
+            "0X04O": {
+              "type": "frame",
+              "id": "16ipm",
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "padding": [
+                12,
+                24
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "L8yBp",
+                  "fill": "$--foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Preview\n1. Bench press — 4×8\n2. Barbell row — 3×10\n3. Overhead press — 3×8",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "ih8Ne",
+                  "fill": "$--primary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "View full plan",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            "kxJDl": {
+              "width": "fill_container",
+              "y": 243
+            },
+            "aBe89": {
+              "width": "fit_content",
+              "x": 183
+            },
+            "aBe89/94TL2": {
+              "content": "Start Workout"
+            }
+          }
+        },
+        {
+          "id": "uj3pR",
+          "type": "ref",
+          "ref": "0sIaq",
+          "width": "fill_container",
+          "height": 320,
+          "name": "m2",
+          "theme": {
+            "mode": "dark"
+          },
+          "x": 20,
+          "stroke": {
+            "align": "inside",
+            "thickness": 2,
+            "fill": "$--success"
+          },
+          "descendants": {
+            "SuTq8": {
+              "width": "fill_container",
+              "height": "fit_content",
+              "x": 0,
+              "y": 0
+            },
+            "aiLkM": {
+              "content": "Rest & recovery"
+            },
+            "kbM4z": {
+              "content": "Recovery day — no session"
+            },
+            "0X04O": {
+              "width": "fill_container",
+              "height": "fill_container",
+              "x": 0,
+              "y": 84,
+              "layout": "vertical",
+              "gap": 10
+            },
+            "eJuwh": {
+              "content": "Tips\n• Stay hydrated\n• Light walk or mobility\n• Prioritize sleep",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "fill": "$--muted-foreground",
+              "fontFamily": "Inter",
+              "fontSize": 13
+            },
+            "kxJDl": {
+              "width": "fill_container",
+              "y": 243,
+              "height": "fit_content",
+              "x": 0,
+              "children": [
+                {
+                  "id": "YJEd3",
+                  "type": "ref",
+                  "ref": "aGtaD",
+                  "descendants": {
+                    "nlrgf": {
+                      "content": "View week plan"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "1K64L",
+          "type": "ref",
+          "ref": "0sIaq",
+          "width": "fill_container",
+          "height": 320,
+          "name": "m3",
+          "theme": {
+            "mode": "dark"
+          },
+          "x": 20,
+          "stroke": {
+            "align": "inside",
+            "thickness": 1,
+            "fill": "$--primary"
+          },
+          "descendants": {
+            "SuTq8": {
+              "width": "fill_container",
+              "height": "fit_content",
+              "x": 0,
+              "y": 0
+            },
+            "aiLkM": {
+              "content": "Push day"
+            },
+            "kbM4z": {
+              "content": "✓ Completed today · 42 min"
+            },
+            "0X04O": {
+              "type": "frame",
+              "id": "6Uj07",
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "padding": [
+                12,
+                24
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "bRUN0",
+                  "fill": "$--muted-foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "You're all set — workout saved to your log.",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "0Kw7j",
+                  "fill": "$--muted-foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Log session again if you trained outside the app",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            "kxJDl": {
+              "width": "fill_container",
+              "y": 243,
+              "height": "fit_content",
+              "x": 0
+            },
+            "aBe89": {
+              "width": "fit_content",
+              "x": 160
+            },
+            "aBe89/94TL2": {
+              "content": "View workout log"
+            }
+          }
         }
       ]
     }

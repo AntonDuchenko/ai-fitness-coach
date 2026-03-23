@@ -41,7 +41,7 @@ export function useAuthProvider(): AuthContextType {
     onSuccess: (data) => {
       localStorage.setItem(TOKEN_KEY, data.accessToken);
       queryClient.setQueryData(["auth", "me"], data.user);
-      router.push("/");
+      router.push("/dashboard");
     },
   });
 
@@ -54,7 +54,7 @@ export function useAuthProvider(): AuthContextType {
     onSuccess: (data) => {
       localStorage.setItem(TOKEN_KEY, data.accessToken);
       queryClient.setQueryData(["auth", "me"], data.user);
-      router.push("/");
+      router.push("/dashboard");
     },
   });
 

@@ -6,6 +6,7 @@ import type {
   CreateWorkoutLogPayload,
   WorkoutLogResponse,
 } from "../workoutLog.types";
+import { WORKOUT_TODAY_KEY } from "./useTodaysWorkoutQuery";
 import { WORKOUT_LOGS_KEY } from "./useWorkoutLogsQuery";
 import { WORKOUT_STATS_KEY } from "./useWorkoutStatsQuery";
 
@@ -21,6 +22,7 @@ export function useLogWorkoutMutation() {
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: WORKOUT_LOGS_KEY });
       void queryClient.invalidateQueries({ queryKey: WORKOUT_STATS_KEY });
+      void queryClient.invalidateQueries({ queryKey: WORKOUT_TODAY_KEY });
     },
   });
 }

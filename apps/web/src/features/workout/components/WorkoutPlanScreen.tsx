@@ -96,6 +96,7 @@ export function WorkoutPlanScreen() {
             currentWeek={v.currentWeek}
             progressPct={v.progressPct}
             slots={v.slots}
+            logsLoading={v.logsLoading}
             selectedDayKey={v.selectedDayKey}
             onSelectDay={v.onSelectDay}
             dayKey={dayKey}

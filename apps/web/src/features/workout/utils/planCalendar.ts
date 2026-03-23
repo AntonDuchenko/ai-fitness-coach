@@ -1,4 +1,6 @@
 import type { CalendarDaySlot, DayStatus, WorkoutDaySchedule } from "../types";
+import type { WorkoutLogResponse } from "../workoutLog.types";
+import { findWorkoutLogForDate } from "./todayLog";
 
 const WEEKDAYS_ORDER = [
   "Monday",
@@ -59,16 +61,18 @@ function findWorkoutForDay(
   return hit ?? null;
 }
 
-function deriveStatus(dayDate: Date, today: Date, isRest: boolean): DayStatus {
+function deriveStatus(
+  dayDate: Date,
+  today: Date,
+  isRest: boolean,
+  hasLog: boolean,
+): DayStatus {
   if (isRest) return "rest";
+  if (hasLog) return "completed";
   const day = startOfDay(dayDate).getTime();
   const t = startOfDay(today).getTime();
   if (day > t) return "scheduled";
-  if (day < t) {
-    const thisWeekStart = getMonday(today).getTime();
-    if (day >= thisWeekStart) return "missed";
-    return "completed";
-  }
+  if (day < t) return "missed";
   return "scheduled";
 }
 
@@ -81,6 +85,7 @@ export function buildWeekSlots(
   planStart: Date,
   selectedWeek: number,
   today: Date = new Date(),
+  logs: WorkoutLogResponse[] = [],
 ): CalendarDaySlot[] {
   const start = startOfDay(planStart);
   const week1Monday = getMonday(start);
@@ -94,7 +99,8 @@ export function buildWeekSlots(
       !workout ||
       workout.exercises.length === 0 ||
       /rest|recovery|off/i.test(workout.focus);
-    const status = deriveStatus(date, today, isRest);
+    const hasLog = !!findWorkoutLogForDate(logs, date);
+    const status = deriveStatus(date, today, isRest, hasLog);
 
     return {
       date,

@@ -2,7 +2,7 @@
 
 import { Progress } from "@/components/ui/progress";
 import type { CalendarDaySlot } from "../types";
-import { DayCard } from "./DayCard";
+import { DayCard, DayCardSkeleton } from "./DayCard";
 import { WeekSelector } from "./WeekSelector";
 
 interface WorkoutWeekContentProps {
@@ -12,6 +12,7 @@ interface WorkoutWeekContentProps {
   currentWeek: number;
   progressPct: number;
   slots: CalendarDaySlot[];
+  logsLoading?: boolean;
   selectedDayKey: string | null;
   onSelectDay: (slot: CalendarDaySlot) => void;
   dayKey: (d: Date) => string;
@@ -24,6 +25,7 @@ export function WorkoutWeekContent({
   currentWeek,
   progressPct,
   slots,
+  logsLoading,
   selectedDayKey,
   onSelectDay,
   dayKey,
@@ -50,14 +52,18 @@ export function WorkoutWeekContent({
         <h2 className="font-heading text-lg font-semibold">This week</h2>
 
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-7">
-          {slots.map((slot) => (
-            <DayCard
-              key={dayKey(slot.date)}
-              slot={slot}
-              selected={dayKey(slot.date) === selectedDayKey}
-              onSelect={() => onSelectDay(slot)}
-            />
-          ))}
+          {logsLoading
+            ? Array.from({ length: 7 }, (_, i) => (
+                <DayCardSkeleton key={i} />
+              ))
+            : slots.map((slot) => (
+                <DayCard
+                  key={dayKey(slot.date)}
+                  slot={slot}
+                  selected={dayKey(slot.date) === selectedDayKey}
+                  onSelect={() => onSelectDay(slot)}
+                />
+              ))}
         </div>
       </div>
     </main>

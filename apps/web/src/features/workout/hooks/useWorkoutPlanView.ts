@@ -8,6 +8,7 @@ import {
   getCurrentWeekIndex,
   weekProgressFraction,
 } from "../utils/planCalendar";
+import { useWorkoutLogsQuery } from "./useWorkoutLogsQuery";
 import { useWorkoutPlan } from "./useWorkoutPlan";
 
 function dayKey(d: Date): string {
@@ -19,6 +20,7 @@ export { dayKey };
 export function useWorkoutPlanView() {
   const { plan, isLoading, isError, error, refetch, regenerate } =
     useWorkoutPlan();
+  const logsQuery = useWorkoutLogsQuery(40, { enabled: !!plan });
   const [selectedWeek, setSelectedWeek] = useState(1);
   const [selectedDayKey, setSelectedDayKey] = useState<string | null>(null);
   const [regenOpen, setRegenOpen] = useState(false);
@@ -46,6 +48,8 @@ export function useWorkoutPlanView() {
     }
   }, [plan, currentWeek]);
 
+  const logs = logsQuery.data ?? [];
+
   const slots: CalendarDaySlot[] = useMemo(() => {
     if (!plan) return [];
     return buildWeekSlots(
@@ -53,8 +57,9 @@ export function useWorkoutPlanView() {
       planStart,
       selectedWeek,
       new Date(),
+      logs,
     );
-  }, [plan, planStart, selectedWeek]);
+  }, [plan, planStart, selectedWeek, logs]);
 
   useEffect(() => {
     if (slots.length === 0) return;
@@ -101,6 +106,7 @@ export function useWorkoutPlanView() {
     isLoading,
     isError,
     error,
+    logsLoading: logsQuery.isLoading && !!plan,
     refetch,
     regenerate,
     selectedWeek,
