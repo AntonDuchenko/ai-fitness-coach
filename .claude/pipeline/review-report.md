@@ -1,46 +1,42 @@
-# Code Review Report: Task 3.5 — Dashboard "Today's Workout" Widget
+# Code Review Report: Task 4.1 — Nutrition Plan Display Backend
 
-## Review Iteration: 2/3
+## Review Iteration: 1/3
 
-## Issues from Previous Review — Resolution
-
-| Issue | Status |
-|-------|--------|
-| TodaysWorkoutWidget.tsx 261 lines (>150) | FIXED — split into Widget (59), Loading (27), Error (26), NoPlan (23), Rest (53), Completed (85), Scheduled (78) |
+## Files Reviewed
+- `apps/api/src/modules/nutrition/nutrition.controller.ts` (149 lines)
+- `apps/api/src/modules/nutrition/nutrition.service.ts` (582 lines)
+- `apps/api/src/modules/nutrition/dto/recipe-request-query.dto.ts` (21 lines)
+- `apps/api/src/modules/nutrition/dto/recipe-response.dto.ts` (81 lines)
 
 ## Convention Compliance
 
 | # | Rule | Status |
 |---|------|--------|
-| 1 | Component files max ~150 lines | PASS — all files under 85 lines |
-| 2 | One component per file | PASS |
-| 3 | Business logic in hooks | PASS |
-| 4 | shadcn/ui components | PASS |
-| 5 | No raw HTML | PASS |
-| 6 | Tailwind utility classes only | PASS |
-| 7 | Semantic design tokens | PASS |
-| 8 | cn() for conditionals | PASS |
-| 9 | Dark mode | PASS |
-| 10 | Server vs Client justified | PASS |
-| 11 | 4 async UI states | PASS — loading, error, no-plan, rest, completed, scheduled |
-| 12 | TanStack Query | PASS |
-| 13 | No raw fetch | PASS |
-| 14 | No `any` types | PASS |
-| 15 | ARIA labels | PASS |
-| 16 | Semantic HTML | PASS |
-| 17 | Keyboard nav | PASS |
-| 18 | File naming | PASS |
-| 19 | Feature folder structure | PASS |
-| 20 | No prop drilling > 2 | PASS |
-| 21 | No console.log | PASS |
-| 22 | Error handling | PASS |
-| 23 | Forms validated | N/A |
-| 24 | Hook size | PASS |
-| 25 | No unnecessary deps | PASS |
+| 1 | Thin controller | PASS — delegates to service |
+| 2 | Service handles business logic | PASS |
+| 3 | class-validator on DTOs | PASS |
+| 4 | Swagger decorators on endpoints | PASS — @ApiTags, @ApiOperation, @ApiResponse, @ApiQuery, @ApiParam |
+| 5 | JwtAuthGuard on endpoints | PASS — class-level decorator |
+| 6 | Proper HTTP codes | PASS — 201 regenerate, 200 recipes, 404/422/502 errors |
+| 7 | Structured error responses | PASS — NestJS exceptions |
+| 8 | No `any` types | PASS |
+| 9 | Logger usage | PASS |
+| 10 | Response DTOs | PASS — explicit constructor mapping |
+| 11 | File size (controller <150) | PASS — 149 lines |
+| 12 | Input validation | PASS — class-validator + ValidationPipe |
+| 13 | AI response validation | PASS — validateRecipeListStructure |
+| 14 | Pattern consistency | PASS — matches workouts module |
 
 ## Build Verification
 - TypeScript: PASS (0 errors)
 - Build: PASS
-- Lint: PASS (no errors in task files)
+- Lint: PASS
+
+## Critical Issues
+None.
+
+## Minor Notes
+- Service file is 582 lines total, but most is pre-existing code. The new additions are well-structured.
+- `regeneratePlan` follows same pattern as `WorkoutsService.regeneratePlan`.
 
 ## Verdict: **APPROVED**

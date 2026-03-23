@@ -1,41 +1,38 @@
 # Pipeline Summary
 
-## Task: Task 3.5 — Dashboard "Today's Workout" Widget
+## Task: Task 4.1 — Nutrition Plan Display Backend
 ## Final Status: SUCCESS
 
 ## Timeline
 | Phase | Status | Iterations |
 |-------|--------|------------|
-| Init | Completed | — |
-| Architect | Skipped (resumed from review) | — |
-| Developer | Completed | 2 passes |
-| Reviewer | APPROVED | 2/3 iterations |
+| Init | Completed | -- |
+| Architect | Completed | -- |
+| Developer | Completed | 1 pass |
+| Reviewer | APPROVED | 1/3 iterations |
 | Tester | PASSED | 1/3 iterations |
 
 ## Convention Compliance
 | Rule | Status |
 |------|--------|
-| Component size (<150 lines) | PASS |
-| Business logic separated (hooks/services) | PASS |
-| shadcn/ui used (no raw HTML) | PASS |
-| Semantic design tokens (no hardcoded hex) | PASS |
-| Error/loading/empty states | PASS |
-| Accessibility | PASS |
-| TypeScript strict (no `any`) | PASS |
+| Thin controllers | PASS |
+| Business logic in services | PASS |
+| class-validator on DTOs | PASS |
+| Swagger on all endpoints | PASS |
+| Proper HTTP codes | PASS |
+| No `any` types | PASS |
+| No console.log | PASS |
+| NestJS Logger | PASS |
 
-## Files Created/Modified
-- `components/TodaysWorkoutLoading.tsx` — NEW: skeleton loading state
-- `components/TodaysWorkoutError.tsx` — NEW: error state with retry
-- `components/TodaysWorkoutNoPlan.tsx` — NEW: empty state CTA
-- `components/TodaysWorkoutRest.tsx` — NEW: rest day card
-- `components/TodaysWorkoutCompleted.tsx` — NEW: completed workout card
-- `components/TodaysWorkoutScheduled.tsx` — NEW: scheduled workout card
-- `components/TodaysWorkoutWidget.tsx` — REFACTORED: thin orchestrator (261 to 59 lines)
+## Files Created
+- `apps/api/src/modules/nutrition/dto/recipe-request-query.dto.ts` — Query DTO for recipe search
+- `apps/api/src/modules/nutrition/dto/recipe-response.dto.ts` — Recipe response DTO
+
+## Files Modified
+- `apps/api/src/modules/nutrition/nutrition.controller.ts` — Added regenerate + recipes endpoints
+- `apps/api/src/modules/nutrition/nutrition.service.ts` — Added regeneratePlan, searchRecipes, prompt builder, validation
 
 ## Key Decisions
-- Split TodaysWorkoutWidget from 261 lines into 7 files to comply with 150-line convention
-- Each subcomponent is self-contained with own imports and props interface
-- TodaysWorkoutCompleted receives `showLogAgain: boolean` for cleaner interface
-
-## Remaining Issues
-- None (minor cosmetic difference in completed card button styling noted but non-blocking)
+- `regeneratePlan` delegates to existing `generatePlan` (same pattern as workouts module)
+- Recipe search generates 3 recipes on-demand via AI, personalized to user's dietary profile
+- Recipe validation ensures name, macros, ingredients, and instructions are present

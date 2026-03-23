@@ -1,4 +1,4 @@
-# Test Report: Task 3.5 — Dashboard "Today's Workout" Widget
+# Test Report: Task 4.1 — Nutrition Plan Display Backend
 
 ## Verdict: **PASSED**
 
@@ -8,62 +8,45 @@
 
 | Criteria | Status | Notes |
 |----------|--------|-------|
-| Shows correct workout for today | PASS | `useTodaysWorkoutQuery` fetches `/workouts/today`, `useTodaysWorkoutWidget` derives correct status |
-| Displays preview of exercises | PASS | First 3 exercises shown with `formatPreviewLine` |
-| Launches workout logger | PASS | `onStartWorkout` opens `WorkoutSessionDialog` |
-| Handles rest days | PASS | `TodaysWorkoutRest` shows recovery tips, green border |
-| Handles completed workouts | PASS | `TodaysWorkoutCompleted` shows checkmark, duration, "Log again" option |
+| Can fetch nutrition plan | PASS | `GET /nutrition/plan` returns NutritionPlanResponseDto |
+| Can regenerate plan | PASS | `POST /nutrition/plan/regenerate` delegates to generatePlan |
+| Plan includes all meal details | PASS | mealPlan JSON has mealType, time, name, macros, ingredients, instructions |
+| Can search recipes | PASS | `GET /nutrition/recipes?search=&type=` generates via AI |
 
-## Design Compliance (Pencil comparison)
+## API Endpoints Verified
 
-| Element | Design | Implementation | Match |
-|---------|--------|----------------|-------|
-| Scheduled card layout | Exercise preview, duration, buttons | Matches design | YES |
-| Scheduled "Start Workout" button | Primary blue | `<Button>` (primary default) | YES |
-| Scheduled "View full plan" link | Blue text link | `text-primary` link | YES |
-| Rest card green border | Green accent | `border-success/50` | YES |
-| Rest card tips list | Bullet list | `<ul>` with 3 tips | YES |
-| Rest card "View week plan" | Outline button | `variant="outline"` | YES |
-| Completed card blue border | Blue accent | `border-primary/50` | YES |
-| Completed checkmark + duration | Checkmark, "42 min" | CheckCircle2 icon, duration | YES |
-| Completed "View workout log" | Primary blue (bottom-right) | Ghost (bottom-left) | MINOR DIFF |
+| Method | Path | Guard | Swagger | HTTP Code | Status |
+|--------|------|-------|---------|-----------|--------|
+| POST | /nutrition/generate | JwtAuthGuard | Full | 201 | PASS |
+| GET | /nutrition/plan | JwtAuthGuard | Full | 200 | PASS |
+| GET | /nutrition/plans | JwtAuthGuard | Full | 200 | PASS |
+| GET | /nutrition/plan/:id | JwtAuthGuard | Full | 200 | PASS |
+| POST | /nutrition/plan/regenerate | JwtAuthGuard | Full | 201 | PASS |
+| GET | /nutrition/recipes | JwtAuthGuard | Full | 200 | PASS |
 
 ## Code Quality Checks
 
 | Check | Status | Details |
 |-------|--------|---------|
-| Component size (<150 lines) | PASS | Max 85 lines (TodaysWorkoutCompleted) |
-| Business logic separated | PASS | All API calls in hooks, components pure presentational |
-| shadcn/ui usage | PASS | Card, Button, Skeleton; no raw HTML equivalents |
-| Semantic design tokens | PASS | No hardcoded hex colors |
-| Error/loading/empty states | PASS | 6 states: loading, error, no-plan, rest, completed, scheduled |
-| Accessibility | PASS | aria-hidden on icons, aria-labelledby, semantic HTML |
-| TypeScript strict (no `any`) | PASS | |
-| TanStack Query | PASS | useQuery for all API calls |
-| No console.log | PASS | |
+| Thin controllers | PASS | All endpoints delegate to service |
+| class-validator on DTOs | PASS | RecipeRequestQueryDto: @IsOptional, @IsString |
+| Swagger on all endpoints | PASS | @ApiTags, @ApiOperation, @ApiResponse, @ApiQuery |
+| JwtAuthGuard | PASS | Class-level decorator |
+| Proper HTTP codes | PASS | 201 for create/regenerate, 200 for reads |
+| Structured errors | PASS | NotFoundException, UnprocessableEntityException, BadGatewayException |
+| No `any` types | PASS | All types explicit |
+| No console.log | PASS | Uses NestJS Logger |
+| No hardcoded values | PASS | No hex colors or magic strings |
+| AI response validation | PASS | validateRecipeListStructure checks name, macros, ingredients, instructions |
 
 ## Build Verification
 - Build: PASS
-- Lint: PASS (no errors in task files)
+- Lint: PASS
 
-## Files Verified (11 total)
-
-### Components (7):
-- TodaysWorkoutWidget.tsx (59 lines) — orchestrator
-- TodaysWorkoutLoading.tsx (27 lines) — skeleton state
-- TodaysWorkoutError.tsx (26 lines) — error with retry
-- TodaysWorkoutNoPlan.tsx (23 lines) — empty state CTA
-- TodaysWorkoutRest.tsx (53 lines) — rest day card
-- TodaysWorkoutCompleted.tsx (85 lines) — completed workout card
-- TodaysWorkoutScheduled.tsx (78 lines) — scheduled workout card
-
-### Hooks (2):
-- useTodaysWorkoutWidget.ts (102 lines) — state derivation + orchestration
-- useTodaysWorkoutQuery.ts (27 lines) — API query
-
-### Supporting (2):
-- todayLog.ts (24 lines) — date utility
-- dashboard/page.tsx (95 lines) — dashboard page integration
-
-## Minor Observation
-"View workout log" button in completed state uses ghost variant (bottom-left) instead of primary (bottom-right) as shown in the Pencil design. Cosmetic only — can be adjusted in a follow-up.
+## Files Verified (6 total)
+- `nutrition.controller.ts` (149 lines) — 6 endpoints, thin
+- `nutrition.service.ts` (582 lines) — full business logic
+- `nutrition.module.ts` (12 lines) — imports AiModule
+- `dto/nutrition-plan-response.dto.ts` (77 lines) — response mapping
+- `dto/recipe-request-query.dto.ts` (21 lines) — query validation
+- `dto/recipe-response.dto.ts` (81 lines) — recipe response mapping

@@ -1,107 +1,78 @@
-# Architect Plan: Task 3.3 — Workout Logging Backend
+# Architect Plan: Task 4.1 — Nutrition Plan Display Backend
 
 ## Overview
-Add workout logging endpoints to the existing workouts module: log completed workouts, fetch history, get specific logs, delete logs, calculate streaks, and track personal records (PRs).
+Complete the nutrition module by adding missing endpoints: `POST /nutrition/plan/regenerate` and `GET /nutrition/recipes`. The module already has `generatePlan`, `getActivePlan`, `getPlanById`, `getUserPlans`. We need regeneration (mirroring the workouts pattern) and recipe search/generation.
 
-## Data Model
-Already exists in Prisma schema (`WorkoutLog` model) — no schema changes needed. The `exercises` field is a JSON column storing `ExerciseLog[]`.
+## Existing Code Analysis
+- **Controller:** `nutrition.controller.ts` — 4 endpoints: POST generate, GET plan, GET plans, GET plan/:id
+- **Service:** `nutrition.service.ts` — Full implementation with TDEE/macro calculation, AI prompt building, plan validation
+- **DTO:** `nutrition-plan-response.dto.ts` — Maps NutritionPlan entity
+- **Module:** Imports AiModule, exports NutritionService
 
-## DTOs to Create
+## What's Missing (from Task Requirements)
 
-### Input DTOs (`dto/`)
+### 1. `POST /nutrition/plan/regenerate`
+Regenerate nutrition plan (archives current, generates new). Follow same pattern as `WorkoutsController.regeneratePlan` — simply call `generatePlan` which already deactivates the current plan first.
 
-1. **`set-log.dto.ts`** — `SetLogDto`
-   - `setNumber: number` (@IsInt)
-   - `weight: number` (@IsNumber)
-   - `reps: number` (@IsInt)
-   - `rpe?: number` (@IsInt, @Min(1), @Max(10), @IsOptional)
+### 2. `GET /nutrition/recipes?search=&type=`
+On-demand recipe search/generation via AI. Returns recipe suggestions matching search criteria and meal type.
 
-2. **`exercise-log.dto.ts`** — `ExerciseLogDto`
-   - `exerciseName: string` (@IsString)
-   - `sets: SetLogDto[]` (@IsArray, @ValidateNested, @Type)
-   - `notes?: string` (@IsString, @IsOptional)
+## New DTOs
 
-3. **`create-workout-log.dto.ts`** — `CreateWorkoutLogDto`
-   - `workoutPlanId: string` (@IsString)
-   - `workoutName: string` (@IsString)
-   - `exercises: ExerciseLogDto[]` (@IsArray, @ValidateNested, @Type)
-   - `duration?: number` (@IsNumber, @IsOptional)
-   - `rating?: number` (@IsInt, @Min(1), @Max(5), @IsOptional)
-   - `notes?: string` (@IsString, @IsOptional)
+### `dto/recipe-request-query.dto.ts` — `RecipeRequestQueryDto`
+- `search?: string` (@IsString, @IsOptional) — search term/keyword
+- `type?: string` (@IsString, @IsOptional) — meal type filter: "breakfast", "lunch", "dinner", "snack"
 
-### Response DTOs
+### `dto/recipe-response.dto.ts` — `RecipeResponseDto`
+- `name: string`
+- `mealType: string`
+- `calories: number`
+- `protein: number`
+- `carbs: number`
+- `fat: number`
+- `prepTime: number`
+- `cookTime: number`
+- `difficulty: string`
+- `servings: number`
+- `ingredients: { amount: number; unit: string; name: string }[]`
+- `instructions: string`
 
-4. **`workout-log-response.dto.ts`** — `WorkoutLogResponseDto`
-   - Maps from WorkoutLog entity
-   - All fields from the model with Swagger decorators
-
-5. **`workout-stats-response.dto.ts`** — `WorkoutStatsResponseDto`
-   - `totalWorkouts: number`
-   - `currentStreak: number`
-   - `longestStreak: number`
-   - `personalRecords: PersonalRecordDto[]`
-
-6. **`personal-record.dto.ts`** — `PersonalRecordDto`
-   - `exerciseName: string`
-   - `maxWeight: number`
-   - `maxReps: number`
-   - `achievedAt: Date`
-
-## Controller Endpoints (add to existing `WorkoutsController`)
+## New Controller Endpoints
 
 | Method | Path | Description | Status |
 |--------|------|-------------|--------|
-| POST | `/workouts/log` | Log completed workout | 201 |
-| GET | `/workouts/logs` | Get workout history (query: `limit`, `offset`) | 200 |
-| GET | `/workouts/log/:id` | Get specific log | 200 |
-| DELETE | `/workouts/log/:id` | Delete a log | 204 |
-| GET | `/workouts/stats` | Get streaks + PRs | 200 |
+| POST | `/nutrition/plan/regenerate` | Regenerate nutrition plan | 201 |
+| GET | `/nutrition/recipes` | Search/generate recipes via AI | 200 |
 
 All endpoints: `@UseGuards(JwtAuthGuard)`, `@ApiBearerAuth()`, full Swagger decorators.
 
-## Service Methods (add to existing `WorkoutsService`)
+## New Service Methods
 
-1. **`logWorkout(userId, dto)`** — Creates WorkoutLog, returns response DTO
-2. **`getWorkoutLogs(userId, limit, offset)`** — Paginated history, ordered by completedAt desc
-3. **`getWorkoutLog(userId, logId)`** — Single log by ID, scoped to user
-4. **`deleteWorkoutLog(userId, logId)`** — Delete log, scoped to user
-5. **`getWorkoutStats(userId)`** — Calculates:
-   - Total workout count
-   - Current streak (consecutive days with logged workouts, allowing 1-day gaps for rest days)
-   - Longest streak
-   - Personal records (max weight per exercise across all logs)
+### `regeneratePlan(userId: string)`
+- Log the regeneration
+- Delegate to existing `generatePlan(userId)` (which already deactivates the old plan)
 
-### Streak Calculation Logic
-- Fetch all log dates for user, ordered desc
-- Group by calendar date
-- Count consecutive days (a gap of exactly 1 day is allowed — rest day)
-- A gap of 2+ days breaks the streak
+### `searchRecipes(userId: string, search?: string, type?: string)`
+- Fetch user profile for dietary restrictions context
+- Build AI prompt for recipe generation based on search/type/restrictions
+- Call `aiService.createJsonCompletion` to generate 3 matching recipes
+- Validate response structure
+- Return `RecipeResponseDto[]`
 
-### Personal Records Logic
-- Flatten all exercise logs across all workout logs
-- For each unique exercise, find the max weight lifted (with reps)
-- Return as PersonalRecordDto[]
+## Files to Create
+- `apps/api/src/modules/nutrition/dto/recipe-request-query.dto.ts`
+- `apps/api/src/modules/nutrition/dto/recipe-response.dto.ts`
 
-## Files to Create/Modify
-
-### New files:
-- `apps/api/src/modules/workouts/dto/set-log.dto.ts`
-- `apps/api/src/modules/workouts/dto/exercise-log.dto.ts`
-- `apps/api/src/modules/workouts/dto/create-workout-log.dto.ts`
-- `apps/api/src/modules/workouts/dto/workout-log-response.dto.ts`
-- `apps/api/src/modules/workouts/dto/workout-stats-response.dto.ts`
-- `apps/api/src/modules/workouts/dto/personal-record.dto.ts`
-
-### Modified files:
-- `apps/api/src/modules/workouts/workouts.controller.ts` — Add 5 new endpoints
-- `apps/api/src/modules/workouts/workouts.service.ts` — Add 5 new methods + streak/PR helpers
+## Files to Modify
+- `apps/api/src/modules/nutrition/nutrition.controller.ts` — Add 2 endpoints
+- `apps/api/src/modules/nutrition/nutrition.service.ts` — Add 2 methods + recipe prompt builder + recipe validation
 
 ## Convention Compliance
 - Thin controller: validate -> delegate to service -> return response
 - class-validator decorators on all DTOs
 - Swagger decorators on all endpoints
 - JwtAuthGuard on all endpoints
-- Proper HTTP codes (201 create, 200 success, 204 no content, 404 not found)
+- Proper HTTP codes (201 for regenerate, 200 for recipes)
 - Structured error responses via NestJS exceptions
 - No `any` types
 - NestJS Logger for logging

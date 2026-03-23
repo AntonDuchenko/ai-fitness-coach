@@ -5,6 +5,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Query,
   Request,
   UseGuards,
 } from "@nestjs/common";
@@ -12,11 +13,14 @@ import {
   ApiBearerAuth,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../../common/guards/jwt-auth.guard";
 import { NutritionPlanResponseDto } from "./dto/nutrition-plan-response.dto";
+import { RecipeRequestQueryDto } from "./dto/recipe-request-query.dto";
+import { RecipeResponseDto } from "./dto/recipe-response.dto";
 import { NutritionService } from "./nutrition.service";
 
 @ApiTags("Nutrition")
@@ -86,5 +90,60 @@ export class NutritionController {
     @Param("id") planId: string,
   ): Promise<NutritionPlanResponseDto> {
     return this.nutritionService.getPlanById(req.user.id, planId);
+  }
+
+  @Post("plan/regenerate")
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({
+    summary: "Regenerate nutrition plan (archives current plan)",
+  })
+  @ApiResponse({
+    status: 201,
+    description: "New nutrition plan generated, old plan archived",
+    type: NutritionPlanResponseDto,
+  })
+  @ApiResponse({ status: 404, description: "User profile not found" })
+  @ApiResponse({ status: 422, description: "Profile incomplete" })
+  @ApiResponse({ status: 502, description: "AI service error" })
+  async regeneratePlan(
+    @Request() req: { user: { id: string } },
+  ): Promise<NutritionPlanResponseDto> {
+    return this.nutritionService.regeneratePlan(req.user.id);
+  }
+
+  @Get("recipes")
+  @ApiOperation({
+    summary: "Search/generate recipes based on user profile and criteria",
+  })
+  @ApiQuery({
+    name: "search",
+    required: false,
+    type: String,
+    description: "Search term for recipe name or ingredients",
+    example: "chicken salad",
+  })
+  @ApiQuery({
+    name: "type",
+    required: false,
+    type: String,
+    description: "Meal type filter",
+    enum: ["breakfast", "lunch", "dinner", "snack"],
+  })
+  @ApiResponse({
+    status: 200,
+    description: "List of matching recipes",
+    type: [RecipeResponseDto],
+  })
+  @ApiResponse({ status: 404, description: "User profile not found" })
+  @ApiResponse({ status: 502, description: "AI service error" })
+  async searchRecipes(
+    @Request() req: { user: { id: string } },
+    @Query() query: RecipeRequestQueryDto,
+  ): Promise<RecipeResponseDto[]> {
+    return this.nutritionService.searchRecipes(
+      req.user.id,
+      query.search,
+      query.type,
+    );
   }
 }

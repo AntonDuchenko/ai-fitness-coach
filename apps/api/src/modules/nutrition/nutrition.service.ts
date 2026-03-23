@@ -9,6 +9,7 @@ import type { NutritionPlan, UserProfile } from "@prisma/client";
 import { PrismaService } from "../../prisma/prisma.service";
 import { AiService } from "../ai/ai.service";
 import { NutritionPlanResponseDto } from "./dto/nutrition-plan-response.dto";
+import { RecipeResponseDto } from "./dto/recipe-response.dto";
 
 interface GeneratedIngredient {
   amount: number;
@@ -43,6 +44,25 @@ interface GeneratedNutritionPlan {
   mealsPerDay: number;
   mealPlan: GeneratedMeal[];
   groceryList: GeneratedGroceryList;
+}
+
+interface GeneratedRecipe {
+  name: string;
+  mealType: string;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  prepTime: number;
+  cookTime: number;
+  difficulty: string;
+  servings: number;
+  ingredients: GeneratedIngredient[];
+  instructions: string;
+}
+
+interface GeneratedRecipeList {
+  recipes: GeneratedRecipe[];
 }
 
 interface Macros {
@@ -178,6 +198,53 @@ export class NutritionService {
     });
 
     return plans.map((plan) => new NutritionPlanResponseDto(plan));
+  }
+
+  async regeneratePlan(userId: string): Promise<NutritionPlanResponseDto> {
+    this.logger.log(`Regenerating nutrition plan for user ${userId}`);
+    return this.generatePlan(userId);
+  }
+
+  async searchRecipes(
+    userId: string,
+    search?: string,
+    type?: string,
+  ): Promise<RecipeResponseDto[]> {
+    const profile = await this.prisma.userProfile.findUnique({
+      where: { userId },
+    });
+
+    if (!profile) {
+      throw new NotFoundException(
+        "User profile not found. Complete onboarding first.",
+      );
+    }
+
+    const prompt = this.buildRecipeSearchPrompt(profile, search, type);
+
+    this.logger.log(
+      `Searching recipes for user ${userId} (search="${search ?? ""}", type="${type ?? ""}")`,
+    );
+
+    const data = await this.aiService.createJsonCompletion<GeneratedRecipeList>(
+      [
+        {
+          role: "system",
+          content:
+            "You are a certified nutritionist and chef. Generate recipe suggestions as valid JSON only. No markdown, no explanations outside the JSON structure.",
+        },
+        { role: "user", content: prompt },
+      ],
+      {
+        model: "gpt-4o",
+        temperature: 0.9,
+        maxTokens: 3000,
+      },
+    );
+
+    this.validateRecipeListStructure(data);
+
+    return data.recipes.map((recipe) => new RecipeResponseDto(recipe));
   }
 
   calculateTDEE(profile: UserProfile): {
@@ -406,6 +473,110 @@ Generate complete daily plan with all ${profile.mealsPerDay} meals.`;
       throw new BadGatewayException(
         "AI generated plan missing 'groceryList' object.",
       );
+    }
+  }
+
+  private buildRecipeSearchPrompt(
+    profile: UserProfile,
+    search?: string,
+    type?: string,
+  ): string {
+    const dietaryRestrictions = Array.isArray(profile.dietaryRestrictions)
+      ? (profile.dietaryRestrictions as string[]).join(", ")
+      : "None";
+
+    const dislikedFoods = Array.isArray(profile.dislikedFoods)
+      ? (profile.dislikedFoods as string[]).join(", ")
+      : "None";
+
+    const searchClause = search
+      ? `The recipes should match this search: "${search}".`
+      : "Generate diverse recipe suggestions.";
+
+    const typeClause = type
+      ? `All recipes must be suitable for: ${type}.`
+      : "Include a mix of meal types (breakfast, lunch, dinner, snack).";
+
+    return `Generate 3 recipe suggestions for this user:
+
+User context:
+- Goal: ${profile.primaryGoal}
+- Dietary restrictions: ${dietaryRestrictions}
+- Disliked foods: ${dislikedFoods}
+- Cooking level: ${profile.cookingLevel}
+- Budget: $${profile.foodBudget}/day
+
+${searchClause}
+${typeClause}
+
+Requirements:
+- Respect dietary restrictions and disliked foods
+- Appropriate for ${profile.cookingLevel} cooking level
+- Include full macro information
+- Simple, actionable instructions
+
+Return JSON format:
+{
+  "recipes": [
+    {
+      "name": "Recipe Name",
+      "mealType": "lunch",
+      "calories": 450,
+      "protein": 35,
+      "carbs": 40,
+      "fat": 15,
+      "prepTime": 10,
+      "cookTime": 15,
+      "difficulty": "easy",
+      "servings": 1,
+      "ingredients": [
+        { "amount": 200, "unit": "g", "name": "chicken breast" }
+      ],
+      "instructions": "Step-by-step instructions..."
+    }
+  ]
+}
+
+Generate exactly 3 recipes.`;
+  }
+
+  private validateRecipeListStructure(data: GeneratedRecipeList): void {
+    if (!Array.isArray(data.recipes) || data.recipes.length === 0) {
+      throw new BadGatewayException(
+        "AI generated response missing 'recipes' array.",
+      );
+    }
+
+    for (const recipe of data.recipes) {
+      if (!recipe.name || typeof recipe.name !== "string") {
+        throw new BadGatewayException("AI generated recipe missing 'name'.");
+      }
+
+      if (
+        recipe.calories === undefined ||
+        recipe.protein === undefined ||
+        recipe.carbs === undefined ||
+        recipe.fat === undefined
+      ) {
+        throw new BadGatewayException(
+          `Recipe '${recipe.name}' missing macro information.`,
+        );
+      }
+
+      if (
+        !Array.isArray(recipe.ingredients) ||
+        recipe.ingredients.length === 0
+      ) {
+        throw new BadGatewayException(
+          `Recipe '${recipe.name}' missing ingredients.`,
+        );
+      }
+
+      if (!recipe.instructions) {
+        throw new BadGatewayException(
+          `Recipe '${recipe.name}' missing instructions.`,
+        );
+      }
     }
   }
 }
