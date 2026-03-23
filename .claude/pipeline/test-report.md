@@ -1,56 +1,36 @@
-# Test Report: Task 4.3 — Recipe Generator (AI)
+# Test Report — Task 4.4: Meal Swapping
 
-## Verdict: **PASSED**
+## Verdict: PASSED
 
-## Test Iteration: 1/3
+## Iteration: 1/3
 
-## Build & Lint
-- `pnpm build --filter=@ai-fitness/api`: PASS (0 TypeScript issues)
-- `biome check src/modules/nutrition/`: PASS (0 errors)
+## Code Quality Tests
 
-## Endpoint Structure
-- `POST /nutrition/recipe/generate` exists with correct path — PASS
-- JwtAuthGuard applied — PASS
-- Body validation via GenerateRecipeDto — PASS
-- Returns RecipeResponseDto — PASS
-- HTTP 201 status code — PASS
-
-## DTO Validation
-- mealType: @IsIn(breakfast/lunch/dinner/snack) — PASS
-- calories: @IsInt, @Min(100), @Max(5000) — PASS
-- protein/carbs/fat: @IsInt, @Min(0) — PASS
-- restrictions/disliked: @IsOptional, @IsArray, @IsString({each}) — PASS
-- cookingLevel: @IsOptional, @IsIn(beginner/regular/advanced) — PASS
-- maxPrepTime: @IsOptional, @IsInt, @Min(5), @Max(120) — PASS
-
-## Swagger Documentation
-- @ApiTags, @ApiOperation, @ApiBody, @ApiResponse decorators — PASS
-- All DTO fields have @ApiProperty/@ApiPropertyOptional — PASS
+| Test | Status | Details |
+|------|--------|---------|
+| Component size (<150 lines) | PASS | SwapMealPanel: 136, MacroComparison: 64, useSwapMeal: 133 |
+| Logic separation | PASS | No API calls or business logic in components |
+| Design system compliance | PASS | No hardcoded hex colors, all shadcn/ui components |
+| Error/loading/empty states | PASS | Skeleton loading, empty state text, error toasts |
+| Accessibility | PASS | aria-label on aside, semantic HTML, button text |
+| TypeScript strict | PASS | No `any` types found |
+| Build verification | PASS | Both API and Web compile with 0 errors |
 
 ## Acceptance Criteria
-| Criterion | Status |
-|-----------|--------|
-| Generates recipe with accurate macros | PASS |
-| Respects dietary restrictions | PASS |
-| Appropriate difficulty level | PASS |
-| Returns valid JSON | PASS |
-| Uses GPT-4o-mini for cost | PASS |
-| Macro validation (10% threshold) | PASS |
-| Redis caching | PASS |
 
-## Error Handling
-- 404 for missing profile — PASS
-- 502 for AI failures — PASS
-- 400 for invalid request body — PASS
-- Graceful Redis failure — PASS
+| Criterion | Status | Verification |
+|-----------|--------|-------------|
+| Can swap any meal | PASS | MealCard has Swap button, onSwapMeal works for any index, backend validates mealIndex |
+| Alternatives have similar macros | PASS | AI prompt requires ±15% similarity, MacroComparison shows visual diff |
+| Plan updates correctly | PASS | prisma.nutritionPlan.update persists swap, optimistic UI with rollback |
 
-## Convention Compliance
-| Rule | Status |
-|------|--------|
-| Thin controller | PASS |
-| Business logic in service | PASS |
-| class-validator on DTOs | PASS |
-| Swagger on all endpoints | PASS |
-| TypeScript strict (no `any`) | PASS |
-| NestJS Logger | PASS |
-| Structured error responses | PASS |
+## API Endpoints
+
+| Endpoint | Swagger | Guards | Validation | Status |
+|----------|---------|--------|------------|--------|
+| POST /nutrition/swap-meal | Full | JwtAuthGuard | SwapMealDto (nested) | PASS |
+| POST /nutrition/swap-meal/apply | Full | JwtAuthGuard | ApplySwapDto (nested) | PASS |
+
+## Notes
+- Visual regression tests not run (Pencil design file could not be opened)
+- Optimistic UI pattern correctly implements cancel → snapshot → update → rollback lifecycle

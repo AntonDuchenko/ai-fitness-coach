@@ -10,21 +10,12 @@ import type {
   NutritionRecipe,
   NutritionTab,
 } from "../types";
+import { useSwapMeal } from "./useSwapMeal";
 
 const PLAN_KEY = ["nutrition", "plan"] as const;
 
 function isPlanNotFound(err: unknown): boolean {
   return err instanceof ApiError && err.statusCode === 404;
-}
-
-function normalizeRecipeType(type: string | undefined): string {
-  if (!type) return "";
-  const t = type.trim().toLowerCase();
-  if (t.includes("breakfast")) return "breakfast";
-  if (t.includes("lunch")) return "lunch";
-  if (t.includes("dinner")) return "dinner";
-  if (t.includes("snack")) return "snack";
-  return "";
 }
 
 function safeParseMealPlan(value: unknown): NutritionMeal[] {
@@ -103,17 +94,6 @@ function mealTypeLabel(type: string): string {
   return t;
 }
 
-function scoreRecipeAgainstMeal(recipe: NutritionRecipe, meal: NutritionMeal) {
-  // Lower score is better.
-  const calScore =
-    Math.abs(recipe.calories - meal.calories) / Math.max(1, meal.calories);
-  const pScore =
-    Math.abs(recipe.protein - meal.protein) / Math.max(1, meal.protein);
-  const cScore = Math.abs(recipe.carbs - meal.carbs) / Math.max(1, meal.carbs);
-  const fScore = Math.abs(recipe.fat - meal.fat) / Math.max(1, meal.fat);
-  return calScore * 0.4 + pScore * 0.25 + cScore * 0.2 + fScore * 0.15;
-}
-
 export function useNutritionPlanView() {
   const queryClient = useQueryClient();
 
@@ -177,35 +157,8 @@ export function useNutritionPlanView() {
   const groceryList = plan?.groceryList ?? {};
 
   const selectedMeal = localMealPlan[selectedMealIndex];
-  const selectedMealRecipeType = normalizeRecipeType(selectedMeal?.mealType);
 
-  const swapAlternativesQuery = useQuery({
-    queryKey: [
-      "nutrition",
-      "recipes",
-      "alternatives",
-      selectedMealRecipeType,
-    ] as const,
-    queryFn: () =>
-      apiClient<NutritionRecipe[]>(
-        `/nutrition/recipes?type=${encodeURIComponent(selectedMealRecipeType)}`,
-      ),
-    enabled: Boolean(selectedMealRecipeType),
-    staleTime: 5 * 60 * 1000,
-  });
-
-  const swapAlternatives = useMemo(() => {
-    if (!selectedMeal) return [];
-    const list = swapAlternativesQuery.data ?? [];
-    const scored = list
-      .filter((r) => r.mealType && normalizeRecipeType(r.mealType))
-      .map((r) => ({
-        recipe: r,
-        score: scoreRecipeAgainstMeal(r, selectedMeal),
-      }))
-      .sort((a, b) => a.score - b.score);
-    return scored.slice(0, 3).map((s) => s.recipe);
-  }, [selectedMeal, swapAlternativesQuery.data]);
+  const swap = useSwapMeal();
 
   // Recipes tab (search + filter).
   const [recipeSearch, setRecipeSearch] = useState("");
@@ -237,27 +190,21 @@ export function useNutritionPlanView() {
     staleTime: 2 * 60 * 1000,
   });
 
+  const onSwapMeal = (idx: number) => {
+    setSelectedMealIndex(idx);
+    const meal = localMealPlan[idx];
+    if (meal) {
+      swap.requestSwap(idx, meal);
+    }
+  };
+
   const onUseAlternative = (alt: NutritionRecipe) => {
-    if (!selectedMeal) return;
-    setLocalMealPlan((prev) =>
-      prev.map((m, idx) =>
-        idx === selectedMealIndex
-          ? {
-              ...m,
-              name: alt.name,
-              calories: alt.calories,
-              protein: alt.protein,
-              carbs: alt.carbs,
-              fat: alt.fat,
-              ingredients: alt.ingredients,
-              instructions: alt.instructions,
-              prepTime: alt.prepTime,
-              cookTime: alt.cookTime,
-            }
-          : m,
-      ),
-    );
-    toast.success("Meal swapped");
+    if (!plan || swap.swapMealIndex === null) return;
+    swap.applySwap.mutate({
+      planId: plan.id,
+      mealIndex: swap.swapMealIndex,
+      recipe: alt,
+    });
   };
 
   const dailyTotals = useMemo(() => {
@@ -339,7 +286,7 @@ export function useNutritionPlanView() {
 
     groceryList,
 
-    // Recipes / Swap
+    // Recipes
     recipes: recipesQuery.data ?? [],
     recipesLoading: recipesQuery.isLoading,
     recipesError: recipesQuery.isError ? recipesQuery.error : null,
@@ -348,11 +295,19 @@ export function useNutritionPlanView() {
     recipeTypeFilter,
     setRecipeTypeFilter,
 
-    swapAlternatives,
-    swapAlternativesLoading: swapAlternativesQuery.isLoading,
+    // Swap
+    swapAlternatives: swap.alternatives,
+    swapAlternativesLoading: swap.isGenerating,
+    swapApplying: swap.isApplying,
+    onSwapMeal,
+    onUseAlternative,
+    onGenerateAlternatives: () => {
+      if (selectedMeal && selectedMealIndex >= 0) {
+        swap.requestSwap(selectedMealIndex, selectedMeal);
+      }
+    },
 
     regenerate,
-    onUseAlternative,
 
     mealTypeLabel,
     onToggleGrocery,

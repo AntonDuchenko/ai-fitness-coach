@@ -12,9 +12,11 @@ import type { NutritionPlan, UserProfile } from "@prisma/client";
 import Redis from "ioredis";
 import { PrismaService } from "../../prisma/prisma.service";
 import { AiService } from "../ai/ai.service";
+import type { ApplySwapDto } from "./dto/apply-swap.dto";
 import type { GenerateRecipeDto } from "./dto/generate-recipe.dto";
 import { NutritionPlanResponseDto } from "./dto/nutrition-plan-response.dto";
 import { RecipeResponseDto } from "./dto/recipe-response.dto";
+import type { SwapMealDto } from "./dto/swap-meal.dto";
 
 interface GeneratedIngredient {
   amount: number;
@@ -285,6 +287,104 @@ export class NutritionService implements OnModuleDestroy {
     await this.setCachedRecipe(cacheKey, result);
 
     return result;
+  }
+
+  async generateSwapAlternatives(
+    userId: string,
+    dto: SwapMealDto,
+  ): Promise<RecipeResponseDto[]> {
+    const plan = await this.getCurrentPlan(userId);
+    if (!plan) {
+      throw new NotFoundException("No active nutrition plan found.");
+    }
+
+    const mealPlan = plan.mealPlan as unknown[];
+    if (dto.mealIndex < 0 || dto.mealIndex >= mealPlan.length) {
+      throw new UnprocessableEntityException(
+        `Invalid mealIndex: ${dto.mealIndex}. Plan has ${mealPlan.length} meals.`,
+      );
+    }
+
+    const profile = await this.prisma.userProfile.findUnique({
+      where: { userId },
+    });
+
+    if (!profile) {
+      throw new NotFoundException(
+        "User profile not found. Complete onboarding first.",
+      );
+    }
+
+    const prompt = this.buildSwapAlternativesPrompt(dto.currentMeal, profile);
+
+    this.logger.log(
+      `Generating swap alternatives for user ${userId}, meal index ${dto.mealIndex} (${dto.currentMeal.name})`,
+    );
+
+    const data = await this.aiService.createJsonCompletion<GeneratedRecipeList>(
+      [
+        {
+          role: "system",
+          content:
+            "You are a certified nutritionist and chef. Generate alternative meal suggestions as valid JSON only. No markdown, no explanations outside the JSON structure.",
+        },
+        { role: "user", content: prompt },
+      ],
+      {
+        model: "gpt-4o-mini",
+        temperature: 0.9,
+        maxTokens: 3000,
+      },
+    );
+
+    this.validateRecipeListStructure(data);
+
+    return data.recipes.map((recipe) => new RecipeResponseDto(recipe));
+  }
+
+  async applyMealSwap(
+    userId: string,
+    dto: ApplySwapDto,
+  ): Promise<NutritionPlanResponseDto> {
+    const plan = await this.prisma.nutritionPlan.findFirst({
+      where: { id: dto.planId, userId },
+    });
+
+    if (!plan) {
+      throw new NotFoundException("Nutrition plan not found.");
+    }
+
+    const mealPlan = plan.mealPlan as unknown[];
+    if (dto.mealIndex < 0 || dto.mealIndex >= mealPlan.length) {
+      throw new UnprocessableEntityException(
+        `Invalid mealIndex: ${dto.mealIndex}. Plan has ${mealPlan.length} meals.`,
+      );
+    }
+
+    const updatedMealPlan = [...mealPlan];
+    updatedMealPlan[dto.mealIndex] = {
+      mealType: dto.recipe.mealType,
+      name: dto.recipe.name,
+      calories: dto.recipe.calories,
+      protein: dto.recipe.protein,
+      carbs: dto.recipe.carbs,
+      fat: dto.recipe.fat,
+      ingredients: dto.recipe.ingredients,
+      instructions: dto.recipe.instructions,
+      prepTime: dto.recipe.prepTime,
+      cookTime: dto.recipe.cookTime,
+    };
+
+    const updated = await this.prisma.nutritionPlan.update({
+      where: { id: dto.planId },
+      data: { mealPlan: JSON.parse(JSON.stringify(updatedMealPlan)) },
+    });
+
+    this.logger.log(
+      `Meal swap applied: plan ${dto.planId}, index ${dto.mealIndex} → "${dto.recipe.name}"`,
+    );
+
+    return new NutritionPlanResponseDto(updated);
   }
 
   async searchRecipes(
@@ -626,6 +726,68 @@ Return JSON format:
 }
 
 Generate exactly 3 recipes.`;
+  }
+
+  private buildSwapAlternativesPrompt(
+    currentMeal: SwapMealDto["currentMeal"],
+    profile: UserProfile,
+  ): string {
+    const dietaryRestrictions = Array.isArray(profile.dietaryRestrictions)
+      ? (profile.dietaryRestrictions as string[]).join(", ")
+      : "None";
+
+    const dislikedFoods = Array.isArray(profile.dislikedFoods)
+      ? (profile.dislikedFoods as string[]).join(", ")
+      : "None";
+
+    return `Generate 3 alternative ${currentMeal.mealType} meals to swap with the current meal.
+
+Current meal to replace:
+- Name: ${currentMeal.name}
+- Type: ${currentMeal.mealType}
+- Calories: ${currentMeal.calories} kcal
+- Protein: ${currentMeal.protein}g
+- Carbs: ${currentMeal.carbs}g
+- Fat: ${currentMeal.fat}g
+
+User context:
+- Goal: ${profile.primaryGoal}
+- Dietary restrictions: ${dietaryRestrictions}
+- Disliked foods: ${dislikedFoods}
+- Cooking level: ${profile.cookingLevel}
+- Budget: $${profile.foodBudget}/day
+
+Requirements:
+- Each alternative must have SIMILAR macros (within ±15% of the current meal)
+- Same meal type (${currentMeal.mealType})
+- Respect dietary restrictions and disliked foods
+- Appropriate for ${profile.cookingLevel} cooking level
+- Different recipes from the current meal
+- Include full ingredients and instructions
+
+Return JSON format:
+{
+  "recipes": [
+    {
+      "name": "Alternative Name",
+      "mealType": "${currentMeal.mealType}",
+      "calories": ${currentMeal.calories},
+      "protein": ${currentMeal.protein},
+      "carbs": ${currentMeal.carbs},
+      "fat": ${currentMeal.fat},
+      "prepTime": 10,
+      "cookTime": 15,
+      "difficulty": "easy",
+      "servings": 1,
+      "ingredients": [
+        { "amount": 200, "unit": "g", "name": "ingredient" }
+      ],
+      "instructions": "Step-by-step instructions..."
+    }
+  ]
+}
+
+Generate exactly 3 alternatives with similar macros.`;
   }
 
   private validateRecipeListStructure(data: GeneratedRecipeList): void {

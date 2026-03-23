@@ -1,90 +1,120 @@
-# Architect Plan: Task 4.3 — Recipe Generator (AI)
+# Architect Plan — Task 4.4: Meal Swapping
 
 ## Overview
-Add a dedicated `POST /nutrition/recipe/generate` endpoint that generates a single recipe based on specific meal type, target macros, and dietary restrictions. Unlike the existing `GET /nutrition/recipes` (which is a general search), this endpoint takes precise macro targets and validates the generated recipe hits them within 10%.
 
-## Existing Code Analysis
-- **Controller:** `nutrition.controller.ts` — Has POST generate, GET plan, GET plans, GET plan/:id, POST plan/regenerate, GET recipes
-- **Service:** `nutrition.service.ts` — Has `searchRecipes` (general), `generatePlan`, TDEE/macro calculation, AI prompt building
-- **DTOs:** `RecipeResponseDto` (already has full recipe fields), `RecipeRequestQueryDto` (for search endpoint)
-- **AI Service:** `createJsonCompletion<T>()` — JSON completion with retry logic
-- **Redis:** Available via Bull/ioredis (used for plan-generation queue). Will use `ConfigService` to get Redis URL and ioredis directly for caching.
+Add a backend `POST /nutrition/swap-meal` endpoint that generates 3 AI-powered alternative meals with similar macros, and a `POST /nutrition/swap-meal/apply` endpoint that persists the chosen swap to the nutrition plan. Update the frontend to show macro comparisons and use optimistic UI updates.
 
-## Task 4.3 Requirements
-1. `POST /nutrition/recipe/generate` with body `{ mealType, targetMacros, restrictions }`
-2. AI prompt with specific macro targets, restrictions, cooking level, prep time
-3. Use GPT-4o-mini for cost efficiency
-4. Validate macro accuracy within 10%
-5. Cache common recipes in Redis
-6. Save to database (optional — skip for now since no Recipe model in schema)
+## Current State
 
-## New DTO
+- **Backend:** No swap endpoint. `NutritionService` has `generateRecipe()` and `searchRecipes()`. `NutritionPlan.mealPlan` is stored as JSON in Prisma.
+- **Frontend:** `SwapMealPanel.tsx` exists as a presentational component. `useNutritionPlanView` hook has local-only swap logic via `onUseAlternative()` — updates `localMealPlan` state but does NOT persist. Alternatives fetched via generic `GET /nutrition/recipes?type=...`.
 
-### `dto/generate-recipe.dto.ts` — `GenerateRecipeDto`
+## Backend Changes
+
+### 1. New DTO: `SwapMealDto` (`dto/swap-meal.dto.ts`)
 ```typescript
 {
-  mealType: string;        // 'breakfast' | 'lunch' | 'dinner' | 'snack' — @IsIn
-  calories: number;        // @IsInt, @Min(100), @Max(5000)
-  protein: number;         // @IsInt, @Min(0)
-  carbs: number;           // @IsInt, @Min(0)
-  fat: number;             // @IsInt, @Min(0)
-  restrictions?: string[]; // @IsOptional, @IsArray, @IsString({ each: true })
-  disliked?: string[];     // @IsOptional, @IsArray, @IsString({ each: true })
-  cookingLevel?: string;   // @IsOptional, @IsIn(['beginner', 'regular', 'advanced'])
-  maxPrepTime?: number;    // @IsOptional, @IsInt, @Min(5), @Max(120)
+  mealIndex: number;     // @IsInt, @Min(0) — index in mealPlan array
+  currentMeal: {         // nested validated object
+    name: string;        // @IsString
+    mealType: string;    // @IsString
+    calories: number;    // @IsInt, @Min(0)
+    protein: number;     // @IsInt, @Min(0)
+    carbs: number;       // @IsInt, @Min(0)
+    fat: number;         // @IsInt, @Min(0)
+  }
 }
 ```
 
-## New Controller Endpoint
+### 2. New DTO: `ApplySwapDto` (`dto/apply-swap.dto.ts`)
+```typescript
+{
+  planId: string;        // @IsString
+  mealIndex: number;     // @IsInt, @Min(0)
+  recipe: {              // the chosen alternative
+    name: string;
+    mealType: string;
+    calories: number;
+    protein: number;
+    carbs: number;
+    fat: number;
+    ingredients: { amount: number; unit: string; name: string }[];
+    instructions: string;
+    prepTime?: number;
+    cookTime?: number;
+  }
+}
+```
 
-| Method | Path | Body | Description | Status |
-|--------|------|------|-------------|--------|
-| POST | `/nutrition/recipe/generate` | `GenerateRecipeDto` | Generate a single recipe matching macro targets | 201 |
+### 3. New Service Methods
 
-Decorators: `@UseGuards(JwtAuthGuard)`, `@ApiBearerAuth()`, `@ApiOperation`, `@ApiResponse(201/400/404/502)`, `@ApiBody({ type: GenerateRecipeDto })`
+**`generateSwapAlternatives(userId, dto)`:**
+1. Load active plan, validate mealIndex in range
+2. Load user profile for dietary restrictions
+3. Build targeted AI prompt: "Generate 3 alternative [mealType] meals with similar macros (~calories kcal, ~protein P, ~carbs C, ~fat F)"
+4. Call `aiService.createJsonCompletion` with model `gpt-4o-mini`
+5. Return 3 `RecipeResponseDto[]`
 
-## New Service Method
+**`applyMealSwap(userId, dto)`:**
+1. Load plan by planId, verify ownership
+2. Validate mealIndex
+3. Replace mealPlan[mealIndex] with the new recipe data
+4. `prisma.nutritionPlan.update({ data: { mealPlan: updated } })`
+5. Return updated `NutritionPlanResponseDto`
 
-### `generateRecipe(userId: string, dto: GenerateRecipeDto): Promise<RecipeResponseDto>`
-1. Fetch user profile (for dietary context fallback if restrictions not provided)
-2. Build cache key from `mealType + macros + restrictions` (sorted, normalized)
-3. Check Redis cache — if hit, return cached recipe
-4. Build recipe generation prompt (from task spec) with:
-   - Meal type, calorie target (±50), protein (±5g), carbs (±10g), fat (±5g)
-   - Restrictions, disliked foods, cooking level, max prep time
-5. Call `aiService.createJsonCompletion` with `model: "gpt-4o-mini"`, `temperature: 0.9`
-6. Validate response structure (name, macros, ingredients, instructions)
-7. **Validate macro accuracy** — each macro must be within 10% of target:
-   - `|generated.calories - target.calories| / target.calories <= 0.10`
-   - Same for protein, carbs, fat
-   - If out of range: log warning, but still return (don't fail — AI can be approximate)
-8. Cache result in Redis with 1-hour TTL
-9. Return `RecipeResponseDto`
+### 4. New Controller Endpoints
 
-### Redis Caching Strategy
-- Key format: `recipe:generate:{hash}` where hash = MD5/simple hash of `{mealType, calories, protein, carbs, fat, restrictions, disliked}`
-- TTL: 3600 seconds (1 hour)
-- Use ioredis directly via a small `RecipeCacheService` or inline in NutritionService
-- Since ioredis is already a dependency and Redis config exists, inject ConfigService to create a Redis client
+| Method | Path | Body | Response | Status |
+|--------|------|------|----------|--------|
+| POST | `/nutrition/swap-meal` | `SwapMealDto` | `RecipeResponseDto[]` | 201 |
+| POST | `/nutrition/swap-meal/apply` | `ApplySwapDto` | `NutritionPlanResponseDto` | 200 |
 
-## Implementation Approach
-Rather than creating a separate cache service (over-engineering for one use case), inject `ConfigService` in NutritionService, create a lazy Redis client, and add `getCachedRecipe`/`setCachedRecipe` private methods.
+Both guarded with `@UseGuards(JwtAuthGuard)`, full Swagger decorators.
 
-## Files to Create
-- `apps/api/src/modules/nutrition/dto/generate-recipe.dto.ts`
+## Frontend Changes
 
-## Files to Modify
-- `apps/api/src/modules/nutrition/nutrition.controller.ts` — Add POST recipe/generate endpoint
-- `apps/api/src/modules/nutrition/nutrition.service.ts` — Add generateRecipe method, Redis caching, macro validation
-- `apps/api/src/modules/nutrition/nutrition.module.ts` — Add ConfigModule if needed (already global)
+### 1. New Hook: `useSwapMeal` (`hooks/useSwapMeal.ts`)
+- `generateAlternatives` — `useMutation` calling `POST /nutrition/swap-meal`
+- `applySwap` — `useMutation` calling `POST /nutrition/swap-meal/apply`
+  - Optimistic update: immediately update plan query cache, rollback on error
+- State: `swapMealIndex`, `alternatives`, `isGenerating`, `isApplying`
+
+### 2. Update `SwapMealPanel.tsx`
+- Add macro comparison section: for each alternative, show diff vs current meal
+  - Format: "+20 kcal", "-5g P", etc. with color coding (green = better for goals, red = worse)
+- "Generate Alternatives" button (replaces auto-fetch)
+- Keep loading skeletons and empty state
+
+### 3. Update `useNutritionPlanView.ts`
+- Remove `swapAlternativesQuery` (was auto-fetching generic recipes)
+- Remove `onUseAlternative` local handler
+- Integrate `useSwapMeal` — expose its state/actions
+
+### 4. Update `NutritionPlanScreen.tsx`
+- Wire SwapMealPanel to useSwapMeal data instead of old swap props
+
+## File Changes
+
+### New Files
+1. `apps/api/src/modules/nutrition/dto/swap-meal.dto.ts`
+2. `apps/api/src/modules/nutrition/dto/apply-swap.dto.ts`
+3. `apps/web/src/features/nutrition/hooks/useSwapMeal.ts`
+4. `apps/web/src/features/nutrition/components/MacroComparison.tsx`
+
+### Modified Files
+1. `apps/api/src/modules/nutrition/nutrition.controller.ts` — 2 new endpoints
+2. `apps/api/src/modules/nutrition/nutrition.service.ts` — 2 new methods
+3. `apps/web/src/features/nutrition/hooks/useNutritionPlanView.ts` — remove old swap, integrate new
+4. `apps/web/src/features/nutrition/components/SwapMealPanel.tsx` — macro comparison, generate button
+5. `apps/web/src/features/nutrition/components/NutritionPlanScreen.tsx` — wire new hook
 
 ## Convention Compliance
-- Thin controller: validate DTO → delegate to service → return response
-- class-validator decorators on DTO with proper constraints
-- Full Swagger decorators on endpoint
-- JwtAuthGuard protection
-- HTTP 201 for creation
-- GPT-4o-mini model for cost efficiency
-- NestJS Logger for all operations
-- No `any` types
-- Structured error responses via NestJS exceptions
+- DTOs: class-validator decorators, nested validation with @ValidateNested + @Type
+- Swagger: @ApiTags, @ApiOperation, @ApiResponse on all endpoints
+- Business logic in service (backend) / hooks (frontend)
+- All API calls via TanStack Query useMutation
+- UI uses shadcn/ui Badge for macro comparison
+- Semantic design tokens only (no hardcoded hex)
+- Optimistic UI via queryClient.setQueryData + onError rollback
+- All components under 150 lines
+- 4 async states: loading skeleton, error message, empty state, success

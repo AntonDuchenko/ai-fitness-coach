@@ -103,7 +103,7 @@ export function NutritionPlanScreen() {
                   selectedMealIndex={v.selectedMealIndex}
                   onSelectMealIndex={v.setSelectedMealIndex}
                   onViewRecipe={(meal) => openRecipe(mealToDialogPayload(meal))}
-                  onSwapMeal={(idx) => v.setSelectedMealIndex(idx)}
+                  onSwapMeal={(idx) => v.onSwapMeal(idx)}
                   dailyTotals={v.dailyTotals}
                 />
               ) : null}
@@ -143,6 +143,8 @@ export function NutritionPlanScreen() {
               currentMeal={v.selectedMeal}
               alternatives={v.swapAlternatives}
               loading={v.swapAlternativesLoading}
+              applying={v.swapApplying}
+              onGenerateAlternatives={v.onGenerateAlternatives}
               onUseAlternative={v.onUseAlternative}
             />
           </aside>

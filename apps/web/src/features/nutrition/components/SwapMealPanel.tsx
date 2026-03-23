@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import type { NutritionMeal, NutritionRecipe } from "../types";
+import { MacroComparison } from "./MacroComparison";
 
 const SWAP_SKELETON_KEYS = ["a", "b", "c"] as const;
 
@@ -31,12 +32,16 @@ export function SwapMealPanel({
   currentMeal,
   alternatives,
   loading,
+  applying,
+  onGenerateAlternatives,
   onUseAlternative,
   className,
 }: {
   currentMeal: NutritionMeal | undefined;
   alternatives: NutritionRecipe[];
   loading: boolean;
+  applying: boolean;
+  onGenerateAlternatives: () => void;
   onUseAlternative: (alt: NutritionRecipe) => void;
   className?: string;
 }) {
@@ -54,16 +59,27 @@ export function SwapMealPanel({
           <p className="mt-1 text-[12px] text-muted-foreground">
             {currentMeal
               ? `Current: ${currentMeal.name}`
-              : "Choose a meal to swap"}
+              : "Select a meal and click Swap to see alternatives"}
           </p>
         </div>
       </header>
+
+      {currentMeal && alternatives.length === 0 && !loading ? (
+        <Button
+          type="button"
+          className="mt-4 w-full"
+          onClick={onGenerateAlternatives}
+          disabled={loading}
+        >
+          Generate Alternatives
+        </Button>
+      ) : null}
 
       <div className="mt-4 flex flex-col gap-3">
         {loading ? (
           <>
             {SWAP_SKELETON_KEYS.map((k) => (
-              <Skeleton key={k} className="h-40 w-full rounded-xl" />
+              <Skeleton key={k} className="h-44 w-full rounded-xl" />
             ))}
           </>
         ) : null}
@@ -80,20 +96,38 @@ export function SwapMealPanel({
             <div className="mt-3">
               <MacroPillsForRecipe r={alt} />
             </div>
+            {currentMeal ? (
+              <div className="mt-2">
+                <MacroComparison
+                  current={{
+                    calories: currentMeal.calories,
+                    protein: currentMeal.protein,
+                    carbs: currentMeal.carbs,
+                    fat: currentMeal.fat,
+                  }}
+                  alternative={{
+                    calories: alt.calories,
+                    protein: alt.protein,
+                    carbs: alt.carbs,
+                    fat: alt.fat,
+                  }}
+                />
+              </div>
+            ) : null}
             <Button
               type="button"
               className="mt-3 w-full"
               onClick={() => onUseAlternative(alt)}
-              disabled={loading}
+              disabled={loading || applying}
             >
-              Use This
+              {applying ? "Applying..." : "Use This"}
             </Button>
           </div>
         ))}
 
-        {!loading && alternatives.length === 0 ? (
+        {!loading && alternatives.length === 0 && !currentMeal ? (
           <p className="text-sm text-muted-foreground">
-            No alternative recipes found.
+            Click &quot;Swap Meal&quot; on any meal card to see alternatives.
           </p>
         ) : null}
       </div>

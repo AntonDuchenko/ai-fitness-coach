@@ -20,10 +20,12 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../../common/guards/jwt-auth.guard";
+import { ApplySwapDto } from "./dto/apply-swap.dto";
 import { GenerateRecipeDto } from "./dto/generate-recipe.dto";
 import { NutritionPlanResponseDto } from "./dto/nutrition-plan-response.dto";
 import { RecipeRequestQueryDto } from "./dto/recipe-request-query.dto";
 import { RecipeResponseDto } from "./dto/recipe-response.dto";
+import { SwapMealDto } from "./dto/swap-meal.dto";
 import { NutritionService } from "./nutrition.service";
 
 @ApiTags("Nutrition")
@@ -112,6 +114,47 @@ export class NutritionController {
     @Request() req: { user: { id: string } },
   ): Promise<NutritionPlanResponseDto> {
     return this.nutritionService.regeneratePlan(req.user.id);
+  }
+
+  @Post("swap-meal")
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({
+    summary: "Generate 3 alternative meals for swapping",
+  })
+  @ApiBody({ type: SwapMealDto })
+  @ApiResponse({
+    status: 201,
+    description: "3 alternative recipes generated",
+    type: [RecipeResponseDto],
+  })
+  @ApiResponse({ status: 404, description: "No active plan or profile found" })
+  @ApiResponse({ status: 422, description: "Invalid meal index" })
+  @ApiResponse({ status: 502, description: "AI service error" })
+  async generateSwapAlternatives(
+    @Request() req: { user: { id: string } },
+    @Body() dto: SwapMealDto,
+  ): Promise<RecipeResponseDto[]> {
+    return this.nutritionService.generateSwapAlternatives(req.user.id, dto);
+  }
+
+  @Post("swap-meal/apply")
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: "Apply a meal swap to the nutrition plan",
+  })
+  @ApiBody({ type: ApplySwapDto })
+  @ApiResponse({
+    status: 200,
+    description: "Meal swapped and plan updated",
+    type: NutritionPlanResponseDto,
+  })
+  @ApiResponse({ status: 404, description: "Plan not found" })
+  @ApiResponse({ status: 422, description: "Invalid meal index" })
+  async applyMealSwap(
+    @Request() req: { user: { id: string } },
+    @Body() dto: ApplySwapDto,
+  ): Promise<NutritionPlanResponseDto> {
+    return this.nutritionService.applyMealSwap(req.user.id, dto);
   }
 
   @Post("recipe/generate")

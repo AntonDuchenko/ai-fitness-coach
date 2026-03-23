@@ -1,37 +1,45 @@
-# Review Report: Task 4.3 — Recipe Generator (AI)
+# Review Report — Task 4.4: Meal Swapping
 
 ## Verdict: APPROVED
 
-## Summary
-Backend-only task implementing `POST /nutrition/recipe/generate` endpoint with AI-powered recipe generation, macro validation, and Redis caching.
+## Iteration: 1/3
+
+## Build Status: PASS (both API and Web compiled successfully)
 
 ## Files Changed
-- `apps/api/src/modules/nutrition/dto/generate-recipe.dto.ts` (NEW)
-- `apps/api/src/modules/nutrition/nutrition.controller.ts` (MODIFIED)
-- `apps/api/src/modules/nutrition/nutrition.service.ts` (MODIFIED)
+- `apps/api/src/modules/nutrition/dto/swap-meal.dto.ts` (NEW)
+- `apps/api/src/modules/nutrition/dto/apply-swap.dto.ts` (NEW)
+- `apps/api/src/modules/nutrition/nutrition.controller.ts` (MODIFIED — 2 new endpoints)
+- `apps/api/src/modules/nutrition/nutrition.service.ts` (MODIFIED — 2 new methods + prompt builder)
+- `apps/web/src/features/nutrition/hooks/useSwapMeal.ts` (NEW)
+- `apps/web/src/features/nutrition/components/MacroComparison.tsx` (NEW)
+- `apps/web/src/features/nutrition/components/SwapMealPanel.tsx` (MODIFIED — macro comparison + generate button)
+- `apps/web/src/features/nutrition/hooks/useNutritionPlanView.ts` (MODIFIED — replaced old swap logic)
+- `apps/web/src/features/nutrition/components/NutritionPlanScreen.tsx` (MODIFIED — wired new props)
 
 ## Checklist
 
-| Rule | Status | Notes |
-|------|--------|-------|
-| Thin controller | PASS | Controller only validates + delegates to service |
-| class-validator on DTOs | PASS | All fields have proper decorators, @IsIn, @Min, @Max |
-| Swagger decorators | PASS | @ApiOperation, @ApiResponse, @ApiBody, @ApiProperty all present |
-| JwtAuthGuard | PASS | Applied at controller class level |
-| HTTP codes | PASS | 201 for generation |
-| Service handles business logic | PASS | All logic in NutritionService |
-| No `any` types | PASS | |
-| Structured error responses | PASS | NestJS exceptions used |
-| Logger used | PASS | Logger.log and Logger.warn for all operations |
-| GPT-4o-mini model | PASS | Per task spec for cost efficiency |
-| Macro validation (10%) | PASS | logMacroAccuracy checks all 4 macros |
-| Redis caching | PASS | 1hr TTL, normalized cache key, graceful failure |
-| Recipe structure validation | PASS | validateRecipeStructure reused from existing code |
-| Profile fallback | PASS | Falls back to profile restrictions/disliked if not in DTO |
-| Build passes | PASS | 0 TypeScript issues |
-| Lint passes | PASS | Biome clean |
+| # | Check | Status |
+|---|-------|--------|
+| 1 | Component size (<150 lines) | PASS |
+| 2 | Business logic in hooks/services | PASS |
+| 3 | shadcn/ui used (no raw HTML) | PASS |
+| 4 | Semantic design tokens (no hex) | PASS |
+| 5 | Error/loading/empty states | PASS |
+| 6 | Accessibility (ARIA, semantic HTML) | PASS |
+| 7 | TanStack Query for API calls | PASS |
+| 8 | TypeScript strict (no `any`) | PASS |
+| 9 | Swagger decorators on endpoints | PASS |
+| 10 | class-validator on DTOs | PASS |
+| 11 | Thin controller pattern | PASS |
+| 12 | Optimistic UI update | PASS |
+
+## Issues Found & Fixed
+- **Minor (fixed):** Dead code `normalizeRecipeType` removed from `useNutritionPlanView.ts`
 
 ## Notes
-- Service file is ~793 lines total (was ~588 before). Large but acceptable for this phase. Future refactoring into a RecipeService could be considered post-MVP.
-- Redis connection is lazy-initialized and gracefully handles failures (degrades to no-cache).
-- Macro accuracy is logged as warnings, not errors — AI approximations are expected.
+- Optimistic update properly implemented with rollback on error via onMutate/onError pattern
+- Nested DTO validation uses @ValidateNested + @Type correctly
+- MacroComparison component shows clear diff indicators (+/- with color coding)
+- SwapMealPanel handles all 4 async states
+- Service file is growing (now ~900 lines) — future refactoring into NutritionSwapService may be warranted post-MVP

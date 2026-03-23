@@ -1,12 +1,12 @@
 {
-  "task": "Task 4.3",
-  "taskTitle": "Recipe Generator (AI)",
+  "task": "Task 4.4",
+  "taskTitle": "Meal Swapping",
   "phase": "summary",
   "status": "completed",
   "iterations": { "review": 1, "test": 1 },
   "maxIterations": { "review": 3, "test": 3 },
-  "startedAt": "2026-03-23T00:00:00.000Z",
-  "completedAt": "2026-03-23T00:30:00.000Z",
+  "startedAt": "2026-03-23T12:00:00.000Z",
+  "completedAt": "2026-03-23T12:45:00.000Z",
   "projectInitialized": true,
   "phases": {
     "init": { "status": "completed" },
