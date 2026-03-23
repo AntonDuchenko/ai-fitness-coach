@@ -1,48 +1,38 @@
-# Review Report — Task 5.1: Weight Logging
+# Review Report — Task 5.2: Progress Analytics Backend
 
 ## Verdict: APPROVED
 
 ## Iteration: 1/3
 
-## Build Status: PASS (both API and Web compiled successfully, 0 lint errors in changed files)
+## Build Status: PASS (API compiled successfully, 0 lint errors)
 
 ## Files Changed
-- `apps/api/src/modules/progress/dto/create-weight-log.dto.ts` (NEW)
-- `apps/api/src/modules/progress/dto/weight-log-response.dto.ts` (NEW)
-- `apps/api/src/modules/progress/dto/weight-history-response.dto.ts` (NEW)
-- `apps/api/src/modules/progress/progress.service.ts` (NEW)
-- `apps/api/src/modules/progress/progress.controller.ts` (NEW)
-- `apps/api/src/modules/progress/progress.module.ts` (NEW)
-- `apps/api/src/app.module.ts` (MODIFIED — added ProgressModule)
-- `apps/web/src/features/progress/types.ts` (NEW)
-- `apps/web/src/features/progress/hooks/useLogWeightMutation.ts` (NEW)
-- `apps/web/src/features/progress/hooks/useWeightHistoryQuery.ts` (NEW)
-- `apps/web/src/features/progress/components/WeightLogWidget.tsx` (NEW)
-- `apps/web/src/features/progress/index.ts` (NEW)
-- `apps/web/src/app/dashboard/page.tsx` (MODIFIED — added WeightLogWidget section)
+- `apps/api/src/modules/progress/dto/strength-progress-response.dto.ts` (NEW)
+- `apps/api/src/modules/progress/dto/volume-progress-response.dto.ts` (NEW)
+- `apps/api/src/modules/progress/dto/consistency-response.dto.ts` (NEW)
+- `apps/api/src/modules/progress/dto/progress-summary-response.dto.ts` (NEW)
+- `apps/api/src/modules/progress/progress.service.ts` (MODIFIED — added 4 analytics methods)
+- `apps/api/src/modules/progress/progress.controller.ts` (MODIFIED — added 4 endpoints)
 
 ## Checklist
 
 | # | Check | Status |
 |---|-------|--------|
-| 1 | Component size (<150 lines) | PASS |
-| 2 | Business logic in hooks/services | PASS |
-| 3 | shadcn/ui used (no raw HTML) | PASS |
-| 4 | Semantic design tokens (no hex) | PASS |
-| 5 | Error/loading/empty states | PASS |
-| 6 | Accessibility (ARIA, semantic HTML) | PASS |
-| 7 | TanStack Query for API calls | PASS |
-| 8 | TypeScript strict (no `any`) | PASS |
-| 9 | Swagger decorators on endpoints | PASS |
-| 10 | class-validator on DTOs | PASS |
-| 11 | Thin controller pattern | PASS |
-| 12 | Auth guards | PASS |
-| 13 | Proper HTTP codes (201/200) | PASS |
-| 14 | No console.log (NestJS Logger used) | PASS |
-| 15 | Feature folder structure | PASS |
+| 1 | Business logic in services | PASS |
+| 2 | Swagger decorators on all endpoints | PASS |
+| 3 | class-validator / ApiProperty on DTOs | PASS |
+| 4 | Thin controller pattern | PASS |
+| 5 | Auth guards (JwtAuthGuard) | PASS |
+| 6 | Proper HTTP codes (200 for GETs) | PASS |
+| 7 | TypeScript strict (no `any`) | PASS |
+| 8 | No console.log (NestJS Logger used) | PASS |
+| 9 | Error handling (graceful empty data) | PASS |
+| 10 | Efficient DB queries (Promise.all) | PASS |
 
 ## Notes
-- Duplicate prevention via date-range query (start-of-day to end-of-day) is correct
-- Unit conversion (lbs/kg) handled client-side, API always receives kg
-- localStorage for unit preference is a good UX choice
-- All 4 async UI states covered: loading (Skeleton), empty ("No weight logged yet"), error (toast), success (toast)
+- Controller at 180 lines — acceptable for backend with 6 decorator-heavy endpoints
+- Service at 573 lines — appropriate for backend service with 4 public methods + helpers
+- Case-insensitive exercise matching is good UX
+- Summary uses Promise.all for parallel queries
+- Streak calculation reuses proven algorithm from WorkoutsService
+- All period options consistently supported across endpoints

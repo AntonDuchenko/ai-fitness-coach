@@ -1,4 +1,4 @@
-# Test Report — Task 5.1: Weight Logging
+# Test Report — Task 5.2: Progress Analytics Backend
 
 ## Verdict: PASSED
 
@@ -8,31 +8,35 @@
 
 | Test | Status | Details |
 |------|--------|---------|
-| Component size (<150 lines) | PASS | WeightLogWidget: 141, controller: 72, service: 129 |
-| Logic separation | PASS | API calls in hooks only, business logic in service |
-| Design system compliance | PASS | No hardcoded hex, all shadcn/ui components |
-| Error/loading/empty states | PASS | Skeleton, empty text, error toast, success toast |
-| Accessibility | PASS | sr-only labels, aria-label, aria-labelledby, semantic HTML |
+| Logic separation | PASS | All logic in service, controller is thin |
+| Swagger decorators | PASS | All 6 endpoints have @ApiOperation, @ApiResponse, @ApiQuery/@ApiParam |
+| DTO ApiProperty coverage | PASS | 68 decorators across 7 DTO files |
+| Auth guards | PASS | @UseGuards(JwtAuthGuard) on controller class |
 | TypeScript strict | PASS | No `any` types |
-| Build verification | PASS | API: 0 TS errors, Web: compiled successfully |
+| Build verification | PASS | 0 TS errors, 79 files compiled |
 | Lint verification | PASS | 0 errors in changed files |
 
 ## Acceptance Criteria
 
 | Criterion | Status | Verification |
 |-----------|--------|-------------|
-| Can log weight | PASS | POST /progress/weight creates WeightLog entry |
-| Can't duplicate same day | PASS | findFirst with date range → upsert pattern |
-| Can fetch history | PASS | GET /progress/weight?period= returns logs + stats |
+| Weight data formatted for charts | PASS | GET /progress/weight returns logs[] with dates + stats |
+| Strength data per exercise | PASS | GET /progress/strength/:exercise returns data points with maxWeight, totalVolume, bestSet |
+| Consistency data (workouts per week) | PASS | GET /progress/consistency returns dailyData[] + workoutsPerWeek |
+| Streaks calculated | PASS | currentStreak + bestStreak in consistency and summary |
 
 ## API Endpoints
 
 | Endpoint | Swagger | Guards | Validation | Status |
 |----------|---------|--------|------------|--------|
-| POST /progress/weight | Full | JwtAuthGuard | CreateWeightLogDto | PASS |
 | GET /progress/weight?period= | Full | JwtAuthGuard | DefaultValuePipe | PASS |
+| GET /progress/strength/:exercise?period= | Full | JwtAuthGuard | @Param + DefaultValuePipe | PASS |
+| GET /progress/volume?period= | Full | JwtAuthGuard | DefaultValuePipe | PASS |
+| GET /progress/consistency?period= | Full | JwtAuthGuard | DefaultValuePipe | PASS |
+| GET /progress/summary | Full | JwtAuthGuard | N/A | PASS |
 
 ## Notes
-- No Pencil design screens exist for weight logging — visual regression skipped
-- Unit conversion (lbs/kg) is client-side only; API always stores kg
-- Dashboard integration verified — widget appears between workout and quick links sections
+- Backend-only task — no Playwright visual tests needed
+- Summary endpoint efficiently uses Promise.all for parallel DB queries
+- Exercise name matching is case-insensitive
+- Period options consistent across all endpoints: 1week, 1month, 3months, 6months, 1year, all

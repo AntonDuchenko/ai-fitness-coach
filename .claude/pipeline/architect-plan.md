@@ -1,101 +1,151 @@
-# Architect Plan — Task 5.1: Weight Logging
+# Architect Plan — Task 5.2: Progress Analytics Backend
 
 ## Overview
-Create a full-stack weight logging feature: backend Progress module with `POST /progress/weight` and `GET /progress/weight` endpoints, plus a frontend quick-log widget on the Dashboard.
+Extend the existing Progress module with analytics endpoints for strength progression, training volume, workout consistency (heatmap), streaks, and a combined summary. All endpoints are backend-only (no frontend in this task).
 
-## Backend Architecture
+## Current State
+- `ProgressModule` exists with weight logging (`POST /progress/weight`, `GET /progress/weight?period=`)
+- `WorkoutsService` has `calculateStreaks()` and `calculatePersonalRecords()` for workout stats
+- `WorkoutLog` model stores exercises as JSON array of `{ exerciseName, sets: [{ setNumber, weight, reps, rpe? }], notes? }`
+- `WeightLog` model tracks weight over time
+- `UserProfile` has `targetWeight`
 
-### New Module: `apps/api/src/modules/progress/`
+## New Endpoints
 
-**Files:**
-1. `progress.module.ts` — NestJS module (imports PrismaModule)
-2. `progress.controller.ts` — Thin controller with 2 endpoints
-3. `progress.service.ts` — Business logic (log weight, get history)
-4. `dto/create-weight-log.dto.ts` — Validated input: `{ weight, date?, notes? }`
-5. `dto/weight-log-response.dto.ts` — Response shape
-6. `dto/weight-history-response.dto.ts` — History response with array + metadata
+### 1. `GET /progress/strength/:exercise?period=`
+Returns strength progression data for a specific exercise over time.
 
-**Endpoints:**
-- `POST /progress/weight` — Log weight (upsert for same user+date). Body: `{ weight: number, date?: string, notes?: string }`. Returns 201 with the created/updated log.
-- `GET /progress/weight?period=3months` — Get weight history. Period options: `1month`, `3months`, `6months`, `1year`, `all`. Returns array of logs + start/current weight + change.
-
-**Key Logic (service):**
-- `logWeight(userId, dto)`: Normalize date to start-of-day (UTC). Check for existing entry on that date via `findFirst` with date range. If exists, update. If not, create. Returns the log.
-- `getWeightHistory(userId, period)`: Calculate start date from period string. Query WeightLog ordered by date asc. Return `{ logs, startWeight, currentWeight, change, changePercent }`.
-
-**Guards/Decorators:** `@UseGuards(JwtAuthGuard)`, `@ApiBearerAuth()` on controller class.
-
-### Register in AppModule
-- Import `ProgressModule` into `app.module.ts`
-
-## Frontend Architecture
-
-### New Feature: `apps/web/src/features/progress/`
-
-**Structure:**
+**Response DTO: `StrengthProgressResponseDto`**
 ```
-features/progress/
-  hooks/useLogWeightMutation.ts    # useMutation for POST /progress/weight
-  hooks/useWeightHistoryQuery.ts   # useQuery for GET /progress/weight
-  components/WeightLogWidget.tsx   # Card with input, unit toggle, log button
-  types.ts                         # WeightLog, WeightHistoryResponse types
-  index.ts                         # Public exports
+{
+  exercise: string;
+  data: Array<{
+    date: string;        // ISO date of workout
+    maxWeight: number;   // heaviest set weight
+    totalVolume: number; // sum(weight * reps) across all sets
+    bestSet: { weight: number; reps: number; }
+  }>;
+  startMaxWeight: number | null;
+  currentMaxWeight: number | null;
+  improvementKg: number | null;
+  improvementPercent: number | null;
+}
 ```
 
-**Hook: `useLogWeightMutation`**
-- Uses `useMutation` + `apiClient`
-- On success: invalidates weight history query key
-- Returns mutation state for UI
+### 2. `GET /progress/volume?period=`
+Returns total training volume over time (weekly aggregated).
 
-**Hook: `useWeightHistoryQuery`**
-- Uses `useQuery` with key `["progress", "weight", period]`
-- Fetches from `/progress/weight?period=<period>`
+**Response DTO: `VolumeProgressResponseDto`**
+```
+{
+  weeklyData: Array<{
+    weekStart: string;  // ISO date (Monday)
+    totalVolume: number; // sum of all weight*reps across all exercises
+    workoutCount: number;
+    avgVolumePerWorkout: number;
+  }>;
+  totalVolume: number;
+  avgWeeklyVolume: number;
+}
+```
 
-**Component: `WeightLogWidget`** (~100 lines)
-- `'use client'` directive
-- Uses hooks internally (self-contained widget)
-- Uses: `Card`, `CardHeader`, `CardTitle`, `CardContent`, `Input`, `Button`, `Label`
-- Features:
-  - Number input for weight value
-  - Unit toggle button (kg/lbs) — stored in localStorage, converts to kg for API
-  - Optional notes input
-  - "Log Weight" button with loading state
-  - Success toast via sonner
-  - Error message inline
-  - Latest weight shown as context ("Last logged: 82.5 kg")
+### 3. `GET /progress/consistency?period=`
+Returns workout consistency data (calendar heatmap format).
 
-### Dashboard Integration
-- Add `WeightLogWidget` as a new section in `apps/web/src/app/dashboard/page.tsx`
-- Place below "Today's workout" section, before "Quick links"
-- Section heading: "Quick weight log"
+**Response DTO: `ConsistencyResponseDto`**
+```
+{
+  dailyData: Array<{
+    date: string;        // ISO date
+    workoutCount: number;
+    totalDuration: number; // minutes
+  }>;
+  totalWorkouts: number;
+  workoutsPerWeek: number; // average
+  currentStreak: number;
+  bestStreak: number;
+}
+```
 
-## File Summary
+### 4. `GET /progress/summary`
+Returns combined summary stats (no period filter — all-time + recent).
 
-### New Files (Backend)
-1. `apps/api/src/modules/progress/progress.module.ts`
-2. `apps/api/src/modules/progress/progress.controller.ts`
-3. `apps/api/src/modules/progress/progress.service.ts`
-4. `apps/api/src/modules/progress/dto/create-weight-log.dto.ts`
-5. `apps/api/src/modules/progress/dto/weight-log-response.dto.ts`
-6. `apps/api/src/modules/progress/dto/weight-history-response.dto.ts`
+**Response DTO: `ProgressSummaryResponseDto`**
+```
+{
+  weight: {
+    startWeight: number | null;
+    currentWeight: number | null;
+    targetWeight: number | null;
+    change: number | null;
+    changePercent: number | null;
+  };
+  workouts: {
+    totalCompleted: number;
+    thisWeek: number;
+    thisMonth: number;
+    currentStreak: number;
+    bestStreak: number;
+  };
+  volume: {
+    thisWeekVolume: number;
+    lastWeekVolume: number;
+    changePercent: number | null;
+  };
+  personalRecords: Array<{
+    exerciseName: string;
+    maxWeight: number;
+    repsAtMax: number;
+    achievedAt: string;
+  }>;
+}
+```
 
-### New Files (Frontend)
-7. `apps/web/src/features/progress/types.ts`
-8. `apps/web/src/features/progress/hooks/useLogWeightMutation.ts`
-9. `apps/web/src/features/progress/hooks/useWeightHistoryQuery.ts`
-10. `apps/web/src/features/progress/components/WeightLogWidget.tsx`
-11. `apps/web/src/features/progress/index.ts`
+## Implementation Plan
+
+### DTOs to Create (in `apps/api/src/modules/progress/dto/`)
+1. `strength-progress-response.dto.ts` — StrengthProgressResponseDto + StrengthDataPointDto
+2. `volume-progress-response.dto.ts` — VolumeProgressResponseDto + WeeklyVolumeDto
+3. `consistency-response.dto.ts` — ConsistencyResponseDto + DailyConsistencyDto
+4. `progress-summary-response.dto.ts` — ProgressSummaryResponseDto + nested DTOs
+
+### Service Methods to Add (in `progress.service.ts`)
+1. `getStrengthProgress(userId, exercise, period)` — Query WorkoutLogs, filter by exercise name, extract max weight + volume per workout date
+2. `getVolumeProgress(userId, period)` — Query WorkoutLogs, aggregate by week (Mon-Sun), compute total volume per week
+3. `getConsistency(userId, period)` — Query WorkoutLogs, group by date, compute daily counts + durations, calculate streaks
+4. `getSummary(userId)` — Combine weight history, workout counts, volume comparison, personal records
+
+### Controller Endpoints to Add (in `progress.controller.ts`)
+4 new GET endpoints with `@ApiTags("Progress")`, `@ApiBearerAuth()`, `@UseGuards(JwtAuthGuard)`, appropriate `@ApiOperation`, `@ApiResponse`, `@ApiQuery`, `@ApiParam` decorators.
+
+### Helper Methods (private in service)
+- `getStartDate(period)` — already exists
+- `calculateStreaks(dates)` — adapted from WorkoutsService
+- `getWeekStart(date)` — returns Monday of the given date's week
+- Exercise JSON parsing helper — type-safe extraction from WorkoutLog.exercises
+
+## File Changes
+
+### New Files
+1. `apps/api/src/modules/progress/dto/strength-progress-response.dto.ts`
+2. `apps/api/src/modules/progress/dto/volume-progress-response.dto.ts`
+3. `apps/api/src/modules/progress/dto/consistency-response.dto.ts`
+4. `apps/api/src/modules/progress/dto/progress-summary-response.dto.ts`
 
 ### Modified Files
-12. `apps/api/src/app.module.ts` — import ProgressModule
-13. `apps/web/src/app/dashboard/page.tsx` — add WeightLogWidget section
+5. `apps/api/src/modules/progress/progress.controller.ts` — add 4 new endpoints
+6. `apps/api/src/modules/progress/progress.service.ts` — add 4 service methods + helpers
+
+### No Changes Needed
+- `progress.module.ts` — no new dependencies needed (all queries via PrismaService)
+- `app.module.ts` — ProgressModule already registered
 
 ## Convention Compliance
-- All API calls via TanStack Query (useQuery/useMutation)
-- All UI via shadcn/ui components (Card, Input, Button, Label)
-- Semantic tokens only (bg-card, text-foreground, text-muted-foreground, etc.)
-- Business logic in hooks, not components
-- DTOs with class-validator decorators
-- Swagger decorators on all endpoints
-- Thin controller, fat service
-- Components under 150 lines
+- Thin controller: validate input, call service, return response
+- Service: all business logic, data transformation
+- DTOs: Swagger decorators on all fields (`@ApiProperty`/`@ApiPropertyOptional`)
+- Endpoints: `@ApiTags`, `@ApiOperation`, `@ApiResponse`, `@ApiQuery`, `@ApiParam`
+- Proper HTTP codes: 200 for all GET endpoints, 401 for unauthorized
+- Guards: `@UseGuards(JwtAuthGuard)` on controller class (already applied)
+- No `any` types — typed interfaces for JSON exercise data
+- Logger for key operations
