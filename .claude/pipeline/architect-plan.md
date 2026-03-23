@@ -1,120 +1,101 @@
-# Architect Plan — Task 4.4: Meal Swapping
+# Architect Plan — Task 5.1: Weight Logging
 
 ## Overview
+Create a full-stack weight logging feature: backend Progress module with `POST /progress/weight` and `GET /progress/weight` endpoints, plus a frontend quick-log widget on the Dashboard.
 
-Add a backend `POST /nutrition/swap-meal` endpoint that generates 3 AI-powered alternative meals with similar macros, and a `POST /nutrition/swap-meal/apply` endpoint that persists the chosen swap to the nutrition plan. Update the frontend to show macro comparisons and use optimistic UI updates.
+## Backend Architecture
 
-## Current State
+### New Module: `apps/api/src/modules/progress/`
 
-- **Backend:** No swap endpoint. `NutritionService` has `generateRecipe()` and `searchRecipes()`. `NutritionPlan.mealPlan` is stored as JSON in Prisma.
-- **Frontend:** `SwapMealPanel.tsx` exists as a presentational component. `useNutritionPlanView` hook has local-only swap logic via `onUseAlternative()` — updates `localMealPlan` state but does NOT persist. Alternatives fetched via generic `GET /nutrition/recipes?type=...`.
+**Files:**
+1. `progress.module.ts` — NestJS module (imports PrismaModule)
+2. `progress.controller.ts` — Thin controller with 2 endpoints
+3. `progress.service.ts` — Business logic (log weight, get history)
+4. `dto/create-weight-log.dto.ts` — Validated input: `{ weight, date?, notes? }`
+5. `dto/weight-log-response.dto.ts` — Response shape
+6. `dto/weight-history-response.dto.ts` — History response with array + metadata
 
-## Backend Changes
+**Endpoints:**
+- `POST /progress/weight` — Log weight (upsert for same user+date). Body: `{ weight: number, date?: string, notes?: string }`. Returns 201 with the created/updated log.
+- `GET /progress/weight?period=3months` — Get weight history. Period options: `1month`, `3months`, `6months`, `1year`, `all`. Returns array of logs + start/current weight + change.
 
-### 1. New DTO: `SwapMealDto` (`dto/swap-meal.dto.ts`)
-```typescript
-{
-  mealIndex: number;     // @IsInt, @Min(0) — index in mealPlan array
-  currentMeal: {         // nested validated object
-    name: string;        // @IsString
-    mealType: string;    // @IsString
-    calories: number;    // @IsInt, @Min(0)
-    protein: number;     // @IsInt, @Min(0)
-    carbs: number;       // @IsInt, @Min(0)
-    fat: number;         // @IsInt, @Min(0)
-  }
-}
+**Key Logic (service):**
+- `logWeight(userId, dto)`: Normalize date to start-of-day (UTC). Check for existing entry on that date via `findFirst` with date range. If exists, update. If not, create. Returns the log.
+- `getWeightHistory(userId, period)`: Calculate start date from period string. Query WeightLog ordered by date asc. Return `{ logs, startWeight, currentWeight, change, changePercent }`.
+
+**Guards/Decorators:** `@UseGuards(JwtAuthGuard)`, `@ApiBearerAuth()` on controller class.
+
+### Register in AppModule
+- Import `ProgressModule` into `app.module.ts`
+
+## Frontend Architecture
+
+### New Feature: `apps/web/src/features/progress/`
+
+**Structure:**
+```
+features/progress/
+  hooks/useLogWeightMutation.ts    # useMutation for POST /progress/weight
+  hooks/useWeightHistoryQuery.ts   # useQuery for GET /progress/weight
+  components/WeightLogWidget.tsx   # Card with input, unit toggle, log button
+  types.ts                         # WeightLog, WeightHistoryResponse types
+  index.ts                         # Public exports
 ```
 
-### 2. New DTO: `ApplySwapDto` (`dto/apply-swap.dto.ts`)
-```typescript
-{
-  planId: string;        // @IsString
-  mealIndex: number;     // @IsInt, @Min(0)
-  recipe: {              // the chosen alternative
-    name: string;
-    mealType: string;
-    calories: number;
-    protein: number;
-    carbs: number;
-    fat: number;
-    ingredients: { amount: number; unit: string; name: string }[];
-    instructions: string;
-    prepTime?: number;
-    cookTime?: number;
-  }
-}
-```
+**Hook: `useLogWeightMutation`**
+- Uses `useMutation` + `apiClient`
+- On success: invalidates weight history query key
+- Returns mutation state for UI
 
-### 3. New Service Methods
+**Hook: `useWeightHistoryQuery`**
+- Uses `useQuery` with key `["progress", "weight", period]`
+- Fetches from `/progress/weight?period=<period>`
 
-**`generateSwapAlternatives(userId, dto)`:**
-1. Load active plan, validate mealIndex in range
-2. Load user profile for dietary restrictions
-3. Build targeted AI prompt: "Generate 3 alternative [mealType] meals with similar macros (~calories kcal, ~protein P, ~carbs C, ~fat F)"
-4. Call `aiService.createJsonCompletion` with model `gpt-4o-mini`
-5. Return 3 `RecipeResponseDto[]`
+**Component: `WeightLogWidget`** (~100 lines)
+- `'use client'` directive
+- Uses hooks internally (self-contained widget)
+- Uses: `Card`, `CardHeader`, `CardTitle`, `CardContent`, `Input`, `Button`, `Label`
+- Features:
+  - Number input for weight value
+  - Unit toggle button (kg/lbs) — stored in localStorage, converts to kg for API
+  - Optional notes input
+  - "Log Weight" button with loading state
+  - Success toast via sonner
+  - Error message inline
+  - Latest weight shown as context ("Last logged: 82.5 kg")
 
-**`applyMealSwap(userId, dto)`:**
-1. Load plan by planId, verify ownership
-2. Validate mealIndex
-3. Replace mealPlan[mealIndex] with the new recipe data
-4. `prisma.nutritionPlan.update({ data: { mealPlan: updated } })`
-5. Return updated `NutritionPlanResponseDto`
+### Dashboard Integration
+- Add `WeightLogWidget` as a new section in `apps/web/src/app/dashboard/page.tsx`
+- Place below "Today's workout" section, before "Quick links"
+- Section heading: "Quick weight log"
 
-### 4. New Controller Endpoints
+## File Summary
 
-| Method | Path | Body | Response | Status |
-|--------|------|------|----------|--------|
-| POST | `/nutrition/swap-meal` | `SwapMealDto` | `RecipeResponseDto[]` | 201 |
-| POST | `/nutrition/swap-meal/apply` | `ApplySwapDto` | `NutritionPlanResponseDto` | 200 |
+### New Files (Backend)
+1. `apps/api/src/modules/progress/progress.module.ts`
+2. `apps/api/src/modules/progress/progress.controller.ts`
+3. `apps/api/src/modules/progress/progress.service.ts`
+4. `apps/api/src/modules/progress/dto/create-weight-log.dto.ts`
+5. `apps/api/src/modules/progress/dto/weight-log-response.dto.ts`
+6. `apps/api/src/modules/progress/dto/weight-history-response.dto.ts`
 
-Both guarded with `@UseGuards(JwtAuthGuard)`, full Swagger decorators.
-
-## Frontend Changes
-
-### 1. New Hook: `useSwapMeal` (`hooks/useSwapMeal.ts`)
-- `generateAlternatives` — `useMutation` calling `POST /nutrition/swap-meal`
-- `applySwap` — `useMutation` calling `POST /nutrition/swap-meal/apply`
-  - Optimistic update: immediately update plan query cache, rollback on error
-- State: `swapMealIndex`, `alternatives`, `isGenerating`, `isApplying`
-
-### 2. Update `SwapMealPanel.tsx`
-- Add macro comparison section: for each alternative, show diff vs current meal
-  - Format: "+20 kcal", "-5g P", etc. with color coding (green = better for goals, red = worse)
-- "Generate Alternatives" button (replaces auto-fetch)
-- Keep loading skeletons and empty state
-
-### 3. Update `useNutritionPlanView.ts`
-- Remove `swapAlternativesQuery` (was auto-fetching generic recipes)
-- Remove `onUseAlternative` local handler
-- Integrate `useSwapMeal` — expose its state/actions
-
-### 4. Update `NutritionPlanScreen.tsx`
-- Wire SwapMealPanel to useSwapMeal data instead of old swap props
-
-## File Changes
-
-### New Files
-1. `apps/api/src/modules/nutrition/dto/swap-meal.dto.ts`
-2. `apps/api/src/modules/nutrition/dto/apply-swap.dto.ts`
-3. `apps/web/src/features/nutrition/hooks/useSwapMeal.ts`
-4. `apps/web/src/features/nutrition/components/MacroComparison.tsx`
+### New Files (Frontend)
+7. `apps/web/src/features/progress/types.ts`
+8. `apps/web/src/features/progress/hooks/useLogWeightMutation.ts`
+9. `apps/web/src/features/progress/hooks/useWeightHistoryQuery.ts`
+10. `apps/web/src/features/progress/components/WeightLogWidget.tsx`
+11. `apps/web/src/features/progress/index.ts`
 
 ### Modified Files
-1. `apps/api/src/modules/nutrition/nutrition.controller.ts` — 2 new endpoints
-2. `apps/api/src/modules/nutrition/nutrition.service.ts` — 2 new methods
-3. `apps/web/src/features/nutrition/hooks/useNutritionPlanView.ts` — remove old swap, integrate new
-4. `apps/web/src/features/nutrition/components/SwapMealPanel.tsx` — macro comparison, generate button
-5. `apps/web/src/features/nutrition/components/NutritionPlanScreen.tsx` — wire new hook
+12. `apps/api/src/app.module.ts` — import ProgressModule
+13. `apps/web/src/app/dashboard/page.tsx` — add WeightLogWidget section
 
 ## Convention Compliance
-- DTOs: class-validator decorators, nested validation with @ValidateNested + @Type
-- Swagger: @ApiTags, @ApiOperation, @ApiResponse on all endpoints
-- Business logic in service (backend) / hooks (frontend)
-- All API calls via TanStack Query useMutation
-- UI uses shadcn/ui Badge for macro comparison
-- Semantic design tokens only (no hardcoded hex)
-- Optimistic UI via queryClient.setQueryData + onError rollback
-- All components under 150 lines
-- 4 async states: loading skeleton, error message, empty state, success
+- All API calls via TanStack Query (useQuery/useMutation)
+- All UI via shadcn/ui components (Card, Input, Button, Label)
+- Semantic tokens only (bg-card, text-foreground, text-muted-foreground, etc.)
+- Business logic in hooks, not components
+- DTOs with class-validator decorators
+- Swagger decorators on all endpoints
+- Thin controller, fat service
+- Components under 150 lines

@@ -1,6 +1,6 @@
 # Pipeline Summary
 
-## Task: Task 4.4 — Meal Swapping
+## Task: Task 5.1 — Weight Logging
 ## Final Status: SUCCESS
 
 ## Timeline
@@ -24,18 +24,23 @@
 | TypeScript strict (no `any`) | PASS |
 
 ## Files Created/Modified
-- `apps/api/src/modules/nutrition/dto/swap-meal.dto.ts` — New DTO for swap request (mealIndex + currentMeal)
-- `apps/api/src/modules/nutrition/dto/apply-swap.dto.ts` — New DTO for applying chosen swap (planId + mealIndex + recipe)
-- `apps/api/src/modules/nutrition/nutrition.controller.ts` — Added POST /nutrition/swap-meal and POST /nutrition/swap-meal/apply
-- `apps/api/src/modules/nutrition/nutrition.service.ts` — Added generateSwapAlternatives, applyMealSwap, buildSwapAlternativesPrompt
-- `apps/web/src/features/nutrition/hooks/useSwapMeal.ts` — New hook with generate + apply mutations, optimistic UI
-- `apps/web/src/features/nutrition/components/MacroComparison.tsx` — New component showing macro diff between current and alternative
-- `apps/web/src/features/nutrition/components/SwapMealPanel.tsx` — Added macro comparison, generate button, applying state
-- `apps/web/src/features/nutrition/hooks/useNutritionPlanView.ts` — Replaced old local-only swap with backend-persisted swap via useSwapMeal
-- `apps/web/src/features/nutrition/components/NutritionPlanScreen.tsx` — Wired new swap props
+- `apps/api/src/modules/progress/progress.module.ts` — New NestJS module for progress tracking
+- `apps/api/src/modules/progress/progress.controller.ts` — POST /progress/weight + GET /progress/weight endpoints
+- `apps/api/src/modules/progress/progress.service.ts` — Weight logging with upsert logic + history with stats
+- `apps/api/src/modules/progress/dto/create-weight-log.dto.ts` — Validated DTO (weight, date?, notes?)
+- `apps/api/src/modules/progress/dto/weight-log-response.dto.ts` — Response DTO for single log
+- `apps/api/src/modules/progress/dto/weight-history-response.dto.ts` — Response DTO for history + computed stats
+- `apps/api/src/app.module.ts` — Registered ProgressModule
+- `apps/web/src/features/progress/types.ts` — Frontend types for weight log API
+- `apps/web/src/features/progress/hooks/useLogWeightMutation.ts` — TanStack Query mutation for logging weight
+- `apps/web/src/features/progress/hooks/useWeightHistoryQuery.ts` — TanStack Query for fetching history
+- `apps/web/src/features/progress/components/WeightLogWidget.tsx` — Card widget with input, unit toggle, log button
+- `apps/web/src/features/progress/index.ts` — Public exports
+- `apps/web/src/app/dashboard/page.tsx` — Added WeightLogWidget section to dashboard
 
 ## Key Decisions
-- Two-endpoint design (generate + apply) instead of single endpoint — allows users to browse alternatives before committing
-- Optimistic UI with rollback — immediate visual feedback, server confirms/reverts
-- AI prompt constrained to ±15% macro similarity for meaningful alternatives
-- Removed dead `normalizeRecipeType` function and old auto-fetch swap logic
+- Upsert via findFirst + date range instead of unique constraint lookup — more robust across timezones
+- Unit conversion (kg/lbs) is client-side only; API always stores kilograms
+- Unit preference persisted in localStorage for cross-session consistency
+- Widget is self-contained (uses hooks internally) — simple drop-in for dashboard
+- No Pencil design screens exist for this feature, so visual regression tests were skipped

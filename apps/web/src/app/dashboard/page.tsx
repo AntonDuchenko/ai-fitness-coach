@@ -4,6 +4,7 @@ import { ProtectedRoute } from "@/components/common/ProtectedRoute";
 import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
 import { Button } from "@/components/ui/button";
 import { MobileDrawer } from "@/features/chat/components/MobileDrawer";
+import { WeightLogWidget } from "@/features/progress/components/WeightLogWidget";
 import { TodaysWorkoutWidget } from "@/features/workout/components/TodaysWorkoutWidget";
 import { WorkoutMobileHeader } from "@/features/workout/components/WorkoutMobileHeader";
 import { WorkoutSessionDialog } from "@/features/workout/components/WorkoutSessionDialog";
@@ -66,6 +67,16 @@ function DashboardHomeContent() {
               onStartWorkout={openSession}
               onRetry={w.refetch}
             />
+          </section>
+
+          <section aria-labelledby="weight-heading">
+            <h2
+              id="weight-heading"
+              className="mb-3 font-heading text-sm font-semibold"
+            >
+              Quick weight log
+            </h2>
+            <WeightLogWidget />
           </section>
 
           <section className="flex flex-wrap gap-3" aria-label="Quick links">
