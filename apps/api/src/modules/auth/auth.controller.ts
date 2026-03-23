@@ -21,6 +21,7 @@ import { UserResponseDto } from "../users/dto/user-response.dto";
 import { AuthService } from "./auth.service";
 import { AuthResponseDto } from "./dto/auth-response.dto";
 import { LoginDto } from "./dto/login.dto";
+import { RefreshTokenDto } from "./dto/refresh-token.dto";
 import { SignupDto } from "./dto/signup.dto";
 
 @ApiTags("Auth")
@@ -43,6 +44,19 @@ export class AuthController {
   @ApiUnauthorizedResponse({ description: "Invalid email or password" })
   async login(@Body() dto: LoginDto): Promise<AuthResponseDto> {
     return this.authService.login(dto);
+  }
+
+  @Post("refresh")
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Refresh access token using refresh token" })
+  @ApiResponse({ status: 200, description: "New token pair" })
+  @ApiUnauthorizedResponse({
+    description: "Invalid or expired refresh token",
+  })
+  async refresh(
+    @Body() dto: RefreshTokenDto,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    return this.authService.refresh(dto.refreshToken);
   }
 
   @Get("me")

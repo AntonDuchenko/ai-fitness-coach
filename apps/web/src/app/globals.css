@@ -156,6 +156,12 @@
   --sidebar-ring: oklch(0.546 0.192 262);
 }
 
+html,
+body {
+  height: 100dvh;
+  overflow: hidden;
+}
+
 body {
   font-family: var(--font-sans);
 }

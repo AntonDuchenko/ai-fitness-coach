@@ -9,6 +9,10 @@ export class AuthResponseDto {
   accessToken!: string;
 
   @Expose()
+  @ApiProperty()
+  refreshToken!: string;
+
+  @Expose()
   @ApiProperty({ type: UserResponseDto })
   @Type(() => UserResponseDto)
   user!: UserResponseDto;

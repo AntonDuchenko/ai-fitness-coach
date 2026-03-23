@@ -1,18 +1,16 @@
 "use client";
 
-import { apiClient } from "@/lib/api-client";
+import { apiClient, clearTokens, setTokens } from "@/lib/api-client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { createContext, useCallback, useContext, useMemo } from "react";
 import type { AuthContextType, AuthResponse, User } from "../types";
 
-const TOKEN_KEY = "auth_token";
-
 export const AuthContext = createContext<AuthContextType | null>(null);
 
-function getToken(): string | null {
-  if (typeof window === "undefined") return null;
-  return localStorage.getItem(TOKEN_KEY);
+function hasToken(): boolean {
+  if (typeof window === "undefined") return false;
+  return Boolean(localStorage.getItem("auth_token"));
 }
 
 export function useAuthProvider(): AuthContextType {
@@ -22,11 +20,11 @@ export function useAuthProvider(): AuthContextType {
   const { data: user = null, isLoading } = useQuery<User | null>({
     queryKey: ["auth", "me"],
     queryFn: async () => {
-      if (!getToken()) return null;
+      if (!hasToken()) return null;
       try {
         return await apiClient<User>("/auth/me");
       } catch {
-        localStorage.removeItem(TOKEN_KEY);
+        clearTokens();
         return null;
       }
     },
@@ -39,7 +37,7 @@ export function useAuthProvider(): AuthContextType {
         body: JSON.stringify(vars),
       }),
     onSuccess: (data) => {
-      localStorage.setItem(TOKEN_KEY, data.accessToken);
+      setTokens(data.accessToken, data.refreshToken);
       queryClient.setQueryData(["auth", "me"], data.user);
       router.push("/dashboard");
     },
@@ -52,7 +50,7 @@ export function useAuthProvider(): AuthContextType {
         body: JSON.stringify(vars),
       }),
     onSuccess: (data) => {
-      localStorage.setItem(TOKEN_KEY, data.accessToken);
+      setTokens(data.accessToken, data.refreshToken);
       queryClient.setQueryData(["auth", "me"], data.user);
       router.push("/dashboard");
     },
@@ -77,7 +75,7 @@ export function useAuthProvider(): AuthContextType {
   );
 
   const logout = useCallback(() => {
-    localStorage.removeItem(TOKEN_KEY);
+    clearTokens();
     queryClient.setQueryData(["auth", "me"], null);
     queryClient.clear();
     router.push("/login");

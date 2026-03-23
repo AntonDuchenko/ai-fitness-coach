@@ -8,10 +8,11 @@ import { usePathname } from "next/navigation";
 const nav = [
   { href: "/dashboard", label: "Home" },
   { href: "/dashboard/workouts", label: "Workouts" },
+  { href: "/dashboard/nutrition", label: "Nutrition" },
   { href: "/chat", label: "AI Chat" },
 ] as const;
 
-const comingSoon = ["Nutrition", "Progress"] as const;
+const comingSoon = ["Progress"] as const;
 
 interface DashboardSidebarProps {
   className?: string;

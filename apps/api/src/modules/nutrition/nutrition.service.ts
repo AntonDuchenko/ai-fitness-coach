@@ -392,13 +392,19 @@ Return JSON format:
     }
   ],
   "groceryList": {
-    "proteins": ["2kg chicken breast - $15"],
-    "carbs": ["1kg oats - $4"],
-    "fats": ["1 jar peanut butter - $6"],
-    "vegetables": ["Broccoli, peppers - $8"],
-    "dairy": ["4L milk - $5"]
+    "proteins": ["200g chicken breast", "2 eggs"],
+    "carbs": ["80g oats", "150g rice"],
+    "fats": ["15ml olive oil", "30g peanut butter"],
+    "vegetables": ["100g broccoli", "1 bell pepper"],
+    "dairy": ["300ml milk (2%)"]
   }
 }
+
+IMPORTANT for groceryList:
+- Sum up the exact amounts from ALL meal ingredients and group them by category.
+- Each item must show the TOTAL amount needed across all meals (e.g. if 2 meals use chicken, sum the grams).
+- Use metric units (g, ml, pieces) matching the ingredient amounts.
+- Do NOT invent quantities or prices — derive totals strictly from the mealPlan ingredients.
 
 Generate complete daily plan with all ${profile.mealsPerDay} meals.`;
   }

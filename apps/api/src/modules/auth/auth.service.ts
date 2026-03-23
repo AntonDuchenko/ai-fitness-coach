@@ -31,13 +31,10 @@ export class AuthService {
       name: dto.name,
     });
 
-    const accessToken = this.tokenService.generateAccessToken(
-      user.id,
-      user.email,
-    );
+    const tokens = this.tokenService.generateTokenPair(user.id, user.email);
 
     return new AuthResponseDto({
-      accessToken,
+      ...tokens,
       user: new UserResponseDto(user),
     });
   }
@@ -57,15 +54,27 @@ export class AuthService {
     }
 
     await this.usersService.updateLastLogin(user.id);
-    const accessToken = this.tokenService.generateAccessToken(
-      user.id,
-      user.email,
-    );
+    const tokens = this.tokenService.generateTokenPair(user.id, user.email);
 
     return new AuthResponseDto({
-      accessToken,
+      ...tokens,
       user: new UserResponseDto(user),
     });
+  }
+
+  async refresh(
+    refreshToken: string,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    try {
+      const payload = this.tokenService.verifyRefreshToken(refreshToken);
+      const user = await this.usersService.findById(payload.sub);
+      if (!user) {
+        throw new UnauthorizedException("User not found");
+      }
+      return this.tokenService.generateTokenPair(user.id, user.email);
+    } catch {
+      throw new UnauthorizedException("Invalid or expired refresh token");
+    }
   }
 
   async getMe(userId: string): Promise<UserResponseDto> {

@@ -1,52 +1,37 @@
-# Test Report: Task 4.1 — Nutrition Plan Display Backend
+# Test Report: Task 4.2 — Nutrition Plan Display Frontend
 
 ## Verdict: **PASSED**
 
-## Iteration: 1/3
+## Test Iteration: 1/3
 
-## Acceptance Criteria
+## Build & Lint
+- `pnpm build`: PASS (5 tasks successful)
+- `pnpm lint` (nutrition files): PASS (0 errors)
 
-| Criteria | Status | Notes |
-|----------|--------|-------|
-| Can fetch nutrition plan | PASS | `GET /nutrition/plan` returns NutritionPlanResponseDto |
-| Can regenerate plan | PASS | `POST /nutrition/plan/regenerate` delegates to generatePlan |
-| Plan includes all meal details | PASS | mealPlan JSON has mealType, time, name, macros, ingredients, instructions |
-| Can search recipes | PASS | `GET /nutrition/recipes?search=&type=` generates via AI |
+## Design Comparison (Pencil vs Implementation)
+- Desktop layout (1440px): Sidebar + Main + Swap panel (420px) — MATCH
+- Macro Targets Card: 4 columns with colored indicators + bar chart — MATCH
+- Meal Tabs: Sample Meal Plan / Grocery List / Recipes — MATCH
+- Day navigation: Arrows + dynamic day label — MATCH
+- Meal cards: Name, time, macro pills, collapsible sections, buttons — MATCH
+- Swap Meal panel: Alternatives with "Use This" buttons — MATCH
+- Grocery List: Categories with checkboxes — MATCH
+- Mobile layout (390px): Stacked vertical layout — MATCH
 
-## API Endpoints Verified
+## Playwright Visual Tests
+- `e2e/visual-nutrition.spec.ts` — Created
+- Desktop baseline: `screenshots/desktop/nutrition-page.png` — captured
+- Mobile baseline: `screenshots/mobile/nutrition-page.png` — captured
+- 2/2 tests passed
 
-| Method | Path | Guard | Swagger | HTTP Code | Status |
-|--------|------|-------|---------|-----------|--------|
-| POST | /nutrition/generate | JwtAuthGuard | Full | 201 | PASS |
-| GET | /nutrition/plan | JwtAuthGuard | Full | 200 | PASS |
-| GET | /nutrition/plans | JwtAuthGuard | Full | 200 | PASS |
-| GET | /nutrition/plan/:id | JwtAuthGuard | Full | 200 | PASS |
-| POST | /nutrition/plan/regenerate | JwtAuthGuard | Full | 201 | PASS |
-| GET | /nutrition/recipes | JwtAuthGuard | Full | 200 | PASS |
-
-## Code Quality Checks
-
-| Check | Status | Details |
-|-------|--------|---------|
-| Thin controllers | PASS | All endpoints delegate to service |
-| class-validator on DTOs | PASS | RecipeRequestQueryDto: @IsOptional, @IsString |
-| Swagger on all endpoints | PASS | @ApiTags, @ApiOperation, @ApiResponse, @ApiQuery |
-| JwtAuthGuard | PASS | Class-level decorator |
-| Proper HTTP codes | PASS | 201 for create/regenerate, 200 for reads |
-| Structured errors | PASS | NotFoundException, UnprocessableEntityException, BadGatewayException |
-| No `any` types | PASS | All types explicit |
-| No console.log | PASS | Uses NestJS Logger |
-| No hardcoded values | PASS | No hex colors or magic strings |
-| AI response validation | PASS | validateRecipeListStructure checks name, macros, ingredients, instructions |
-
-## Build Verification
-- Build: PASS
-- Lint: PASS
-
-## Files Verified (6 total)
-- `nutrition.controller.ts` (149 lines) — 6 endpoints, thin
-- `nutrition.service.ts` (582 lines) — full business logic
-- `nutrition.module.ts` (12 lines) — imports AiModule
-- `dto/nutrition-plan-response.dto.ts` (77 lines) — response mapping
-- `dto/recipe-request-query.dto.ts` (21 lines) — query validation
-- `dto/recipe-response.dto.ts` (81 lines) — recipe response mapping
+## Convention Compliance
+| Rule | Status |
+|------|--------|
+| Component size (<150 lines) | PASS |
+| Business logic in hooks | PASS |
+| shadcn/ui used (no raw HTML) | PASS |
+| Semantic design tokens (no hardcoded hex) | PASS |
+| Error/loading/empty states | PASS |
+| Accessibility (ARIA, semantic HTML) | PASS |
+| TypeScript strict (no `any`) | PASS |
+| TanStack Query for API calls | PASS |

@@ -1,42 +1,42 @@
-# Code Review Report: Task 4.1 — Nutrition Plan Display Backend
+# Review Report: Task 4.2 — Nutrition Plan Display Frontend
 
-## Review Iteration: 1/3
-
-## Files Reviewed
-- `apps/api/src/modules/nutrition/nutrition.controller.ts` (149 lines)
-- `apps/api/src/modules/nutrition/nutrition.service.ts` (582 lines)
-- `apps/api/src/modules/nutrition/dto/recipe-request-query.dto.ts` (21 lines)
-- `apps/api/src/modules/nutrition/dto/recipe-response.dto.ts` (81 lines)
-
-## Convention Compliance
-
-| # | Rule | Status |
-|---|------|--------|
-| 1 | Thin controller | PASS — delegates to service |
-| 2 | Service handles business logic | PASS |
-| 3 | class-validator on DTOs | PASS |
-| 4 | Swagger decorators on endpoints | PASS — @ApiTags, @ApiOperation, @ApiResponse, @ApiQuery, @ApiParam |
-| 5 | JwtAuthGuard on endpoints | PASS — class-level decorator |
-| 6 | Proper HTTP codes | PASS — 201 regenerate, 200 recipes, 404/422/502 errors |
-| 7 | Structured error responses | PASS — NestJS exceptions |
-| 8 | No `any` types | PASS |
-| 9 | Logger usage | PASS |
-| 10 | Response DTOs | PASS — explicit constructor mapping |
-| 11 | File size (controller <150) | PASS — 149 lines |
-| 12 | Input validation | PASS — class-validator + ValidationPipe |
-| 13 | AI response validation | PASS — validateRecipeListStructure |
-| 14 | Pattern consistency | PASS — matches workouts module |
-
-## Build Verification
-- TypeScript: PASS (0 errors)
-- Build: PASS
-- Lint: PASS
+## Verdict: NEEDS_CHANGES
 
 ## Critical Issues
-None.
 
-## Minor Notes
-- Service file is 582 lines total, but most is pre-existing code. The new additions are well-structured.
-- `regeneratePlan` follows same pattern as `WorkoutsService.regeneratePlan`.
+### 1. `NutritionPlanScreen.tsx` exceeds 150-line limit (259 lines)
+- Contains 3 inline sub-components: `NutritionPlanSkeleton`, `NutritionPlanEmpty`, `NutritionPlanError`
+- **Fix:** Extract these 3 components into separate files or a single `NutritionPlanStates.tsx` file
 
-## Verdict: **APPROVED**
+### 2. `DayMealsPanel.tsx` exceeds 150-line limit (173 lines)
+- The DailyTotals summary section and day navigation are embedded inline
+- **Fix:** Extract the daily summary section (lines 95-127) into a `DailySummary` component
+
+## Medium Issues
+
+### 3. Day navigation label is static
+- The "Today · Day 1" button always shows "Day 1" regardless of `selectedDay` value
+- **Fix:** Show the actual selected day: `Today · Day ${selectedDay}` or just `Day ${selectedDay}`
+
+### 4. Hardcoded grocery cost estimate
+- `GroceryListPanel.tsx:111` shows `$18.40` as a static value
+- Acceptable for MVP placeholder but should be noted
+
+### 5. Select empty string value in RecipesPanel
+- `RecipesPanel.tsx:55` uses `value=""` for "All meal types" SelectItem — Radix Select may not handle empty string values correctly
+- **Fix:** Use a sentinel value like `"all"` and map it back to empty string in the handler
+
+## Passing Checks
+
+| Rule | Status |
+|------|--------|
+| No hardcoded hex colors | PASS |
+| shadcn/ui used (no raw HTML) | PASS |
+| Business logic in hooks | PASS |
+| TanStack Query for all API calls | PASS |
+| Semantic design tokens | PASS |
+| 4 async UI states (loading/error/empty/success) | PASS |
+| Accessibility (ARIA labels, semantic HTML) | PASS |
+| TypeScript strict (no `any`) | PASS |
+| Build passes | PASS |
+| Lint passes (nutrition files) | PASS |
