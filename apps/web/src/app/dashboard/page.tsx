@@ -81,6 +81,9 @@ function DashboardHomeContent() {
 
           <section className="flex flex-wrap gap-3" aria-label="Quick links">
             <Button type="button" variant="secondary" asChild>
+              <Link href="/dashboard/progress">Progress</Link>
+            </Button>
+            <Button type="button" variant="secondary" asChild>
               <Link href="/dashboard/workouts">Full workout plan</Link>
             </Button>
             <Button type="button" variant="secondary" asChild>

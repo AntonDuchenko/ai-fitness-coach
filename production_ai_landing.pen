@@ -33280,7 +33280,9 @@
                                   "y": 36,
                                   "descendants": {
                                     "lfkHP": {
-                                      "content": "Targets hit ✓"
+                                      "content": "Targets hit ✓",
+                                      "x": 12,
+                                      "y": 4
                                     }
                                   }
                                 }
@@ -33366,7 +33368,9 @@
                                                   "height": "fit_content",
                                                   "descendants": {
                                                     "7gk0d": {
-                                                      "content": "450 kcal"
+                                                      "content": "450 kcal",
+                                                      "x": 12,
+                                                      "y": 4
                                                     }
                                                   }
                                                 },
@@ -33379,7 +33383,9 @@
                                                   "x": 82,
                                                   "descendants": {
                                                     "lfkHP": {
-                                                      "content": "35g P"
+                                                      "content": "35g P",
+                                                      "x": 12,
+                                                      "y": 4
                                                     }
                                                   }
                                                 },
@@ -33392,7 +33398,9 @@
                                                   "x": 148,
                                                   "descendants": {
                                                     "SF4Rm": {
-                                                      "content": "45g C"
+                                                      "content": "45g C",
+                                                      "x": 12,
+                                                      "y": 4
                                                     }
                                                   }
                                                 }
@@ -33457,7 +33465,9 @@
                                           "x": 0,
                                           "descendants": {
                                             "nlrgf": {
-                                              "content": "View Recipe"
+                                              "content": "View Recipe",
+                                              "x": 24,
+                                              "y": 12
                                             }
                                           }
                                         },
@@ -33470,7 +33480,9 @@
                                           "x": 509,
                                           "descendants": {
                                             "94TL2": {
-                                              "content": "Swap Meal"
+                                              "content": "Swap Meal",
+                                              "x": 24,
+                                              "y": 12
                                             }
                                           }
                                         }
@@ -33535,8 +33547,12 @@
                                   "x": 12,
                                   "y": 36,
                                   "descendants": {
+                                    "UE3ft": {
+                                      "y": 0
+                                    },
                                     "1jMEA": {
-                                      "content": "Chicken breast"
+                                      "content": "Chicken breast",
+                                      "x": 28
                                     }
                                   }
                                 },
@@ -33549,8 +33565,12 @@
                                   "x": 12,
                                   "y": 62,
                                   "descendants": {
+                                    "UE3ft": {
+                                      "y": 0
+                                    },
                                     "1jMEA": {
-                                      "content": "Greek yogurt"
+                                      "content": "Greek yogurt",
+                                      "x": 28
                                     }
                                   }
                                 }
@@ -33591,8 +33611,12 @@
                                   "x": 12,
                                   "y": 36,
                                   "descendants": {
+                                    "UE3ft": {
+                                      "y": 0
+                                    },
                                     "1jMEA": {
-                                      "content": "Spinach"
+                                      "content": "Spinach",
+                                      "x": 28
                                     }
                                   }
                                 },
@@ -33605,8 +33629,12 @@
                                   "x": 12,
                                   "y": 62,
                                   "descendants": {
+                                    "UE3ft": {
+                                      "y": 0
+                                    },
                                     "1jMEA": {
-                                      "content": "Bell peppers"
+                                      "content": "Bell peppers",
+                                      "x": 28
                                     }
                                   }
                                 }
@@ -33633,7 +33661,9 @@
                               "y": 271,
                               "descendants": {
                                 "nlrgf": {
-                                  "content": "Export to Email"
+                                  "content": "Export to Email",
+                                  "x": 24,
+                                  "y": 12
                                 }
                               }
                             }
@@ -33856,7 +33886,9 @@
                                       "y": 132,
                                       "descendants": {
                                         "nlrgf": {
-                                          "content": "View Recipe"
+                                          "content": "View Recipe",
+                                          "x": 24,
+                                          "y": 12
                                         }
                                       }
                                     }
@@ -33922,7 +33954,9 @@
                                       "y": 132,
                                       "descendants": {
                                         "nlrgf": {
-                                          "content": "View Recipe"
+                                          "content": "View Recipe",
+                                          "x": 24,
+                                          "y": 12
                                         }
                                       }
                                     }
@@ -34050,7 +34084,9 @@
                                   "height": "fit_content",
                                   "descendants": {
                                     "7gk0d": {
-                                      "content": "420 kcal"
+                                      "content": "420 kcal",
+                                      "x": 12,
+                                      "y": 4
                                     }
                                   }
                                 },
@@ -34063,7 +34099,9 @@
                                   "x": 83,
                                   "descendants": {
                                     "lfkHP": {
-                                      "content": "40g P"
+                                      "content": "40g P",
+                                      "x": 12,
+                                      "y": 4
                                     }
                                   }
                                 },
@@ -34076,7 +34114,9 @@
                                   "x": 150,
                                   "descendants": {
                                     "SF4Rm": {
-                                      "content": "38g C"
+                                      "content": "38g C",
+                                      "x": 12,
+                                      "y": 4
                                     }
                                   }
                                 }
@@ -34092,7 +34132,9 @@
                               "y": 72,
                               "descendants": {
                                 "94TL2": {
-                                  "content": "Use This"
+                                  "content": "Use This",
+                                  "x": 24,
+                                  "y": 12
                                 }
                               }
                             }
@@ -34140,7 +34182,9 @@
                                   "height": "fit_content",
                                   "descendants": {
                                     "7gk0d": {
-                                      "content": "480 kcal"
+                                      "content": "480 kcal",
+                                      "x": 12,
+                                      "y": 4
                                     }
                                   }
                                 },
@@ -34153,7 +34197,9 @@
                                   "x": 83,
                                   "descendants": {
                                     "lfkHP": {
-                                      "content": "45g P"
+                                      "content": "45g P",
+                                      "x": 12,
+                                      "y": 4
                                     }
                                   }
                                 },
@@ -34166,7 +34212,9 @@
                                   "x": 149,
                                   "descendants": {
                                     "SF4Rm": {
-                                      "content": "46g C"
+                                      "content": "46g C",
+                                      "x": 12,
+                                      "y": 4
                                     }
                                   }
                                 }
@@ -34182,7 +34230,9 @@
                               "y": 72,
                               "descendants": {
                                 "94TL2": {
-                                  "content": "Use This"
+                                  "content": "Use This",
+                                  "x": 24,
+                                  "y": 12
                                 }
                               }
                             }
@@ -34230,7 +34280,9 @@
                                   "height": "fit_content",
                                   "descendants": {
                                     "7gk0d": {
-                                      "content": "430 kcal"
+                                      "content": "430 kcal",
+                                      "x": 12,
+                                      "y": 4
                                     }
                                   }
                                 },
@@ -34243,7 +34295,9 @@
                                   "x": 83,
                                   "descendants": {
                                     "lfkHP": {
-                                      "content": "38g P"
+                                      "content": "38g P",
+                                      "x": 12,
+                                      "y": 4
                                     }
                                   }
                                 },
@@ -34256,7 +34310,9 @@
                                   "x": 149,
                                   "descendants": {
                                     "SF4Rm": {
-                                      "content": "41g C"
+                                      "content": "41g C",
+                                      "x": 12,
+                                      "y": 4
                                     }
                                   }
                                 }
@@ -34272,7 +34328,9 @@
                               "y": 72,
                               "descendants": {
                                 "94TL2": {
-                                  "content": "Use This"
+                                  "content": "Use This",
+                                  "x": 24,
+                                  "y": 12
                                 }
                               }
                             }
@@ -34927,7 +34985,9 @@
                                   "y": 35,
                                   "descendants": {
                                     "lfkHP": {
-                                      "content": "Targets hit ✓"
+                                      "content": "Targets hit ✓",
+                                      "x": 12,
+                                      "y": 4
                                     }
                                   }
                                 }
@@ -35005,7 +35065,9 @@
                                               "height": "fit_content",
                                               "descendants": {
                                                 "7gk0d": {
-                                                  "content": "450 kcal"
+                                                  "content": "450 kcal",
+                                                  "x": 12,
+                                                  "y": 4
                                                 }
                                               }
                                             },
@@ -35018,7 +35080,9 @@
                                               "x": 82,
                                               "descendants": {
                                                 "lfkHP": {
-                                                  "content": "35g P"
+                                                  "content": "35g P",
+                                                  "x": 12,
+                                                  "y": 4
                                                 }
                                               }
                                             },
@@ -35031,7 +35095,9 @@
                                               "x": 148,
                                               "descendants": {
                                                 "SF4Rm": {
-                                                  "content": "45g C"
+                                                  "content": "45g C",
+                                                  "x": 12,
+                                                  "y": 4
                                                 }
                                               }
                                             }
@@ -35096,7 +35162,9 @@
                                       "x": 0,
                                       "descendants": {
                                         "nlrgf": {
-                                          "content": "View Recipe"
+                                          "content": "View Recipe",
+                                          "x": 24,
+                                          "y": 12
                                         }
                                       }
                                     },
@@ -35109,7 +35177,9 @@
                                       "x": 167,
                                       "descendants": {
                                         "94TL2": {
-                                          "content": "Swap Meal"
+                                          "content": "Swap Meal",
+                                          "x": 24,
+                                          "y": 12
                                         }
                                       }
                                     }
@@ -35172,8 +35242,12 @@
                                   "x": 12,
                                   "y": 36,
                                   "descendants": {
+                                    "UE3ft": {
+                                      "y": 0
+                                    },
                                     "1jMEA": {
-                                      "content": "Chicken breast"
+                                      "content": "Chicken breast",
+                                      "x": 28
                                     }
                                   }
                                 },
@@ -35186,8 +35260,12 @@
                                   "x": 12,
                                   "y": 62,
                                   "descendants": {
+                                    "UE3ft": {
+                                      "y": 0
+                                    },
                                     "1jMEA": {
-                                      "content": "Greek yogurt"
+                                      "content": "Greek yogurt",
+                                      "x": 28
                                     }
                                   }
                                 }
@@ -35213,7 +35291,9 @@
                               "y": 161,
                               "descendants": {
                                 "nlrgf": {
-                                  "content": "Export to Email"
+                                  "content": "Export to Email",
+                                  "x": 24,
+                                  "y": 12
                                 }
                               }
                             }
@@ -35325,7 +35405,9 @@
                                   "y": 132,
                                   "descendants": {
                                     "nlrgf": {
-                                      "content": "View Recipe"
+                                      "content": "View Recipe",
+                                      "x": 24,
+                                      "y": 12
                                     }
                                   }
                                 }
@@ -35451,7 +35533,9 @@
                                   "height": "fit_content",
                                   "descendants": {
                                     "7gk0d": {
-                                      "content": "420 kcal"
+                                      "content": "420 kcal",
+                                      "x": 12,
+                                      "y": 4
                                     }
                                   }
                                 },
@@ -35464,7 +35548,9 @@
                                   "x": 83,
                                   "descendants": {
                                     "lfkHP": {
-                                      "content": "40g P"
+                                      "content": "40g P",
+                                      "x": 12,
+                                      "y": 4
                                     }
                                   }
                                 },
@@ -35477,7 +35563,9 @@
                                   "x": 150,
                                   "descendants": {
                                     "SF4Rm": {
-                                      "content": "38g C"
+                                      "content": "38g C",
+                                      "x": 12,
+                                      "y": 4
                                     }
                                   }
                                 }
@@ -35493,7 +35581,9 @@
                               "y": 72,
                               "descendants": {
                                 "94TL2": {
-                                  "content": "Use This"
+                                  "content": "Use This",
+                                  "x": 24,
+                                  "y": 12
                                 }
                               }
                             }
@@ -35541,7 +35631,9 @@
                                   "height": "fit_content",
                                   "descendants": {
                                     "7gk0d": {
-                                      "content": "430 kcal"
+                                      "content": "430 kcal",
+                                      "x": 12,
+                                      "y": 4
                                     }
                                   }
                                 },
@@ -35554,7 +35646,9 @@
                                   "x": 83,
                                   "descendants": {
                                     "lfkHP": {
-                                      "content": "38g P"
+                                      "content": "38g P",
+                                      "x": 12,
+                                      "y": 4
                                     }
                                   }
                                 },
@@ -35567,7 +35661,9 @@
                                   "x": 149,
                                   "descendants": {
                                     "SF4Rm": {
-                                      "content": "41g C"
+                                      "content": "41g C",
+                                      "x": 12,
+                                      "y": 4
                                     }
                                   }
                                 }
@@ -35583,7 +35679,9 @@
                               "y": 72,
                               "descendants": {
                                 "94TL2": {
-                                  "content": "Use This"
+                                  "content": "Use This",
+                                  "x": 24,
+                                  "y": 12
                                 }
                               }
                             }
@@ -36510,7 +36608,9 @@
                                   "y": 36,
                                   "descendants": {
                                     "lfkHP": {
-                                      "content": "Targets hit ✓"
+                                      "content": "Targets hit ✓",
+                                      "x": 12,
+                                      "y": 4
                                     }
                                   }
                                 }
@@ -36596,7 +36696,9 @@
                                                   "height": "fit_content",
                                                   "descendants": {
                                                     "7gk0d": {
-                                                      "content": "450 kcal"
+                                                      "content": "450 kcal",
+                                                      "x": 12,
+                                                      "y": 4
                                                     }
                                                   }
                                                 },
@@ -36609,7 +36711,9 @@
                                                   "x": 82,
                                                   "descendants": {
                                                     "lfkHP": {
-                                                      "content": "35g P"
+                                                      "content": "35g P",
+                                                      "x": 12,
+                                                      "y": 4
                                                     }
                                                   }
                                                 },
@@ -36622,7 +36726,9 @@
                                                   "x": 148,
                                                   "descendants": {
                                                     "SF4Rm": {
-                                                      "content": "45g C"
+                                                      "content": "45g C",
+                                                      "x": 12,
+                                                      "y": 4
                                                     }
                                                   }
                                                 }
@@ -36687,7 +36793,9 @@
                                           "x": 0,
                                           "descendants": {
                                             "nlrgf": {
-                                              "content": "View Recipe"
+                                              "content": "View Recipe",
+                                              "x": 24,
+                                              "y": 12
                                             }
                                           }
                                         },
@@ -36700,7 +36808,9 @@
                                           "x": 257,
                                           "descendants": {
                                             "94TL2": {
-                                              "content": "Swap Meal"
+                                              "content": "Swap Meal",
+                                              "x": 24,
+                                              "y": 12
                                             }
                                           }
                                         }
@@ -36765,8 +36875,12 @@
                                   "x": 12,
                                   "y": 36,
                                   "descendants": {
+                                    "UE3ft": {
+                                      "y": 0
+                                    },
                                     "1jMEA": {
-                                      "content": "Chicken breast"
+                                      "content": "Chicken breast",
+                                      "x": 28
                                     }
                                   }
                                 },
@@ -36779,8 +36893,12 @@
                                   "x": 12,
                                   "y": 62,
                                   "descendants": {
+                                    "UE3ft": {
+                                      "y": 0
+                                    },
                                     "1jMEA": {
-                                      "content": "Greek yogurt"
+                                      "content": "Greek yogurt",
+                                      "x": 28
                                     }
                                   }
                                 }
@@ -36821,8 +36939,12 @@
                                   "x": 12,
                                   "y": 36,
                                   "descendants": {
+                                    "UE3ft": {
+                                      "y": 0
+                                    },
                                     "1jMEA": {
-                                      "content": "Spinach"
+                                      "content": "Spinach",
+                                      "x": 28
                                     }
                                   }
                                 },
@@ -36835,8 +36957,12 @@
                                   "x": 12,
                                   "y": 62,
                                   "descendants": {
+                                    "UE3ft": {
+                                      "y": 0
+                                    },
                                     "1jMEA": {
-                                      "content": "Bell peppers"
+                                      "content": "Bell peppers",
+                                      "x": 28
                                     }
                                   }
                                 }
@@ -36863,7 +36989,9 @@
                               "y": 271,
                               "descendants": {
                                 "nlrgf": {
-                                  "content": "Export to Email"
+                                  "content": "Export to Email",
+                                  "x": 24,
+                                  "y": 12
                                 }
                               }
                             }
@@ -37086,7 +37214,9 @@
                                       "y": 132,
                                       "descendants": {
                                         "nlrgf": {
-                                          "content": "View Recipe"
+                                          "content": "View Recipe",
+                                          "x": 24,
+                                          "y": 12
                                         }
                                       }
                                     }
@@ -37152,7 +37282,9 @@
                                       "y": 132,
                                       "descendants": {
                                         "nlrgf": {
-                                          "content": "View Recipe"
+                                          "content": "View Recipe",
+                                          "x": 24,
+                                          "y": 12
                                         }
                                       }
                                     }
@@ -37280,7 +37412,9 @@
                                   "height": "fit_content",
                                   "descendants": {
                                     "7gk0d": {
-                                      "content": "420 kcal"
+                                      "content": "420 kcal",
+                                      "x": 12,
+                                      "y": 4
                                     }
                                   }
                                 },
@@ -37293,7 +37427,9 @@
                                   "x": 83,
                                   "descendants": {
                                     "lfkHP": {
-                                      "content": "40g P"
+                                      "content": "40g P",
+                                      "x": 12,
+                                      "y": 4
                                     }
                                   }
                                 },
@@ -37306,7 +37442,9 @@
                                   "x": 150,
                                   "descendants": {
                                     "SF4Rm": {
-                                      "content": "38g C"
+                                      "content": "38g C",
+                                      "x": 12,
+                                      "y": 4
                                     }
                                   }
                                 }
@@ -37322,7 +37460,9 @@
                               "y": 72,
                               "descendants": {
                                 "94TL2": {
-                                  "content": "Use This"
+                                  "content": "Use This",
+                                  "x": 24,
+                                  "y": 12
                                 }
                               }
                             }
@@ -37370,7 +37510,9 @@
                                   "height": "fit_content",
                                   "descendants": {
                                     "7gk0d": {
-                                      "content": "480 kcal"
+                                      "content": "480 kcal",
+                                      "x": 12,
+                                      "y": 4
                                     }
                                   }
                                 },
@@ -37383,7 +37525,9 @@
                                   "x": 83,
                                   "descendants": {
                                     "lfkHP": {
-                                      "content": "45g P"
+                                      "content": "45g P",
+                                      "x": 12,
+                                      "y": 4
                                     }
                                   }
                                 },
@@ -37396,7 +37540,9 @@
                                   "x": 149,
                                   "descendants": {
                                     "SF4Rm": {
-                                      "content": "46g C"
+                                      "content": "46g C",
+                                      "x": 12,
+                                      "y": 4
                                     }
                                   }
                                 }
@@ -37412,7 +37558,9 @@
                               "y": 72,
                               "descendants": {
                                 "94TL2": {
-                                  "content": "Use This"
+                                  "content": "Use This",
+                                  "x": 24,
+                                  "y": 12
                                 }
                               }
                             }
@@ -37460,7 +37608,9 @@
                                   "height": "fit_content",
                                   "descendants": {
                                     "7gk0d": {
-                                      "content": "430 kcal"
+                                      "content": "430 kcal",
+                                      "x": 12,
+                                      "y": 4
                                     }
                                   }
                                 },
@@ -37473,7 +37623,9 @@
                                   "x": 83,
                                   "descendants": {
                                     "lfkHP": {
-                                      "content": "38g P"
+                                      "content": "38g P",
+                                      "x": 12,
+                                      "y": 4
                                     }
                                   }
                                 },
@@ -37486,7 +37638,9 @@
                                   "x": 149,
                                   "descendants": {
                                     "SF4Rm": {
-                                      "content": "41g C"
+                                      "content": "41g C",
+                                      "x": 12,
+                                      "y": 4
                                     }
                                   }
                                 }
@@ -37502,7 +37656,9 @@
                               "y": 72,
                               "descendants": {
                                 "94TL2": {
-                                  "content": "Use This"
+                                  "content": "Use This",
+                                  "x": 24,
+                                  "y": 12
                                 }
                               }
                             }
@@ -37515,6 +37671,1367 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "RZG3V",
+      "x": 15718,
+      "y": 0,
+      "name": "Task 5.3 — Progress Page / Desktop 1440",
+      "theme": {
+        "mode": "dark"
+      },
+      "width": 1440,
+      "fill": "$--background",
+      "layout": "vertical",
+      "gap": 24,
+      "padding": 32,
+      "children": [
+        {
+          "type": "frame",
+          "id": "w2oao",
+          "name": "head",
+          "width": "fill_container",
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "TH0WY",
+              "name": "headLeft",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "coP2b",
+                  "name": "headT",
+                  "fill": "$--foreground",
+                  "content": "Progress",
+                  "fontFamily": "Poppins",
+                  "fontSize": 34,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "4vBJ6",
+                  "name": "headS",
+                  "fill": "$--muted-foreground",
+                  "content": "Track body metrics, strength and workout consistency",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "TpWYb",
+              "name": "headActions",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "BB1WZ",
+                  "type": "ref",
+                  "ref": "F3HWx",
+                  "name": "rangeBtn",
+                  "x": 0,
+                  "descendants": {
+                    "JAExE": {
+                      "content": "Last 3 Months"
+                    }
+                  }
+                },
+                {
+                  "id": "NGVeS",
+                  "type": "ref",
+                  "ref": "HSalw",
+                  "name": "logBtn",
+                  "x": 156,
+                  "descendants": {
+                    "94TL2": {
+                      "content": "Log Weight"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "5vCnl",
+          "name": "statsRow",
+          "width": "fill_container",
+          "gap": 16,
+          "children": [
+            {
+              "id": "h3WqD",
+              "type": "ref",
+              "ref": "wI6Rj",
+              "width": "fill_container",
+              "name": "stat1",
+              "x": 0,
+              "descendants": {
+                "5aYwV": {
+                  "iconFontName": "scale"
+                },
+                "btaQw": {
+                  "content": "92.0 -> 86.4 kg"
+                },
+                "dslqr": {
+                  "content": "Starting -> Current"
+                },
+                "8z6HW": {
+                  "content": "-5.6 kg"
+                },
+                "br1Q4": {
+                  "content": "-6.1% total"
+                }
+              }
+            },
+            {
+              "id": "0Obev",
+              "type": "ref",
+              "ref": "wI6Rj",
+              "width": "fill_container",
+              "name": "stat2",
+              "x": 348,
+              "descendants": {
+                "5aYwV": {
+                  "iconFontName": "dumbbell"
+                },
+                "btaQw": {
+                  "content": "48 workouts"
+                },
+                "dslqr": {
+                  "content": "Workouts completed"
+                },
+                "8z6HW": {
+                  "content": "+9"
+                },
+                "br1Q4": {
+                  "content": "last 30 days"
+                }
+              }
+            },
+            {
+              "id": "RBIF1",
+              "type": "ref",
+              "ref": "wI6Rj",
+              "width": "fill_container",
+              "name": "stat3",
+              "x": 696,
+              "descendants": {
+                "5aYwV": {
+                  "iconFontName": "flame"
+                },
+                "btaQw": {
+                  "content": "17 days"
+                },
+                "dslqr": {
+                  "content": "Current streak"
+                },
+                "8z6HW": {
+                  "content": "Best: 28"
+                },
+                "br1Q4": {
+                  "content": "days in row"
+                }
+              }
+            },
+            {
+              "id": "kiogG",
+              "type": "ref",
+              "ref": "wI6Rj",
+              "width": "fill_container",
+              "name": "stat4",
+              "x": 1044,
+              "descendants": {
+                "5aYwV": {
+                  "iconFontName": "trending-up"
+                },
+                "btaQw": {
+                  "content": "+12.4%"
+                },
+                "dslqr": {
+                  "content": "Strength improvement"
+                },
+                "8z6HW": {
+                  "content": "Bench press"
+                },
+                "br1Q4": {
+                  "content": "since start"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "8vExv",
+          "type": "ref",
+          "ref": "0sIaq",
+          "width": "fill_container",
+          "name": "weightCard",
+          "x": 32,
+          "y": 375,
+          "height": "fit_content",
+          "descendants": {
+            "SuTq8": {
+              "width": "fill_container"
+            },
+            "aiLkM": {
+              "content": "Weight Progress"
+            },
+            "kbM4z": {
+              "content": "Body weight trend with goal and starting lines"
+            },
+            "0X04O": {
+              "type": "frame",
+              "id": "s8wQ9",
+              "name": "weightContent",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 14,
+              "padding": [
+                12,
+                24
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "waRbK",
+                  "name": "wTop",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "KP1zy",
+                      "name": "wLegend",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "n4lq4",
+                          "name": "wStart",
+                          "fill": "$--muted-foreground",
+                          "content": "Start 92.0",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "mRqIE",
+                          "name": "wGoal",
+                          "fill": "$--success",
+                          "content": "Goal 82.0",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "a9yI9",
+                          "name": "wTrend",
+                          "fill": "$--primary",
+                          "content": "Trend -0.4kg/week",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "bskg0",
+                      "name": "wHint",
+                      "fill": "$--muted-foreground",
+                      "content": "Hover point for exact date/weight",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Y0pzK",
+                  "name": "wChart",
+                  "width": "fill_container",
+                  "height": 320,
+                  "fill": "$--muted",
+                  "cornerRadius": "$--radius",
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "$--border"
+                  },
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "line",
+                      "id": "0wdp8",
+                      "x": 24,
+                      "y": 80,
+                      "name": "wStartLine",
+                      "width": 1280,
+                      "height": 0,
+                      "stroke": {
+                        "align": "center",
+                        "thickness": 1,
+                        "fill": "$--muted-foreground"
+                      }
+                    },
+                    {
+                      "type": "line",
+                      "id": "TspMz",
+                      "x": 24,
+                      "y": 224,
+                      "name": "wGoalLine",
+                      "width": 1280,
+                      "height": 0,
+                      "stroke": {
+                        "align": "center",
+                        "thickness": 1,
+                        "fill": "$--success"
+                      }
+                    },
+                    {
+                      "type": "line",
+                      "id": "wKsMi",
+                      "x": 60,
+                      "y": 90,
+                      "name": "wTrendLine",
+                      "width": 1180,
+                      "height": 120,
+                      "stroke": {
+                        "align": "center",
+                        "thickness": 3,
+                        "fill": "$--primary"
+                      }
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "6kHdp",
+                      "x": 60,
+                      "y": 88,
+                      "name": "p1",
+                      "fill": "$--primary",
+                      "width": 10,
+                      "height": 10
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "wPw8z",
+                      "x": 320,
+                      "y": 116,
+                      "name": "p2",
+                      "fill": "$--primary",
+                      "width": 10,
+                      "height": 10
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "WAAsc",
+                      "x": 540,
+                      "y": 138,
+                      "name": "p3",
+                      "fill": "$--primary",
+                      "width": 10,
+                      "height": 10
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "ry5mH",
+                      "x": 800,
+                      "y": 166,
+                      "name": "p4",
+                      "fill": "$--primary",
+                      "width": 10,
+                      "height": 10
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "1Ngw4",
+                      "x": 1050,
+                      "y": 188,
+                      "name": "p5",
+                      "fill": "$--primary",
+                      "width": 10,
+                      "height": 10
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "tiKZY",
+                      "x": 1240,
+                      "y": 208,
+                      "name": "p6",
+                      "fill": "$--primary",
+                      "width": 10,
+                      "height": 10
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "YSj56",
+                  "name": "axis",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "KDOoR",
+                      "name": "a1",
+                      "fill": "$--muted-foreground",
+                      "content": "Jan",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "trVMc",
+                      "name": "a2",
+                      "fill": "$--muted-foreground",
+                      "content": "Feb",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "76ZvK",
+                      "name": "a3",
+                      "fill": "$--muted-foreground",
+                      "content": "Mar",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "RlluJ",
+                      "name": "a4",
+                      "fill": "$--muted-foreground",
+                      "content": "Apr",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "khkfm",
+                      "name": "a5",
+                      "fill": "$--muted-foreground",
+                      "content": "May",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "XSCjs",
+                      "name": "a6",
+                      "fill": "$--muted-foreground",
+                      "content": "Jun",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            "kxJDl": {
+              "width": "fill_container(1376)",
+              "enabled": false
+            },
+            "aBe89": {
+              "x": 1270
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "BlJMd",
+          "name": "midRow",
+          "width": "fill_container",
+          "gap": 16,
+          "children": [
+            {
+              "id": "ksDDC",
+              "type": "ref",
+              "ref": "0sIaq",
+              "width": "fill_container",
+              "name": "strengthCard",
+              "height": "fit_content",
+              "descendants": {
+                "SuTq8": {
+                  "width": "fill_container"
+                },
+                "aiLkM": {
+                  "content": "Strength Progress"
+                },
+                "kbM4z": {
+                  "content": "Exercise-specific progression and PR tracking"
+                },
+                "0X04O": {
+                  "type": "frame",
+                  "id": "1bWBL",
+                  "name": "strengthContent",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": [
+                    12,
+                    24
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "HeuPK",
+                      "name": "sTop",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "yF8nh",
+                          "name": "sLbl",
+                          "fill": "$--muted-foreground",
+                          "content": "Exercise",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "id": "Pz7Pn",
+                          "type": "ref",
+                          "ref": "F3HWx",
+                          "name": "sSel",
+                          "x": 499,
+                          "descendants": {
+                            "JAExE": {
+                              "content": "Bench Press"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "cKzCk",
+                      "name": "sChart",
+                      "width": "fill_container",
+                      "height": 180,
+                      "fill": "$--muted",
+                      "cornerRadius": "$--radius",
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "$--border"
+                      },
+                      "gap": 8,
+                      "padding": [
+                        12,
+                        16
+                      ],
+                      "alignItems": "end",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "id": "3tpU0",
+                          "name": "b1",
+                          "fill": "#1E3A5F",
+                          "width": "fill_container",
+                          "height": 48
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "qLgA8",
+                          "name": "b2",
+                          "fill": "#1E3A5F",
+                          "width": "fill_container",
+                          "height": 62
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "u4k8U",
+                          "name": "b3",
+                          "fill": "#2563EB",
+                          "width": "fill_container",
+                          "height": 75
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "oFndm",
+                          "name": "b4",
+                          "fill": "#2563EB",
+                          "width": "fill_container",
+                          "height": 92
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "rvIvp",
+                          "name": "b5",
+                          "fill": "#3B82F6",
+                          "width": "fill_container",
+                          "height": 110
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "kzSio",
+                          "name": "b6",
+                          "fill": "#60A5FA",
+                          "width": "fill_container",
+                          "height": 126
+                        }
+                      ]
+                    },
+                    {
+                      "id": "RYHG0",
+                      "type": "ref",
+                      "ref": "yBtN6",
+                      "name": "prTag",
+                      "x": 24,
+                      "y": 257,
+                      "descendants": {
+                        "lfkHP": {
+                          "content": "PR ★ 100kg"
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "9QnJU",
+                      "name": "sStats",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "yqEKi",
+                          "name": "ss1",
+                          "fill": "$--muted-foreground",
+                          "content": "Start: 70kg",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "LOIv3",
+                          "name": "ss2",
+                          "fill": "$--foreground",
+                          "content": "Current: 100kg",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Ku0v5",
+                          "name": "ss3",
+                          "fill": "$--success",
+                          "content": "Improvement: +42.8%",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "kxJDl": {
+                  "width": "fill_container(680)",
+                  "enabled": false
+                },
+                "aBe89": {
+                  "x": 574
+                }
+              }
+            },
+            {
+              "id": "XbxMq",
+              "type": "ref",
+              "ref": "0sIaq",
+              "width": "fill_container",
+              "name": "consCard",
+              "x": 696,
+              "height": "fit_content",
+              "descendants": {
+                "SuTq8": {
+                  "width": "fill_container"
+                },
+                "aiLkM": {
+                  "content": "Consistency Calendar"
+                },
+                "kbM4z": {
+                  "content": "GitHub-style heatmap for the last 12 weeks"
+                },
+                "0X04O": {
+                  "type": "frame",
+                  "id": "sxhnk",
+                  "name": "consistencyContent",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": [
+                    12,
+                    24
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "bnyY0",
+                      "name": "cTop",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "KyTfQ",
+                          "name": "cLbl",
+                          "fill": "$--muted-foreground",
+                          "content": "Each column = 1 week",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Dz1gQ",
+                          "name": "cHint",
+                          "fill": "$--muted-foreground",
+                          "content": "Hover: workout + XP",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "AzTQc",
+                      "name": "cGrid",
+                      "width": "fill_container",
+                      "height": 100,
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "id": "Ym1yQ",
+                          "name": "c1",
+                          "fill": "#374151",
+                          "width": "fill_container",
+                          "height": "fill_container"
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "osSDb",
+                          "name": "c2",
+                          "fill": "#14532D",
+                          "width": "fill_container",
+                          "height": "fill_container"
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "U3Nll",
+                          "name": "c3",
+                          "fill": "#166534",
+                          "width": "fill_container",
+                          "height": "fill_container"
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "XOHWD",
+                          "name": "c4",
+                          "fill": "#15803D",
+                          "width": "fill_container",
+                          "height": "fill_container"
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "IMVY4",
+                          "name": "c5",
+                          "fill": "#14532D",
+                          "width": "fill_container",
+                          "height": "fill_container"
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "o5wPH",
+                          "name": "c6",
+                          "fill": "#166534",
+                          "width": "fill_container",
+                          "height": "fill_container"
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "7flXc",
+                          "name": "c7",
+                          "fill": "#15803D",
+                          "width": "fill_container",
+                          "height": "fill_container"
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "Ax09q",
+                          "name": "c8",
+                          "fill": "#14532D",
+                          "width": "fill_container",
+                          "height": "fill_container"
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "TgFih",
+                          "name": "c9",
+                          "fill": "#166534",
+                          "width": "fill_container",
+                          "height": "fill_container"
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "IR0WI",
+                          "name": "c10",
+                          "fill": "#15803D",
+                          "width": "fill_container",
+                          "height": "fill_container"
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "lmLZa",
+                          "name": "c11",
+                          "fill": "#14532D",
+                          "width": "fill_container",
+                          "height": "fill_container"
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "uStWX",
+                          "name": "c12",
+                          "fill": "#166534",
+                          "width": "fill_container",
+                          "height": "fill_container"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "OhLbH",
+                      "name": "cStats",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "HGmOb",
+                          "name": "cs1",
+                          "fill": "$--foreground",
+                          "content": "Total workouts: 48",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "BBL3V",
+                          "name": "cs2",
+                          "fill": "$--success",
+                          "content": "Avg/week: 4.0",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "kxJDl": {
+                  "width": "fill_container(680)",
+                  "enabled": false
+                },
+                "aBe89": {
+                  "x": 574
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "1nFu7",
+          "type": "ref",
+          "ref": "0sIaq",
+          "width": "fill_container",
+          "name": "volumeCard",
+          "x": 32,
+          "y": 1312,
+          "height": "fit_content",
+          "descendants": {
+            "SuTq8": {
+              "width": "fill_container"
+            },
+            "aiLkM": {
+              "content": "Volume by Muscle Group"
+            },
+            "kbM4z": {
+              "content": "Track total training volume and detect imbalances"
+            },
+            "0X04O": {
+              "type": "frame",
+              "id": "IxIus",
+              "name": "volumeContent",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 14,
+              "padding": [
+                12,
+                24
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "fTUwm",
+                  "name": "vChart",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "WjOSL",
+                      "name": "r1",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "8pHcw",
+                          "name": "r1t",
+                          "fill": "$--muted-foreground",
+                          "content": "Chest",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 8,
+                          "id": "hJLh9",
+                          "name": "r1b",
+                          "fill": "$--primary",
+                          "width": 900,
+                          "height": 14
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "eHmhr",
+                      "name": "r2",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "4fXQm",
+                          "name": "r2t",
+                          "fill": "$--muted-foreground",
+                          "content": "Back",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 8,
+                          "id": "rHZzl",
+                          "name": "r2b",
+                          "fill": "$--primary-light",
+                          "width": 820,
+                          "height": 14
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "rRkNi",
+                      "name": "r3",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "DC1BI",
+                          "name": "r3t",
+                          "fill": "$--muted-foreground",
+                          "content": "Legs",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 8,
+                          "id": "JEQ58",
+                          "name": "r3b",
+                          "fill": "$--warning",
+                          "width": 560,
+                          "height": 14
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "m6u40",
+                      "name": "r4",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "0kK8I",
+                          "name": "r4t",
+                          "fill": "$--muted-foreground",
+                          "content": "Shoulders",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 8,
+                          "id": "RKi3P",
+                          "name": "r4b",
+                          "fill": "$--primary-lighter",
+                          "width": 670,
+                          "height": 14
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "HqflX",
+                  "name": "alert",
+                  "width": "fill_container",
+                  "fill": "$--secondary",
+                  "cornerRadius": "$--radius-sm",
+                  "gap": 8,
+                  "padding": [
+                    10,
+                    12
+                  ],
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "y1hhc",
+                      "name": "alertI",
+                      "width": 16,
+                      "height": 16,
+                      "iconFontName": "triangle-alert",
+                      "iconFontFamily": "lucide",
+                      "fill": "$--warning"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Jeg78",
+                      "name": "alertT",
+                      "fill": "$--foreground",
+                      "content": "⚠ Legs volume 30% lower than upper body",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            "kxJDl": {
+              "width": "fill_container(1376)",
+              "enabled": false
+            },
+            "aBe89": {
+              "x": 1270
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "CPjIm",
+      "x": 17200,
+      "y": 0,
+      "name": "Task 5.3 — Progress Page / Mobile 390",
+      "theme": {
+        "mode": "dark"
+      },
+      "width": 390,
+      "fill": "$--background",
+      "layout": "vertical",
+      "gap": 14,
+      "padding": 20,
+      "children": [
+        {
+          "type": "text",
+          "id": "xlHzZ",
+          "name": "mTitle",
+          "fill": "$--foreground",
+          "content": "Progress",
+          "fontFamily": "Poppins",
+          "fontSize": 24,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "VqADI",
+          "name": "mSub",
+          "fill": "$--muted-foreground",
+          "content": "Quick progress overview",
+          "fontFamily": "Inter",
+          "fontSize": 12,
+          "fontWeight": "normal"
+        },
+        {
+          "id": "whD5i",
+          "type": "ref",
+          "ref": "F3HWx",
+          "width": "fill_container",
+          "name": "mRange",
+          "x": 20,
+          "y": 99,
+          "descendants": {
+            "JAExE": {
+              "content": "Last Month"
+            }
+          }
+        },
+        {
+          "id": "MYlCL",
+          "type": "ref",
+          "ref": "wI6Rj",
+          "width": "fill_container",
+          "name": "mStats1",
+          "x": 20,
+          "y": 154,
+          "descendants": {
+            "btaQw": {
+              "content": "-5.6 kg"
+            },
+            "dslqr": {
+              "content": "Weight change"
+            }
+          }
+        },
+        {
+          "id": "0Zc5M",
+          "type": "ref",
+          "ref": "wI6Rj",
+          "width": "fill_container",
+          "name": "mStats2",
+          "x": 20,
+          "y": 389,
+          "descendants": {
+            "btaQw": {
+              "content": "17 days"
+            },
+            "dslqr": {
+              "content": "Current streak"
+            }
+          }
+        },
+        {
+          "id": "2jGwD",
+          "type": "ref",
+          "ref": "0sIaq",
+          "width": "fill_container",
+          "name": "mWeight",
+          "x": 20,
+          "y": 624,
+          "height": "fit_content",
+          "descendants": {
+            "SuTq8": {
+              "width": "fill_container"
+            },
+            "aiLkM": {
+              "content": "Weight trend"
+            },
+            "kbM4z": {
+              "content": "Last 30 days"
+            },
+            "0X04O": {
+              "width": "fill_container",
+              "height": "fit_content",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "t1u9s",
+                  "width": "fill_container",
+                  "height": 140,
+                  "fill": "$--muted",
+                  "cornerRadius": "$--radius",
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "$--border"
+                  },
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "line",
+                      "id": "k4cwJ",
+                      "x": 16,
+                      "y": 24,
+                      "width": 340,
+                      "height": 88,
+                      "stroke": {
+                        "align": "center",
+                        "thickness": 2,
+                        "fill": "$--primary"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "kxJDl": {
+              "width": "fill_container(350)",
+              "y": 248,
+              "enabled": false
+            },
+            "aBe89": {
+              "x": 244
+            }
+          }
+        },
+        {
+          "id": "zFUVT",
+          "type": "ref",
+          "ref": "0sIaq",
+          "width": "fill_container",
+          "name": "mCons",
+          "x": 20,
+          "y": 886,
+          "height": "fit_content",
+          "descendants": {
+            "SuTq8": {
+              "width": "fill_container"
+            },
+            "aiLkM": {
+              "content": "Consistency"
+            },
+            "kbM4z": {
+              "content": "12-week heatmap"
+            },
+            "0X04O": {
+              "width": "fill_container",
+              "height": "fit_content",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "sh8JX",
+                  "width": "fill_container",
+                  "height": 70,
+                  "gap": 4,
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "e6uy4",
+                      "fill": "#374151",
+                      "width": "fill_container",
+                      "height": "fill_container"
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "KBKLC",
+                      "fill": "#14532D",
+                      "width": "fill_container",
+                      "height": "fill_container"
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "Uxs0t",
+                      "fill": "#166534",
+                      "width": "fill_container",
+                      "height": "fill_container"
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "4ZhEg",
+                      "fill": "#15803D",
+                      "width": "fill_container",
+                      "height": "fill_container"
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "lEBkA",
+                      "fill": "#14532D",
+                      "width": "fill_container",
+                      "height": "fill_container"
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "KDvF6",
+                      "fill": "#166534",
+                      "width": "fill_container",
+                      "height": "fill_container"
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "ApAlY",
+                      "fill": "#15803D",
+                      "width": "fill_container",
+                      "height": "fill_container"
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "aWCy3",
+                      "fill": "#14532D",
+                      "width": "fill_container",
+                      "height": "fill_container"
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "BMf3S",
+                      "fill": "#166534",
+                      "width": "fill_container",
+                      "height": "fill_container"
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "tVWp0",
+                      "fill": "#15803D",
+                      "width": "fill_container",
+                      "height": "fill_container"
+                    }
+                  ]
+                }
+              ]
+            },
+            "kxJDl": {
+              "width": "fill_container(350)",
+              "y": 178,
+              "enabled": false
+            },
+            "aBe89": {
+              "x": 244
+            }
+          }
         }
       ]
     }

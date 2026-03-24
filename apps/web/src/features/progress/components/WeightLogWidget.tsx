@@ -24,7 +24,12 @@ function getStoredUnit(): "kg" | "lbs" {
   return (localStorage.getItem(UNIT_KEY) as "kg" | "lbs") || "kg";
 }
 
-export function WeightLogWidget() {
+interface WeightLogWidgetProps {
+  /** Called after a successful log (e.g. close dialog). */
+  onLogged?: () => void;
+}
+
+export function WeightLogWidget({ onLogged }: WeightLogWidgetProps) {
   const [unit, setUnit] = useState<"kg" | "lbs">(getStoredUnit);
   const [value, setValue] = useState("");
   const [notes, setNotes] = useState("");
@@ -56,13 +61,14 @@ export function WeightLogWidget() {
           toast.success("Weight logged successfully");
           setValue("");
           setNotes("");
+          onLogged?.();
         },
         onError: (err) => {
           toast.error(err.message || "Failed to log weight");
         },
       },
     );
-  }, [value, unit, notes, mutation]);
+  }, [value, unit, notes, mutation, onLogged]);
 
   const lastWeight = history.data?.currentWeight;
   const displayLast =

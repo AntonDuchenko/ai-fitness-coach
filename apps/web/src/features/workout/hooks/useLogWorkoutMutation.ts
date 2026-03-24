@@ -7,7 +7,7 @@ import type {
   WorkoutLogResponse,
 } from "../workoutLog.types";
 import { WORKOUT_TODAY_KEY } from "./useTodaysWorkoutQuery";
-import { WORKOUT_LOGS_KEY } from "./useWorkoutLogsQuery";
+import { WORKOUT_LOGS_LIST_KEY } from "./useWorkoutLogsQuery";
 import { WORKOUT_STATS_KEY } from "./useWorkoutStatsQuery";
 
 export function useLogWorkoutMutation() {
@@ -20,7 +20,8 @@ export function useLogWorkoutMutation() {
         body: JSON.stringify(payload),
       }),
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: WORKOUT_LOGS_KEY });
+      void queryClient.invalidateQueries({ queryKey: WORKOUT_LOGS_LIST_KEY });
+      void queryClient.invalidateQueries({ queryKey: ["progress"] });
       void queryClient.invalidateQueries({ queryKey: WORKOUT_STATS_KEY });
       void queryClient.invalidateQueries({ queryKey: WORKOUT_TODAY_KEY });
     },

@@ -9,10 +9,9 @@ const nav = [
   { href: "/dashboard", label: "Home" },
   { href: "/dashboard/workouts", label: "Workouts" },
   { href: "/dashboard/nutrition", label: "Nutrition" },
+  { href: "/dashboard/progress", label: "Progress" },
   { href: "/chat", label: "AI Chat" },
 ] as const;
-
-const comingSoon = ["Progress"] as const;
 
 interface DashboardSidebarProps {
   className?: string;
@@ -50,9 +49,11 @@ export function DashboardSidebar({ className }: DashboardSidebarProps) {
           const active =
             href === "/dashboard/workouts"
               ? pathname?.startsWith("/dashboard/workouts")
-              : href === "/dashboard"
-                ? pathname === "/dashboard" || pathname === "/dashboard/"
-                : pathname === href;
+              : href === "/dashboard/progress"
+                ? pathname?.startsWith("/dashboard/progress")
+                : href === "/dashboard"
+                  ? pathname === "/dashboard" || pathname === "/dashboard/"
+                  : pathname === href;
           return (
             <Link
               key={href}
@@ -68,17 +69,6 @@ export function DashboardSidebar({ className }: DashboardSidebarProps) {
             </Link>
           );
         })}
-        {comingSoon.map((label) => (
-          <div
-            key={label}
-            className="flex h-11 cursor-not-allowed items-center rounded-lg px-3 text-[13px] text-muted-foreground/50"
-          >
-            {label}
-            <span className="ml-auto text-[10px] uppercase tracking-wide opacity-60">
-              Soon
-            </span>
-          </div>
-        ))}
       </nav>
       <div className="mt-auto h-px w-full bg-sidebar-border" />
       <div className="flex h-16 items-center gap-3 px-4">
