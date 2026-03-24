@@ -57,4 +57,8 @@ export class StripeService implements OnModuleInit {
   getPriceIdAnnual(): string | undefined {
     return this.configService.get<string>("stripe.priceIdAnnual");
   }
+
+  getWebhookSecret(): string | undefined {
+    return this.configService.get<string>("stripe.webhookSecret");
+  }
 }
