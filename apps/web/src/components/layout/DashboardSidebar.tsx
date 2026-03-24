@@ -11,6 +11,7 @@ const nav = [
   { href: "/dashboard/nutrition", label: "Nutrition" },
   { href: "/dashboard/progress", label: "Progress" },
   { href: "/chat", label: "AI Chat" },
+  { href: "/pricing", label: "Pricing" },
 ] as const;
 
 interface DashboardSidebarProps {

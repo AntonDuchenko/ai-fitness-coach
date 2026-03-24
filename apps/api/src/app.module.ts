@@ -1,3 +1,4 @@
+import { resolve } from "node:path";
 import { BullModule } from "@nestjs/bull";
 import { ClassSerializerInterceptor, Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
@@ -28,6 +29,7 @@ import { PrismaModule } from "./prisma/prisma.module";
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: [resolve(__dirname, "..", ".env"), ".env"],
       validate,
       load: [
         appConfig,

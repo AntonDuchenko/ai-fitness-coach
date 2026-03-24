@@ -69,11 +69,11 @@ export class PaymentsController {
   @ApiResponse({ status: 401, description: "Unauthorized" })
   @ApiResponse({ status: 404, description: "User not found" })
   async createCheckoutSession(
-    @Req() req: { user: { sub: string } },
+    @Req() req: { user: { id: string } },
     @Body() dto: CreateCheckoutSessionDto,
   ): Promise<CheckoutSessionResponseDto> {
     return this.paymentsService.createCheckoutSession(
-      req.user.sub,
+      req.user.id,
       dto.priceId,
     );
   }
@@ -102,9 +102,9 @@ export class PaymentsController {
   @ApiResponse({ status: 401, description: "Unauthorized" })
   @ApiResponse({ status: 404, description: "User not found" })
   async createPortalSession(
-    @Req() req: { user: { sub: string } },
+    @Req() req: { user: { id: string } },
   ): Promise<PortalSessionResponseDto> {
-    return this.paymentsService.createPortalSession(req.user.sub);
+    return this.paymentsService.createPortalSession(req.user.id);
   }
 
   @Get("subscription")
@@ -119,8 +119,8 @@ export class PaymentsController {
   @ApiResponse({ status: 401, description: "Unauthorized" })
   @ApiResponse({ status: 404, description: "User not found" })
   async getSubscription(
-    @Req() req: { user: { sub: string } },
+    @Req() req: { user: { id: string } },
   ): Promise<SubscriptionResponseDto> {
-    return this.paymentsService.getSubscription(req.user.sub);
+    return this.paymentsService.getSubscription(req.user.id);
   }
 }
