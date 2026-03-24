@@ -22,6 +22,7 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
+import { RequiresPremium } from "../../common/decorators/requires-premium.decorator";
 import { JwtAuthGuard } from "../../common/guards/jwt-auth.guard";
 import { CreateWorkoutLogDto } from "./dto/create-workout-log.dto";
 import { WorkoutDayResponseDto } from "./dto/workout-day-response.dto";
@@ -38,6 +39,7 @@ export class WorkoutsController {
   constructor(private readonly workoutsService: WorkoutsService) {}
 
   @Post("generate")
+  @RequiresPremium()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: "Generate a personalized workout plan using AI" })
   @ApiResponse({
@@ -167,6 +169,7 @@ export class WorkoutsController {
   }
 
   @Post("plan/regenerate")
+  @RequiresPremium()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     summary: "Regenerate workout plan (archives current plan)",

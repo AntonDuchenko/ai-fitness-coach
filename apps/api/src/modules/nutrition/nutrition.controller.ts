@@ -19,6 +19,7 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
+import { RequiresPremium } from "../../common/decorators/requires-premium.decorator";
 import { JwtAuthGuard } from "../../common/guards/jwt-auth.guard";
 import { ApplySwapDto } from "./dto/apply-swap.dto";
 import { GenerateRecipeDto } from "./dto/generate-recipe.dto";
@@ -36,6 +37,7 @@ export class NutritionController {
   constructor(private readonly nutritionService: NutritionService) {}
 
   @Post("generate")
+  @RequiresPremium()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     summary: "Generate a personalized nutrition plan using AI",
@@ -98,6 +100,7 @@ export class NutritionController {
   }
 
   @Post("plan/regenerate")
+  @RequiresPremium()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     summary: "Regenerate nutrition plan (archives current plan)",
@@ -117,6 +120,7 @@ export class NutritionController {
   }
 
   @Post("swap-meal")
+  @RequiresPremium()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     summary: "Generate 3 alternative meals for swapping",
@@ -138,6 +142,7 @@ export class NutritionController {
   }
 
   @Post("swap-meal/apply")
+  @RequiresPremium()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: "Apply a meal swap to the nutrition plan",
@@ -158,6 +163,7 @@ export class NutritionController {
   }
 
   @Post("recipe/generate")
+  @RequiresPremium()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     summary: "Generate a single recipe matching specific macro targets",
@@ -179,6 +185,7 @@ export class NutritionController {
   }
 
   @Get("recipes")
+  @RequiresPremium()
   @ApiOperation({
     summary: "Search/generate recipes based on user profile and criteria",
   })

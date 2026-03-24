@@ -1,39 +1,41 @@
 # Pipeline Summary
 
-## Task: Task 6.4 — Subscription Management Frontend
+## Task: Task 6.5 — Free Tier Enforcement
 ## Final Status: SUCCESS
 
 ## Timeline
 | Phase | Status | Iterations |
 |-------|--------|------------|
-| Init | Skipped (resumed from review) | — |
-| Architect | Skipped (resumed from review) | — |
-| Developer | Completed | 2 passes |
-| Reviewer | APPROVED | 2/3 iterations |
+| Init | Completed | - |
+| Architect | Completed | - |
+| Developer | Completed | 1 pass |
+| Reviewer | APPROVED | 1/3 iterations |
 | Tester | PASSED | 1/3 iterations |
 
 ## Convention Compliance
 | Rule | Status |
 |------|--------|
-| Component size (<150 lines) | PASS (max 157, within tolerance) |
+| Component size (<150 lines) | PASS |
 | Business logic separated (hooks/services) | PASS |
-| shadcn/ui used (no raw HTML) | PASS |
-| Semantic design tokens (no hardcoded hex) | PASS |
-| cn() for conditional classes | PASS |
-| Error/loading/empty states | PASS |
-| Accessibility | PASS |
+| shadcn/ui used (no raw HTML) | N/A (backend) |
+| Semantic design tokens (no hardcoded hex) | N/A (backend) |
+| Error/loading/empty states | N/A (backend) |
+| Accessibility | N/A (backend) |
 | TypeScript strict (no `any`) | PASS |
-| TanStack Query for API calls | PASS |
 
 ## Files Created/Modified
-- `apps/web/src/features/subscription/components/SubscriptionManagementScreen.tsx` — added desktop header button, mobile-responsive layout
-- `apps/web/src/features/subscription/components/CurrentPlanCard.tsx` — mobile stacked buttons, updated card description
-- `apps/web/src/features/subscription/components/SubscriptionStatusList.tsx` — refactored to use shadcn Alert component
-- `apps/web/src/components/ui/alert.tsx` — added success/info variants
-- `apps/web/e2e/visual-subscription.spec.ts` — Playwright visual regression test (NEW)
+- `apps/api/src/common/guards/premium.guard.ts` — PremiumGuard (CanActivate) checks isPremium via UsersService
+- `apps/api/src/common/decorators/requires-premium.decorator.ts` — @RequiresPremium() composite decorator (guard + Swagger 403)
+- `apps/api/src/common/exceptions/forbidden-premium.exception.ts` — ForbiddenPremiumException with upgradeUrl: '/pricing'
+- `apps/api/src/common/constants/tier-limits.ts` — Centralized free tier limit constants
+- `apps/api/src/modules/users/users.module.ts` — Made @Global() for guard injection
+- `apps/api/src/modules/workouts/workouts.controller.ts` — @RequiresPremium() on generate, regenerate
+- `apps/api/src/modules/nutrition/nutrition.controller.ts` — @RequiresPremium() on generate, regenerate, swap-meal, swap-meal/apply, recipe/generate, recipes
+- `apps/api/src/modules/progress/progress.controller.ts` — @RequiresPremium() on strength, volume, consistency
+- `apps/api/src/modules/chat/chat.service.ts` — Uses ForbiddenPremiumException + TIER_LIMITS constant
 
 ## Key Decisions
-- Added `success` and `info` variants to shadcn Alert component for status row styling
-- Mobile layout uses stacked full-width buttons inside CurrentPlanCard (matching Pencil design)
-- Desktop layout uses separate FreeUpgradeCard (hidden on mobile via `hidden lg:block`)
-- Desktop header includes "Manage Subscription" outline button (right-aligned, matching design)
+- Made UsersModule @Global() so PremiumGuard can inject UsersService without explicit imports in each feature module
+- Used composite decorator pattern (@RequiresPremium) to bundle guard + Swagger response in one call
+- View/log endpoints remain free (users can see their existing plans/data), only AI generation and advanced analytics are premium-gated
+- Chat keeps its unique daily-limit enforcement in the service layer (more granular than binary premium check)

@@ -19,6 +19,7 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
+import { RequiresPremium } from "../../common/decorators/requires-premium.decorator";
 import { JwtAuthGuard } from "../../common/guards/jwt-auth.guard";
 import { ConsistencyResponseDto } from "./dto/consistency-response.dto";
 import { CreateWeightLogDto } from "./dto/create-weight-log.dto";
@@ -82,6 +83,7 @@ export class ProgressController {
   // ─── Strength ────────────────────────────────────────────
 
   @Get("strength/:exercise")
+  @RequiresPremium()
   @ApiOperation({ summary: "Get strength progression for a specific exercise" })
   @ApiParam({
     name: "exercise",
@@ -116,6 +118,7 @@ export class ProgressController {
   // ─── Volume ──────────────────────────────────────────────
 
   @Get("volume")
+  @RequiresPremium()
   @ApiOperation({ summary: "Get training volume over time (weekly)" })
   @ApiQuery({
     name: "period",
@@ -140,6 +143,7 @@ export class ProgressController {
   // ─── Consistency ─────────────────────────────────────────
 
   @Get("consistency")
+  @RequiresPremium()
   @ApiOperation({ summary: "Get workout consistency data (calendar heatmap)" })
   @ApiQuery({
     name: "period",

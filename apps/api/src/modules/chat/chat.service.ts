@@ -1,4 +1,6 @@
-import { ForbiddenException, Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
+import { TIER_LIMITS } from "../../common/constants/tier-limits";
+import { ForbiddenPremiumException } from "../../common/exceptions/forbidden-premium.exception";
 import { PrismaService } from "../../prisma/prisma.service";
 import { AiService } from "../ai/ai.service";
 import { ContextService } from "../ai/context.service";
@@ -7,7 +9,7 @@ import { ChatMessageResponseDto } from "./dto/chat-message-response.dto";
 import { ChatUsageResponseDto } from "./dto/chat-usage-response.dto";
 import { SendMessageResponseDto } from "./dto/send-message-response.dto";
 
-const FREE_TIER_DAILY_LIMIT = 5;
+const FREE_TIER_DAILY_LIMIT = TIER_LIMITS.FREE.CHAT_MESSAGES_PER_DAY;
 
 @Injectable()
 export class ChatService {
@@ -29,7 +31,7 @@ export class ChatService {
     if (!user?.isPremium) {
       const todayCount = await this.checkAndResetDailyLimit(userId);
       if (todayCount >= FREE_TIER_DAILY_LIMIT) {
-        throw new ForbiddenException(
+        throw new ForbiddenPremiumException(
           "Daily message limit reached. Upgrade to Premium for unlimited messages.",
         );
       }

@@ -1,28 +1,24 @@
-# Review Report — Task 6.4: Subscription Management Frontend
+# Review Report — Task 6.5: Free Tier Enforcement
 
-## Iteration: 2/3
+## Iteration: 1/3
 ## Verdict: APPROVED
 
-## Fixes Applied (from iteration 1)
-1. Replaced raw `<div>` status rows with shadcn `Alert` + `AlertDescription` components; added `success` and `info` variants to Alert
-2. Added "Manage Subscription" outline button to desktop header (right-aligned)
-3. Mobile layout: both "Upgrade to Premium" and "Manage Subscription" buttons now stacked inside CurrentPlanCard; FreeUpgradeCard hidden on mobile
+## Findings
 
-## Build/Lint
-- Build: PASS
-- Lint (subscription files): PASS
+### No Critical Issues
 
-## Checklist
+### Minor Issues (Fixed During Review)
+1. **TIER_LIMITS constant not used in chat.service.ts** — The local `FREE_TIER_DAILY_LIMIT = 5` was replaced with `TIER_LIMITS.FREE.CHAT_MESSAGES_PER_DAY` for consistency with the centralized constants file. Fixed.
 
-| # | Rule | Status |
-|---|------|--------|
-| 1 | Component size (<150 lines) | PASS (157 — within ~150 tolerance) |
-| 2 | Business logic in hooks | PASS |
-| 3 | shadcn/ui components used | PASS — Alert, Card, Button, Badge, Skeleton all used |
-| 4 | Semantic design tokens (no hex) | PASS |
-| 5 | cn() for conditional classes | PASS |
-| 6 | Error/loading/empty states | PASS |
-| 7 | Accessibility | PASS — role="alert" on status items, buttons have text labels |
-| 8 | TypeScript strict (no `any`) | PASS |
-| 9 | TanStack Query for API calls | PASS |
-| 10 | Server vs client separation | PASS |
+### Checklist Summary
+| Check | Status |
+|-------|--------|
+| Component/file size (<150 lines) | PASS — all new files under 30 lines |
+| Business logic separated | PASS — guard logic in guard, controller is thin |
+| Swagger decorators | PASS — @RequiresPremium includes @ApiResponse(403) |
+| Error response structure | PASS — includes upgradeUrl: '/pricing' |
+| Guard execution order | PASS — JwtAuthGuard runs first (class-level), PremiumGuard second (method-level) |
+| TypeScript strict (no `any`) | PASS |
+| Build passes | PASS |
+| Lint passes (changed files) | PASS |
+| Correct endpoints protected | PASS — generate/regenerate/AI endpoints gated; view/log endpoints free |
