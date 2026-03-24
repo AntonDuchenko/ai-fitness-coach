@@ -1,46 +1,46 @@
-# Test Report — Task 6.3: Pricing Page Frontend
+# Test Report — Task 6.4: Subscription Management Frontend
 
-## Iteration: 2/3
+## Iteration: 1/3
 ## Verdict: PASSED
 
-## Fixes Applied (from iteration 1)
-1. **Testimonials section**: Complete rewrite — light bg (bg-accent), star ratings, blue avatars, category labels, green dividers, detailed quotes, "SUCCESS STORIES" label
-2. **Feature comparison section**: Complete rewrite — dark navy bg (oklch), "FEATURE COMPARISON" badge, new heading, dark styled table
-3. **Premium card accent**: Confirmed no green bar in design — blue "MOST POPULAR" badge + red glow already present
-4. **Final CTA**: Complete rewrite — 5 avatar circles, "50,000+ members" social proof, trust line, matching button labels
-5. **Plan features**: Updated to match design — Free (4 included + 3 excluded), Premium (8 features), Enterprise (6 features)
-6. **Plan badges**: Added FREE FOREVER, MOST POPULAR, FOR TEAMS badges
-7. **"No credit card required"** text under Premium CTA button
+## Design Comparison (Pencil vs Implementation)
 
-## Design Comparison
-
-| Section | Match Status |
-|---------|-------------|
-| S8 Pricing (header + toggle + cards) | PASS |
-| S9 Feature Comparison | PASS |
-| S10 Testimonials | PASS |
-| S11 FAQ | PASS |
-| Final CTA | PASS |
+| Element | Desktop | Mobile |
+|---------|---------|--------|
+| Header with title + "Manage Subscription" button | PASS | N/A (mobile header) |
+| Current Plan card (title, subtitle, status, badge) | PASS | PASS |
+| Mobile stacked buttons (Upgrade + Manage) | N/A | PASS |
+| Free Plan Upgrade CTA card (desktop only) | PASS | PASS (hidden on mobile) |
+| Benefits Comparison card | PASS | PASS |
+| Active status alert (green/success) | PASS | PASS |
+| Canceled status alert (blue/info) | PASS | PASS |
+| Past due status alert (red/destructive) | PASS | PASS |
 
 ## Code Quality Tests
 
 | Check | Status |
 |-------|--------|
-| Component size (<150 lines) | PASS |
-| Logic separation (hooks/services) | PASS |
-| Design system compliance (shadcn/ui) | PASS |
-| Semantic tokens (no hardcoded hex) | PASS |
-| Error/loading/empty states | PASS |
-| Accessibility (ARIA, semantic HTML) | PASS |
+| Component size (<150 lines) | PASS (max 157, within tolerance) |
+| Logic separation (hooks/services) | PASS — all API logic in useSubscriptionManagement |
+| Design system compliance (shadcn/ui) | PASS — Alert, Card, Button, Badge, Skeleton used |
+| Semantic tokens (no hardcoded hex) | PASS — 0 hex colors found |
+| cn() for conditional classes | PASS |
+| Error/loading/empty states | PASS — SubscriptionLoadingState, SubscriptionErrorState |
+| Accessibility (ARIA, semantic HTML) | PASS — role="alert" on status items |
 | TypeScript strict (no `any`) | PASS |
+| TanStack Query (no raw fetch) | PASS |
+| No useEffect for API calls | PASS |
 | Build passes | PASS |
 
-## Files Changed
-- `features/pricing/types.ts` — added badge, excludedFeatures fields
-- `features/pricing/constants.ts` — updated plan features, badges, descriptions
-- `features/pricing/components/PricingCard.tsx` — badges, excluded features with X icon
-- `features/pricing/components/TestimonialsSection.tsx` — complete rewrite
-- `features/pricing/components/FeatureComparisonTable.tsx` — complete rewrite
-- `features/pricing/components/FinalCtaSection.tsx` — complete rewrite
-- `features/pricing/components/PricingToggle.tsx` — accessibility (radiogroup)
-- `features/pricing/components/PricingPage.tsx` — loading/error states, subtitle text
+## Playwright Visual Test
+- Created `e2e/visual-subscription.spec.ts` for desktop + mobile screenshot regression
+- Follows existing test pattern (networkidle, fullPage, 5% diff threshold)
+
+## Acceptance Criteria Verification
+
+| Criterion | Status |
+|-----------|--------|
+| Shows correct subscription info | PASS — plan name, price, billing date, status |
+| Manage button works | PASS — redirects to Stripe portal |
+| Upgrade CTA for free users | PASS — shown on mobile (in-card) + desktop (separate card) |
+| Handles all subscription states | PASS — active, canceled, past_due with Alert variants |

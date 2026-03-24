@@ -42652,6 +42652,596 @@
           ]
         }
       ]
+    },
+    {
+      "type": "frame",
+      "id": "JZp6Y",
+      "x": 19980,
+      "y": 0,
+      "name": "Task 6.4 — Subscription Management / Desktop 1440",
+      "theme": {
+        "mode": "dark"
+      },
+      "clip": true,
+      "width": 1440,
+      "height": 1220,
+      "fill": "#0A0A0A",
+      "children": [
+        {
+          "type": "frame",
+          "id": "ctYYV",
+          "name": "Sidebar",
+          "width": 280,
+          "height": "fill_container",
+          "fill": "#111113",
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            24,
+            20
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "QG62n",
+              "name": "t64dLogoA",
+              "fill": "$--foreground",
+              "content": "AI Fitness",
+              "fontFamily": "Poppins",
+              "fontSize": 20,
+              "fontWeight": "700"
+            },
+            {
+              "type": "frame",
+              "id": "l7OK9",
+              "name": "t64dNavA",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "7rPlW",
+                  "name": "t64dNav1A",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": "$--radius",
+                  "padding": [
+                    10,
+                    12
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "1nZ0g",
+                      "fill": "$--muted-foreground",
+                      "content": "Profile",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "sIg0G",
+                  "name": "t64dNav2A",
+                  "width": "fill_container",
+                  "fill": "$--primary",
+                  "cornerRadius": "$--radius",
+                  "padding": [
+                    10,
+                    12
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "mEKty",
+                      "fill": "$--primary-foreground",
+                      "content": "Subscription",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Nwp62",
+                  "name": "t64dNav3A",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": "$--radius",
+                  "padding": [
+                    10,
+                    12
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "tZZFu",
+                      "fill": "$--muted-foreground",
+                      "content": "Security",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "OBbyQ",
+          "name": "MainArea",
+          "width": "fill_container",
+          "height": "fill_container",
+          "fill": "#0A0A0A",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 32,
+          "children": [
+            {
+              "type": "frame",
+              "id": "n8Urd",
+              "name": "t64dHeadA",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "I9zzO",
+                  "name": "t64dHeadTextA",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "2nMai",
+                      "name": "t64dTitleA",
+                      "fill": "$--foreground",
+                      "content": "Subscription Management",
+                      "fontFamily": "Poppins",
+                      "fontSize": 30,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "qiSLD",
+                      "name": "t64dSubA",
+                      "fill": "$--muted-foreground",
+                      "content": "Manage plan, billing, and access states",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "id": "gisYg",
+                  "type": "ref",
+                  "ref": "aGtaD",
+                  "theme": {
+                    "mode": "dark"
+                  },
+                  "name": "t64dManageTopA",
+                  "x": 903,
+                  "y": 13.5,
+                  "descendants": {
+                    "nlrgf": {
+                      "content": "Manage Subscription"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "id": "EcYr1",
+              "type": "ref",
+              "ref": "0sIaq",
+              "theme": {
+                "mode": "dark"
+              },
+              "width": "fill_container",
+              "name": "t64dCurrentA",
+              "x": 32,
+              "y": 120,
+              "descendants": {
+                "SuTq8": {
+                  "width": "fill_container"
+                },
+                "aiLkM": {
+                  "content": "Current Plan: Premium"
+                },
+                "kbM4z": {
+                  "content": "USD 29/month · Next billing: Apr 24, 2026"
+                },
+                "0X04O": {
+                  "width": "fill_container"
+                },
+                "eJuwh": {
+                  "content": "Status: active. Full access to chat, workout, nutrition, and advanced analytics.",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "fill": "$--muted-foreground"
+                },
+                "kxJDl": {
+                  "width": "fill_container"
+                },
+                "aBe89": {
+                  "x": 879
+                },
+                "aBe89/94TL2": {
+                  "content": "Manage Subscription"
+                }
+              }
+            },
+            {
+              "id": "9V9j5",
+              "type": "ref",
+              "ref": "0sIaq",
+              "theme": {
+                "mode": "dark"
+              },
+              "width": "fill_container",
+              "name": "t64dFreeA",
+              "x": 32,
+              "y": 342,
+              "descendants": {
+                "SuTq8": {
+                  "width": "fill_container"
+                },
+                "aiLkM": {
+                  "content": "Free Plan Upgrade CTA"
+                },
+                "kbM4z": {
+                  "content": "Shown to users without Premium"
+                },
+                "0X04O": {
+                  "width": "fill_container"
+                },
+                "eJuwh": {
+                  "content": "Upgrade to Premium to unlock unlimited AI coaching, richer analytics, and advanced personalized plans.",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "fill": "$--muted-foreground"
+                },
+                "kxJDl": {
+                  "width": "fill_container"
+                },
+                "aBe89": {
+                  "x": 885
+                },
+                "aBe89/94TL2": {
+                  "content": "Upgrade to Premium"
+                }
+              }
+            },
+            {
+              "id": "3sOTd",
+              "type": "ref",
+              "ref": "0sIaq",
+              "theme": {
+                "mode": "dark"
+              },
+              "width": "fill_container",
+              "name": "t64dBenefitsA",
+              "x": 32,
+              "y": 564,
+              "descendants": {
+                "SuTq8": {
+                  "width": "fill_container"
+                },
+                "aiLkM": {
+                  "content": "Benefits Comparison"
+                },
+                "kbM4z": {
+                  "content": "Free vs Premium features"
+                },
+                "0X04O": {
+                  "width": "fill_container"
+                },
+                "eJuwh": {
+                  "content": "Chat: 5/day vs Unlimited | Workout: Basic vs Advanced | Nutrition: Calorie-only vs Full plans | Progress: Basic charts vs Advanced analytics",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "fill": "$--muted-foreground"
+                },
+                "kxJDl": {
+                  "width": "fill_container"
+                },
+                "aBe89": {
+                  "x": 912
+                },
+                "aBe89/94TL2": {
+                  "content": "View Full Pricing"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "4cW2n",
+              "name": "t64dStatesA",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "id": "qcvNm",
+                  "type": "ref",
+                  "ref": "Y1qGq",
+                  "theme": {
+                    "mode": "dark"
+                  },
+                  "name": "t64dStateActiveA",
+                  "width": "fill_container",
+                  "y": 0,
+                  "descendants": {
+                    "dE0Qm": {
+                      "width": "fill_container",
+                      "content": "Active subscription: renewal is enabled and benefits are available now."
+                    }
+                  }
+                },
+                {
+                  "id": "BONi3",
+                  "type": "ref",
+                  "ref": "vzMGu",
+                  "theme": {
+                    "mode": "dark"
+                  },
+                  "name": "t64dStateCancelA",
+                  "width": "fill_container",
+                  "y": 56,
+                  "descendants": {
+                    "zvA2I": {
+                      "width": "fill_container",
+                      "content": "Canceled: premium access remains until the end of your current billing period."
+                    }
+                  }
+                },
+                {
+                  "id": "RhSgn",
+                  "type": "ref",
+                  "ref": "8E5Yx",
+                  "theme": {
+                    "mode": "dark"
+                  },
+                  "name": "t64dStatePastDueA",
+                  "width": "fill_container",
+                  "y": 112,
+                  "descendants": {
+                    "RL6aL": {
+                      "fill": "#B91C1C"
+                    },
+                    "IBMjg": {
+                      "width": "fill_container",
+                      "content": "Past due: payment failed. Update payment method to avoid service interruption.",
+                      "fill": "#7F1D1D"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "ZRRNR",
+      "x": 21520,
+      "y": 0,
+      "name": "Task 6.4 — Subscription Management / Mobile 390",
+      "theme": {
+        "mode": "dark"
+      },
+      "clip": true,
+      "width": 390,
+      "height": 1320,
+      "fill": "#0A0A0A",
+      "layout": "vertical",
+      "gap": 14,
+      "padding": 20,
+      "children": [
+        {
+          "type": "text",
+          "id": "nqT1j",
+          "name": "t64mTitleB",
+          "fill": "$--foreground",
+          "content": "Subscription",
+          "fontFamily": "Poppins",
+          "fontSize": 24,
+          "fontWeight": "700"
+        },
+        {
+          "id": "whOTJ",
+          "type": "ref",
+          "ref": "0sIaq",
+          "theme": {
+            "mode": "dark"
+          },
+          "width": "fill_container",
+          "name": "t64mCurrentB",
+          "x": 20,
+          "y": 70,
+          "height": "fit_content",
+          "descendants": {
+            "SuTq8": {
+              "width": "fill_container"
+            },
+            "aiLkM": {
+              "content": "Current Plan: Free"
+            },
+            "kbM4z": {
+              "content": "Upgrade to unlock all premium features"
+            },
+            "0X04O": {
+              "width": "fill_container"
+            },
+            "eJuwh": {
+              "content": "Status: active (free tier)",
+              "fill": "$--muted-foreground"
+            },
+            "kxJDl": {
+              "type": "frame",
+              "id": "BbXx5",
+              "name": "mMobFooterB",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "padding": [
+                12,
+                24,
+                24,
+                24
+              ],
+              "children": [
+                {
+                  "id": "EoTeF",
+                  "type": "ref",
+                  "ref": "HSalw",
+                  "theme": {
+                    "mode": "dark"
+                  },
+                  "width": "fill_container",
+                  "x": 24,
+                  "y": 12,
+                  "descendants": {
+                    "94TL2": {
+                      "content": "Upgrade to Premium"
+                    }
+                  }
+                },
+                {
+                  "id": "X8QsA",
+                  "type": "ref",
+                  "ref": "aGtaD",
+                  "theme": {
+                    "mode": "dark"
+                  },
+                  "width": "fill_container",
+                  "x": 24,
+                  "y": 63,
+                  "descendants": {
+                    "nlrgf": {
+                      "content": "Manage Subscription"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "gojgd",
+          "type": "ref",
+          "ref": "0sIaq",
+          "theme": {
+            "mode": "dark"
+          },
+          "width": "fill_container",
+          "name": "t64mBenefitsB",
+          "x": 20,
+          "y": 337,
+          "descendants": {
+            "SuTq8": {
+              "width": "fill_container"
+            },
+            "aiLkM": {
+              "content": "Benefits Comparison"
+            },
+            "kbM4z": {
+              "content": "Free vs Premium"
+            },
+            "0X04O": {
+              "width": "fill_container"
+            },
+            "eJuwh": {
+              "content": "Chat: 5/day vs Unlimited\nWorkout: Basic vs Advanced\nNutrition: Calorie-only vs Full plans\nProgress: Basic charts vs Advanced analytics",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "fill": "$--muted-foreground"
+            },
+            "kxJDl": {
+              "width": "fill_container(350)",
+              "enabled": false
+            },
+            "aBe89": {
+              "x": 166
+            },
+            "aBe89/94TL2": {
+              "content": "View Full Pricing"
+            }
+          }
+        },
+        {
+          "id": "BBizN",
+          "type": "ref",
+          "ref": "Y1qGq",
+          "theme": {
+            "mode": "dark"
+          },
+          "name": "t64mStateActiveB",
+          "width": "fill_container",
+          "x": 20,
+          "y": 527,
+          "descendants": {
+            "dE0Qm": {
+              "width": "fill_container",
+              "content": "Active: premium benefits are enabled."
+            }
+          }
+        },
+        {
+          "id": "worjk",
+          "type": "ref",
+          "ref": "vzMGu",
+          "theme": {
+            "mode": "dark"
+          },
+          "name": "t64mStateCancelB",
+          "width": "fill_container",
+          "height": "fit_content",
+          "x": 20,
+          "y": 587,
+          "descendants": {
+            "XZC5M": {
+              "y": 14
+            },
+            "zvA2I": {
+              "width": "fill_container",
+              "y": 14.5,
+              "content": "Canceled: access remains until period end."
+            }
+          }
+        },
+        {
+          "id": "kBbY2",
+          "type": "ref",
+          "ref": "8E5Yx",
+          "theme": {
+            "mode": "dark"
+          },
+          "name": "t64mStatePastDueB",
+          "width": "fill_container",
+          "x": 20,
+          "y": 647,
+          "descendants": {
+            "RL6aL": {
+              "fill": "#B91C1C"
+            },
+            "IBMjg": {
+              "width": "fill_container",
+              "content": "Past due: update payment method.",
+              "fill": "#7F1D1D"
+            }
+          }
+        }
+      ]
     }
   ],
   "themes": {

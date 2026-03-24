@@ -10,6 +10,7 @@ const nav = [
   { href: "/dashboard/workouts", label: "Workouts" },
   { href: "/dashboard/nutrition", label: "Nutrition" },
   { href: "/dashboard/progress", label: "Progress" },
+  { href: "/dashboard/settings", label: "Subscription" },
   { href: "/chat", label: "AI Chat" },
   { href: "/pricing", label: "Pricing" },
 ] as const;
@@ -52,9 +53,11 @@ export function DashboardSidebar({ className }: DashboardSidebarProps) {
               ? pathname?.startsWith("/dashboard/workouts")
               : href === "/dashboard/progress"
                 ? pathname?.startsWith("/dashboard/progress")
-                : href === "/dashboard"
-                  ? pathname === "/dashboard" || pathname === "/dashboard/"
-                  : pathname === href;
+                : href === "/dashboard/settings"
+                  ? pathname?.startsWith("/dashboard/settings")
+                  : href === "/dashboard"
+                    ? pathname === "/dashboard" || pathname === "/dashboard/"
+                    : pathname === href;
           return (
             <Link
               key={href}
