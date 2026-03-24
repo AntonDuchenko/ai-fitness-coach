@@ -28,3 +28,10 @@ export const openaiConfig = registerAs("openai", () => ({
   maxRetries: 3,
   retryBaseDelayMs: 1000,
 }));
+
+export const stripeConfig = registerAs("stripe", () => ({
+  secretKey: process.env.STRIPE_SECRET_KEY,
+  webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
+  priceIdMonthly: process.env.STRIPE_PRICE_ID_MONTHLY,
+  priceIdAnnual: process.env.STRIPE_PRICE_ID_ANNUAL,
+}));

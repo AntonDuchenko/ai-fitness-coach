@@ -1,151 +1,61 @@
-# Architect Plan — Task 5.2: Progress Analytics Backend
+# Architect Plan — Task 6.1: Stripe Setup
 
 ## Overview
-Extend the existing Progress module with analytics endpoints for strength progression, training volume, workout consistency (heatmap), streaks, and a combined summary. All endpoints are backend-only (no frontend in this task).
+Set up Stripe SDK integration in the NestJS backend. This is a backend-only task — no frontend UI changes.
 
-## Current State
-- `ProgressModule` exists with weight logging (`POST /progress/weight`, `GET /progress/weight?period=`)
-- `WorkoutsService` has `calculateStreaks()` and `calculatePersonalRecords()` for workout stats
-- `WorkoutLog` model stores exercises as JSON array of `{ exerciseName, sets: [{ setNumber, weight, reps, rpe? }], notes? }`
-- `WeightLog` model tracks weight over time
-- `UserProfile` has `targetWeight`
-
-## New Endpoints
-
-### 1. `GET /progress/strength/:exercise?period=`
-Returns strength progression data for a specific exercise over time.
-
-**Response DTO: `StrengthProgressResponseDto`**
-```
-{
-  exercise: string;
-  data: Array<{
-    date: string;        // ISO date of workout
-    maxWeight: number;   // heaviest set weight
-    totalVolume: number; // sum(weight * reps) across all sets
-    bestSet: { weight: number; reps: number; }
-  }>;
-  startMaxWeight: number | null;
-  currentMaxWeight: number | null;
-  improvementKg: number | null;
-  improvementPercent: number | null;
-}
-```
-
-### 2. `GET /progress/volume?period=`
-Returns total training volume over time (weekly aggregated).
-
-**Response DTO: `VolumeProgressResponseDto`**
-```
-{
-  weeklyData: Array<{
-    weekStart: string;  // ISO date (Monday)
-    totalVolume: number; // sum of all weight*reps across all exercises
-    workoutCount: number;
-    avgVolumePerWorkout: number;
-  }>;
-  totalVolume: number;
-  avgWeeklyVolume: number;
-}
-```
-
-### 3. `GET /progress/consistency?period=`
-Returns workout consistency data (calendar heatmap format).
-
-**Response DTO: `ConsistencyResponseDto`**
-```
-{
-  dailyData: Array<{
-    date: string;        // ISO date
-    workoutCount: number;
-    totalDuration: number; // minutes
-  }>;
-  totalWorkouts: number;
-  workoutsPerWeek: number; // average
-  currentStreak: number;
-  bestStreak: number;
-}
-```
-
-### 4. `GET /progress/summary`
-Returns combined summary stats (no period filter — all-time + recent).
-
-**Response DTO: `ProgressSummaryResponseDto`**
-```
-{
-  weight: {
-    startWeight: number | null;
-    currentWeight: number | null;
-    targetWeight: number | null;
-    change: number | null;
-    changePercent: number | null;
-  };
-  workouts: {
-    totalCompleted: number;
-    thisWeek: number;
-    thisMonth: number;
-    currentStreak: number;
-    bestStreak: number;
-  };
-  volume: {
-    thisWeekVolume: number;
-    lastWeekVolume: number;
-    changePercent: number | null;
-  };
-  personalRecords: Array<{
-    exerciseName: string;
-    maxWeight: number;
-    repsAtMax: number;
-    achievedAt: string;
-  }>;
-}
-```
-
-## Implementation Plan
-
-### DTOs to Create (in `apps/api/src/modules/progress/dto/`)
-1. `strength-progress-response.dto.ts` — StrengthProgressResponseDto + StrengthDataPointDto
-2. `volume-progress-response.dto.ts` — VolumeProgressResponseDto + WeeklyVolumeDto
-3. `consistency-response.dto.ts` — ConsistencyResponseDto + DailyConsistencyDto
-4. `progress-summary-response.dto.ts` — ProgressSummaryResponseDto + nested DTOs
-
-### Service Methods to Add (in `progress.service.ts`)
-1. `getStrengthProgress(userId, exercise, period)` — Query WorkoutLogs, filter by exercise name, extract max weight + volume per workout date
-2. `getVolumeProgress(userId, period)` — Query WorkoutLogs, aggregate by week (Mon-Sun), compute total volume per week
-3. `getConsistency(userId, period)` — Query WorkoutLogs, group by date, compute daily counts + durations, calculate streaks
-4. `getSummary(userId)` — Combine weight history, workout counts, volume comparison, personal records
-
-### Controller Endpoints to Add (in `progress.controller.ts`)
-4 new GET endpoints with `@ApiTags("Progress")`, `@ApiBearerAuth()`, `@UseGuards(JwtAuthGuard)`, appropriate `@ApiOperation`, `@ApiResponse`, `@ApiQuery`, `@ApiParam` decorators.
-
-### Helper Methods (private in service)
-- `getStartDate(period)` — already exists
-- `calculateStreaks(dates)` — adapted from WorkoutsService
-- `getWeekStart(date)` — returns Monday of the given date's week
-- Exercise JSON parsing helper — type-safe extraction from WorkoutLog.exercises
+## Acceptance Criteria (from TASKS.md)
+- Stripe client initialized
+- Test API calls work
+- Products created in Stripe (config for price IDs)
 
 ## File Changes
 
-### New Files
-1. `apps/api/src/modules/progress/dto/strength-progress-response.dto.ts`
-2. `apps/api/src/modules/progress/dto/volume-progress-response.dto.ts`
-3. `apps/api/src/modules/progress/dto/consistency-response.dto.ts`
-4. `apps/api/src/modules/progress/dto/progress-summary-response.dto.ts`
+### 1. Install dependency
+```bash
+cd apps/api && pnpm add stripe
+```
 
-### Modified Files
-5. `apps/api/src/modules/progress/progress.controller.ts` — add 4 new endpoints
-6. `apps/api/src/modules/progress/progress.service.ts` — add 4 service methods + helpers
+### 2. `apps/api/src/config/app.config.ts` (MODIFY)
+- Add `stripeConfig` registerAs factory with:
+  - `secretKey` from `STRIPE_SECRET_KEY`
+  - `webhookSecret` from `STRIPE_WEBHOOK_SECRET`
+  - `priceIdMonthly` from `STRIPE_PRICE_ID_MONTHLY`
+  - `priceIdAnnual` from `STRIPE_PRICE_ID_ANNUAL`
 
-### No Changes Needed
-- `progress.module.ts` — no new dependencies needed (all queries via PrismaService)
-- `app.module.ts` — ProgressModule already registered
+### 3. `apps/api/src/config/env.validation.ts` (MODIFY)
+- Add `STRIPE_PRICE_ID_MONTHLY` and `STRIPE_PRICE_ID_ANNUAL` as optional strings
+
+### 4. `apps/api/src/app.module.ts` (MODIFY)
+- Import `stripeConfig` in ConfigModule.forRoot load array
+
+### 5. `apps/api/src/modules/payments/stripe.service.ts` (NEW)
+- Injectable service
+- Constructor: inject ConfigService, initialize `Stripe` client
+- `getClient(): Stripe` — exposes the initialized client
+- `testConnection(): Promise<boolean>` — calls stripe.customers.list({limit:1}) to verify key
+
+### 6. `apps/api/src/modules/payments/payments.service.ts` (MODIFY)
+- Inject `StripeService` and `PrismaService`
+- Add `testConnection()` method
+- Add `getProducts()` method to list Stripe products/prices
+
+### 7. `apps/api/src/modules/payments/dto/` (NEW directory)
+- `stripe-health-response.dto.ts` — response DTO for health check
+- `product-response.dto.ts` — response DTO for products/prices
+
+### 8. `apps/api/src/modules/payments/payments.controller.ts` (MODIFY)
+- Add `GET /payments/health` — verify Stripe connection (JwtAuthGuard)
+- Add `GET /payments/products` — list products/prices (public)
+- Full Swagger decorators
+
+### 9. `apps/api/src/modules/payments/payments.module.ts` (MODIFY)
+- Add `StripeService` to providers and exports
+- Import `UsersModule` for future use
 
 ## Convention Compliance
-- Thin controller: validate input, call service, return response
-- Service: all business logic, data transformation
-- DTOs: Swagger decorators on all fields (`@ApiProperty`/`@ApiPropertyOptional`)
-- Endpoints: `@ApiTags`, `@ApiOperation`, `@ApiResponse`, `@ApiQuery`, `@ApiParam`
-- Proper HTTP codes: 200 for all GET endpoints, 401 for unauthorized
-- Guards: `@UseGuards(JwtAuthGuard)` on controller class (already applied)
-- No `any` types — typed interfaces for JSON exercise data
-- Logger for key operations
+- Thin controller: validate -> delegate -> return
+- Service layer: all business logic
+- Swagger: @ApiTags, @ApiOperation, @ApiResponse on every endpoint
+- ConfigService for all env access (no raw process.env)
+- No `any` types
+- Proper HTTP codes and error responses

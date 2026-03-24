@@ -22,9 +22,11 @@ const envSchema = z.object({
   // Redis (for Bull queue)
   REDIS_URL: z.string().default("redis://localhost:6379"),
 
-  // Stripe (optional until payments module is implemented)
+  // Stripe
   STRIPE_SECRET_KEY: z.string().optional(),
   STRIPE_WEBHOOK_SECRET: z.string().optional(),
+  STRIPE_PRICE_ID_MONTHLY: z.string().optional(),
+  STRIPE_PRICE_ID_ANNUAL: z.string().optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;
