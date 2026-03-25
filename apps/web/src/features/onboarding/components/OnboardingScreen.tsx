@@ -3,7 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Dumbbell, Sparkles } from "lucide-react";
+import { BrandLogo } from "@/components/common/BrandLogo";
+import { Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ONBOARDING_STEPS } from "../constants";
 import { useOnboarding } from "../hooks/useOnboarding";
@@ -80,8 +81,7 @@ export function OnboardingScreen() {
   return (
     <div className="mx-auto max-h-[calc(100dvh-2rem)] w-full max-w-[430px] overflow-y-auto rounded-xl border border-border bg-card p-4 text-card-foreground shadow-2xl sm:p-6">
       <div className="mb-4 flex items-center justify-center gap-2 text-xs text-muted-foreground">
-        <Dumbbell className="size-4 text-primary" aria-hidden="true" /> AI
-        Pocket Trainer
+        <BrandLogo size={16} /> ForgeFit
       </div>
       <h1 className="font-heading text-2xl font-bold sm:text-3xl">
         {TITLES[state.step - 1]}

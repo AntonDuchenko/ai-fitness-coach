@@ -1,6 +1,6 @@
 "use client";
 
-import { Dumbbell } from "lucide-react";
+import { BrandLogo } from "@/components/common/BrandLogo";
 import { AuthHero } from "./AuthHero";
 
 interface AuthLayoutProps {
@@ -33,11 +33,9 @@ export function AuthLayout({ children }: AuthLayoutProps) {
         >
           <div className="mx-auto flex w-full max-w-[390px] flex-col items-center md:max-w-[768px]">
             <div className="mb-4 flex items-center gap-3 md:mb-5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-gradient-to-br from-primary to-blue-400">
-                <Dumbbell className="size-5 text-white" />
-              </div>
+              <BrandLogo size={36} />
               <span className="font-heading text-xl font-semibold text-white">
-                AI Pocket Trainer
+                ForgeFit
               </span>
             </div>
             <h1 className="max-w-[280px] text-center font-heading text-[44px] font-extrabold leading-[1.05] tracking-tight text-white md:max-w-none md:text-[48px]">
@@ -46,8 +44,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
               Fitness Journey
             </h1>
             <p className="mt-3 max-w-[310px] text-center text-[15px] leading-relaxed text-slate-300 md:max-w-[520px] md:text-[16px]">
-              AI-powered coaching that adapts to your goals, schedule, and
-              progress
+              ForgeFit adapts to your goals, schedule, and progress
             </p>
             <div className="mt-8 hidden w-full grid-cols-3 gap-3 md:grid">
               <div className="rounded-xl border border-[#1F1F23] bg-[#161618]/85 px-4 py-3 text-center">

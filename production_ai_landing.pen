@@ -42830,9 +42830,13 @@
                   "name": "t64dManageTopA",
                   "x": 903,
                   "y": 13.5,
+                  "width": "fit_content",
+                  "height": "fit_content",
                   "descendants": {
                     "nlrgf": {
-                      "content": "Manage Subscription"
+                      "content": "Manage Subscription",
+                      "x": 24,
+                      "y": 12
                     }
                   }
                 }
@@ -42849,30 +42853,44 @@
               "name": "t64dCurrentA",
               "x": 32,
               "y": 120,
+              "height": "fit_content",
               "descendants": {
                 "SuTq8": {
-                  "width": "fill_container"
+                  "width": "fill_container",
+                  "height": "fit_content"
                 },
                 "aiLkM": {
-                  "content": "Current Plan: Premium"
+                  "content": "Current Plan: Premium",
+                  "x": 24,
+                  "y": 24
                 },
                 "kbM4z": {
-                  "content": "USD 29/month · Next billing: Apr 24, 2026"
+                  "content": "USD 29/month · Next billing: Apr 24, 2026",
+                  "x": 24,
+                  "y": 55
                 },
                 "0X04O": {
-                  "width": "fill_container"
+                  "width": "fill_container",
+                  "height": "fit_content",
+                  "y": 84
                 },
                 "eJuwh": {
                   "content": "Status: active. Full access to chat, workout, nutrition, and advanced analytics.",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "fill": "$--muted-foreground"
+                  "fill": "$--muted-foreground",
+                  "x": 24,
+                  "y": 12
                 },
                 "kxJDl": {
-                  "width": "fill_container"
+                  "width": "fill_container",
+                  "height": "fit_content",
+                  "y": 125
                 },
                 "aBe89": {
-                  "x": 879
+                  "x": 879,
+                  "width": "fit_content",
+                  "height": "fit_content"
                 },
                 "aBe89/94TL2": {
                   "content": "Manage Subscription"
@@ -42890,30 +42908,44 @@
               "name": "t64dFreeA",
               "x": 32,
               "y": 342,
+              "height": "fit_content",
               "descendants": {
                 "SuTq8": {
-                  "width": "fill_container"
+                  "width": "fill_container",
+                  "height": "fit_content"
                 },
                 "aiLkM": {
-                  "content": "Free Plan Upgrade CTA"
+                  "content": "Free Plan Upgrade CTA",
+                  "x": 24,
+                  "y": 24
                 },
                 "kbM4z": {
-                  "content": "Shown to users without Premium"
+                  "content": "Shown to users without Premium",
+                  "x": 24,
+                  "y": 55
                 },
                 "0X04O": {
-                  "width": "fill_container"
+                  "width": "fill_container",
+                  "height": "fit_content",
+                  "y": 84
                 },
                 "eJuwh": {
                   "content": "Upgrade to Premium to unlock unlimited AI coaching, richer analytics, and advanced personalized plans.",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "fill": "$--muted-foreground"
+                  "fill": "$--muted-foreground",
+                  "x": 24,
+                  "y": 12
                 },
                 "kxJDl": {
-                  "width": "fill_container"
+                  "width": "fill_container",
+                  "height": "fit_content",
+                  "y": 125
                 },
                 "aBe89": {
-                  "x": 885
+                  "x": 885,
+                  "width": "fit_content",
+                  "height": "fit_content"
                 },
                 "aBe89/94TL2": {
                   "content": "Upgrade to Premium"
@@ -42931,30 +42963,44 @@
               "name": "t64dBenefitsA",
               "x": 32,
               "y": 564,
+              "height": "fit_content",
               "descendants": {
                 "SuTq8": {
-                  "width": "fill_container"
+                  "width": "fill_container",
+                  "height": "fit_content"
                 },
                 "aiLkM": {
-                  "content": "Benefits Comparison"
+                  "content": "Benefits Comparison",
+                  "x": 24,
+                  "y": 24
                 },
                 "kbM4z": {
-                  "content": "Free vs Premium features"
+                  "content": "Free vs Premium features",
+                  "x": 24,
+                  "y": 55
                 },
                 "0X04O": {
-                  "width": "fill_container"
+                  "width": "fill_container",
+                  "height": "fit_content",
+                  "y": 84
                 },
                 "eJuwh": {
                   "content": "Chat: 5/day vs Unlimited | Workout: Basic vs Advanced | Nutrition: Calorie-only vs Full plans | Progress: Basic charts vs Advanced analytics",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "fill": "$--muted-foreground"
+                  "fill": "$--muted-foreground",
+                  "x": 24,
+                  "y": 12
                 },
                 "kxJDl": {
-                  "width": "fill_container"
+                  "width": "fill_container",
+                  "height": "fit_content",
+                  "y": 125
                 },
                 "aBe89": {
-                  "x": 912
+                  "x": 912,
+                  "width": "fit_content",
+                  "height": "fit_content"
                 },
                 "aBe89/94TL2": {
                   "content": "View Full Pricing"
@@ -42979,10 +43025,17 @@
                   "name": "t64dStateActiveA",
                   "width": "fill_container",
                   "y": 0,
+                  "height": "fit_content",
                   "descendants": {
+                    "3sz6e": {
+                      "x": 16,
+                      "y": 14
+                    },
                     "dE0Qm": {
                       "width": "fill_container",
-                      "content": "Active subscription: renewal is enabled and benefits are available now."
+                      "content": "Active subscription: renewal is enabled and benefits are available now.",
+                      "x": 46,
+                      "y": 14.5
                     }
                   }
                 },
@@ -42996,10 +43049,17 @@
                   "name": "t64dStateCancelA",
                   "width": "fill_container",
                   "y": 56,
+                  "height": "fit_content",
                   "descendants": {
+                    "XZC5M": {
+                      "x": 16,
+                      "y": 14
+                    },
                     "zvA2I": {
                       "width": "fill_container",
-                      "content": "Canceled: premium access remains until the end of your current billing period."
+                      "content": "Canceled: premium access remains until the end of your current billing period.",
+                      "x": 46,
+                      "y": 14.5
                     }
                   }
                 },
@@ -43013,14 +43073,19 @@
                   "name": "t64dStatePastDueA",
                   "width": "fill_container",
                   "y": 112,
+                  "height": "fit_content",
                   "descendants": {
                     "RL6aL": {
-                      "fill": "#B91C1C"
+                      "fill": "#B91C1C",
+                      "x": 16,
+                      "y": 14
                     },
                     "IBMjg": {
                       "width": "fill_container",
                       "content": "Past due: payment failed. Update payment method to avoid service interruption.",
-                      "fill": "#7F1D1D"
+                      "fill": "#7F1D1D",
+                      "x": 46,
+                      "y": 14.5
                     }
                   }
                 }
@@ -43071,20 +43136,29 @@
           "height": "fit_content",
           "descendants": {
             "SuTq8": {
-              "width": "fill_container"
+              "width": "fill_container",
+              "height": "fit_content"
             },
             "aiLkM": {
-              "content": "Current Plan: Free"
+              "content": "Current Plan: Free",
+              "x": 24,
+              "y": 24
             },
             "kbM4z": {
-              "content": "Upgrade to unlock all premium features"
+              "content": "Upgrade to unlock all premium features",
+              "x": 24,
+              "y": 55
             },
             "0X04O": {
-              "width": "fill_container"
+              "width": "fill_container",
+              "height": "fit_content",
+              "y": 84
             },
             "eJuwh": {
               "content": "Status: active (free tier)",
-              "fill": "$--muted-foreground"
+              "fill": "$--muted-foreground",
+              "x": 24,
+              "y": 12
             },
             "kxJDl": {
               "type": "frame",
@@ -43110,9 +43184,12 @@
                   "width": "fill_container",
                   "x": 24,
                   "y": 12,
+                  "height": "fit_content",
                   "descendants": {
                     "94TL2": {
-                      "content": "Upgrade to Premium"
+                      "content": "Upgrade to Premium",
+                      "x": 24,
+                      "y": 12
                     }
                   }
                 },
@@ -43126,9 +43203,12 @@
                   "width": "fill_container",
                   "x": 24,
                   "y": 63,
+                  "height": "fit_content",
                   "descendants": {
                     "nlrgf": {
-                      "content": "Manage Subscription"
+                      "content": "Manage Subscription",
+                      "x": 24,
+                      "y": 12
                     }
                   }
                 }
@@ -43147,31 +43227,44 @@
           "name": "t64mBenefitsB",
           "x": 20,
           "y": 337,
+          "height": "fit_content",
           "descendants": {
             "SuTq8": {
-              "width": "fill_container"
+              "width": "fill_container",
+              "height": "fit_content"
             },
             "aiLkM": {
-              "content": "Benefits Comparison"
+              "content": "Benefits Comparison",
+              "x": 24,
+              "y": 24
             },
             "kbM4z": {
-              "content": "Free vs Premium"
+              "content": "Free vs Premium",
+              "x": 24,
+              "y": 55
             },
             "0X04O": {
-              "width": "fill_container"
+              "width": "fill_container",
+              "height": "fit_content",
+              "y": 84
             },
             "eJuwh": {
               "content": "Chat: 5/day vs Unlimited\nWorkout: Basic vs Advanced\nNutrition: Calorie-only vs Full plans\nProgress: Basic charts vs Advanced analytics",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "fill": "$--muted-foreground"
+              "fill": "$--muted-foreground",
+              "x": 24,
+              "y": 12
             },
             "kxJDl": {
               "width": "fill_container(350)",
-              "enabled": false
+              "enabled": false,
+              "height": "fit_content"
             },
             "aBe89": {
-              "x": 166
+              "x": 166,
+              "width": "fit_content",
+              "height": "fit_content"
             },
             "aBe89/94TL2": {
               "content": "View Full Pricing"
@@ -43189,10 +43282,17 @@
           "width": "fill_container",
           "x": 20,
           "y": 527,
+          "height": "fit_content",
           "descendants": {
+            "3sz6e": {
+              "x": 16,
+              "y": 14
+            },
             "dE0Qm": {
               "width": "fill_container",
-              "content": "Active: premium benefits are enabled."
+              "content": "Active: premium benefits are enabled.",
+              "x": 46,
+              "y": 14.5
             }
           }
         },
@@ -43210,12 +43310,14 @@
           "y": 587,
           "descendants": {
             "XZC5M": {
-              "y": 14
+              "y": 14,
+              "x": 16
             },
             "zvA2I": {
               "width": "fill_container",
               "y": 14.5,
-              "content": "Canceled: access remains until period end."
+              "content": "Canceled: access remains until period end.",
+              "x": 46
             }
           }
         },
@@ -43230,14 +43332,19 @@
           "width": "fill_container",
           "x": 20,
           "y": 647,
+          "height": "fit_content",
           "descendants": {
             "RL6aL": {
-              "fill": "#B91C1C"
+              "fill": "#B91C1C",
+              "x": 16,
+              "y": 14
             },
             "IBMjg": {
               "width": "fill_container",
               "content": "Past due: update payment method.",
-              "fill": "#7F1D1D"
+              "fill": "#7F1D1D",
+              "x": 46,
+              "y": 14.5
             }
           }
         }

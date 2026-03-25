@@ -3,7 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Dumbbell, Loader2, Lock, ShieldCheck, Users } from "lucide-react";
+import { BrandLogo } from "@/components/common/BrandLogo";
+import { Loader2, Lock, ShieldCheck, Users } from "lucide-react";
 import Link from "next/link";
 import type { AuthFormErrors, AuthFormFields } from "../types";
 import { PasswordInput } from "./PasswordInput";
@@ -30,9 +31,7 @@ export function LoginForm({
   return (
     <div className="flex w-full max-w-[342px] flex-col gap-8 md:max-w-[528px] lg:max-w-[424px]">
       <div className="flex flex-col gap-2">
-        <div className="hidden h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-blue-400 md:flex">
-          <Dumbbell className="size-6 text-white" />
-        </div>
+        <BrandLogo size={44} className="hidden md:block" />
         <h1 className="font-heading text-[42px] font-bold leading-none text-foreground md:text-[34px] lg:text-[36px]">
           Welcome back
         </h1>

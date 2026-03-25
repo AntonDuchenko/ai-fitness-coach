@@ -1,5 +1,6 @@
 "use client";
 
+import { BrandLogo } from "@/components/common/BrandLogo";
 import { useAuth } from "@/features/auth";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -40,9 +41,9 @@ export function DashboardSidebar({ className }: DashboardSidebarProps) {
       )}
     >
       <div className="flex h-[72px] items-center gap-3 px-5">
-        <div className="size-8 shrink-0 rounded-lg bg-primary" aria-hidden />
+        <BrandLogo size={32} />
         <span className="font-heading text-[15px] font-semibold tracking-tight">
-          AI Pocket Trainer
+          ForgeFit
         </span>
       </div>
       <div className="h-px w-full bg-sidebar-border" />

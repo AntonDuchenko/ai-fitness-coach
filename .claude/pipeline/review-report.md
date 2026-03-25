@@ -1,24 +1,38 @@
-# Review Report — Task 6.5: Free Tier Enforcement
+# Review Report: Task 6.6 — Landing Page (Iteration 2/3)
 
-## Iteration: 1/3
 ## Verdict: APPROVED
 
-## Findings
+## All Previous Critical Issues Resolved
 
-### No Critical Issues
-
-### Minor Issues (Fixed During Review)
-1. **TIER_LIMITS constant not used in chat.service.ts** — The local `FREE_TIER_DAILY_LIMIT = 5` was replaced with `TIER_LIMITS.FREE.CHAT_MESSAGES_PER_DAY` for consistency with the centralized constants file. Fixed.
-
-### Checklist Summary
-| Check | Status |
+| Issue | Status |
 |-------|--------|
-| Component/file size (<150 lines) | PASS — all new files under 30 lines |
-| Business logic separated | PASS — guard logic in guard, controller is thin |
-| Swagger decorators | PASS — @RequiresPremium includes @ApiResponse(403) |
-| Error response structure | PASS — includes upgradeUrl: '/pricing' |
-| Guard execution order | PASS — JwtAuthGuard runs first (class-level), PremiumGuard second (method-level) |
+| Component size (was 425 lines) | FIXED — max 90 lines (PricingSection), 14 files |
+| Solution section missing bento grid | FIXED — bento layout with images |
+| Hero right missing dashboard preview | FIXED — browser mockup with dashboard image |
+| How It Works missing icons/images | FIXED — gradient circle icons + bottom images |
+| Final CTA missing avatar row | FIXED — 5 avatar circles + member count |
+| Missing framer-motion animations | FIXED — fade-in, slide-up, number counters |
+| Nav items not links | FIXED — buttons with smooth scroll |
+| Footer links not links | FIXED — Next.js Link components |
+| Missing SEO meta tags | FIXED — title, description, OG tags |
+
+## Convention Compliance
+
+| Rule | Status |
+|------|--------|
+| Component size (<150 lines) | PASS — all under 90 lines |
+| Business logic separated | PASS — no business logic needed |
+| shadcn/ui used (no raw HTML) | PASS — Badge, Button, Card used |
+| Semantic design tokens (no hardcoded hex) | PASS — zero hardcoded hex |
+| Error/loading/empty states | N/A — static page |
+| Accessibility | PASS — nav labels, ARIA, semantic HTML |
 | TypeScript strict (no `any`) | PASS |
 | Build passes | PASS |
-| Lint passes (changed files) | PASS |
-| Correct endpoints protected | PASS — generate/regenerate/AI endpoints gated; view/log endpoints free |
+| Lint passes (landing files) | PASS |
+
+## Files Changed
+- Split `LandingPage.tsx` (425 lines) → 14 component files (28-90 lines each)
+- Updated `constants.ts` with image paths and icons for steps/solutions
+- Updated `page.tsx` with SEO metadata
+- Added framer-motion dependency
+- Copied images to `apps/web/public/images/landing/`

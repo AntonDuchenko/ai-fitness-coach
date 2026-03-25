@@ -2,7 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { AlertCircle, Dumbbell } from "lucide-react";
+import { BrandLogo } from "@/components/common/BrandLogo";
+import { AlertCircle } from "lucide-react";
 
 interface GeneratingScreenProps {
   progress: number;
@@ -34,8 +35,7 @@ export function GeneratingScreen({
   return (
     <div className="mx-auto max-h-[calc(100dvh-2rem)] w-full max-w-[430px] overflow-y-auto rounded-xl border border-border bg-card p-4 text-card-foreground shadow-2xl sm:p-6">
       <div className="mb-6 flex items-center justify-center gap-2 text-xs text-muted-foreground sm:mb-8">
-        <Dumbbell className="size-4 text-primary" aria-hidden="true" /> AI
-        Pocket Trainer
+        <BrandLogo size={16} /> ForgeFit
       </div>
 
       {hasError ? (

@@ -3,7 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Dumbbell, Loader2 } from "lucide-react";
+import { BrandLogo } from "@/components/common/BrandLogo";
+import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import type {
   AuthFormErrors,
@@ -36,9 +37,7 @@ export function SignupForm({
   return (
     <div className="flex w-full max-w-sm flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-blue-400">
-          <Dumbbell className="size-6 text-white" />
-        </div>
+        <BrandLogo size={44} />
         <h1 className="font-heading text-[28px] font-bold text-foreground">
           Create an account
         </h1>

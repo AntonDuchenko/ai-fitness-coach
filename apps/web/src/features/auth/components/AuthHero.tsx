@@ -1,6 +1,6 @@
 "use client";
 
-import { Dumbbell } from "lucide-react";
+import { BrandLogo } from "@/components/common/BrandLogo";
 import { FloatingCards } from "./FloatingCards";
 
 export function AuthHero() {
@@ -21,11 +21,9 @@ export function AuthHero() {
 
       <div className="absolute left-1/2 top-[9%] z-10 flex -translate-x-1/2 flex-col items-center gap-6">
         <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-blue-400">
-            <Dumbbell className="size-6 text-white" />
-          </div>
+          <BrandLogo size={44} />
           <span className="font-heading text-lg font-semibold text-white">
-            AI Pocket Trainer
+            ForgeFit
           </span>
         </div>
 
@@ -36,8 +34,7 @@ export function AuthHero() {
         </h1>
 
         <p className="max-w-[440px] text-center text-base leading-relaxed text-slate-400">
-          AI-powered coaching that adapts to your goals, schedule, and progress
-          in real time.
+          ForgeFit adapts to your goals, schedule, and progress in real time.
         </p>
       </div>
 

@@ -1,15 +1,15 @@
 # Pipeline Summary
 
-## Task: Task 6.5 — Free Tier Enforcement
+## Task: Task 6.6 — Landing Page
 ## Final Status: SUCCESS
 
 ## Timeline
 | Phase | Status | Iterations |
 |-------|--------|------------|
-| Init | Completed | - |
-| Architect | Completed | - |
-| Developer | Completed | 1 pass |
-| Reviewer | APPROVED | 1/3 iterations |
+| Init | Completed | — |
+| Architect | Completed | — |
+| Developer | Completed | 2 passes |
+| Reviewer | APPROVED | 2/3 iterations |
 | Tester | PASSED | 1/3 iterations |
 
 ## Convention Compliance
@@ -17,25 +17,35 @@
 |------|--------|
 | Component size (<150 lines) | PASS |
 | Business logic separated (hooks/services) | PASS |
-| shadcn/ui used (no raw HTML) | N/A (backend) |
-| Semantic design tokens (no hardcoded hex) | N/A (backend) |
-| Error/loading/empty states | N/A (backend) |
-| Accessibility | N/A (backend) |
+| shadcn/ui used (no raw HTML) | PASS |
+| Semantic design tokens (no hardcoded hex) | PASS |
+| Error/loading/empty states | N/A (static) |
+| Accessibility | PASS |
 | TypeScript strict (no `any`) | PASS |
 
 ## Files Created/Modified
-- `apps/api/src/common/guards/premium.guard.ts` — PremiumGuard (CanActivate) checks isPremium via UsersService
-- `apps/api/src/common/decorators/requires-premium.decorator.ts` — @RequiresPremium() composite decorator (guard + Swagger 403)
-- `apps/api/src/common/exceptions/forbidden-premium.exception.ts` — ForbiddenPremiumException with upgradeUrl: '/pricing'
-- `apps/api/src/common/constants/tier-limits.ts` — Centralized free tier limit constants
-- `apps/api/src/modules/users/users.module.ts` — Made @Global() for guard injection
-- `apps/api/src/modules/workouts/workouts.controller.ts` — @RequiresPremium() on generate, regenerate
-- `apps/api/src/modules/nutrition/nutrition.controller.ts` — @RequiresPremium() on generate, regenerate, swap-meal, swap-meal/apply, recipe/generate, recipes
-- `apps/api/src/modules/progress/progress.controller.ts` — @RequiresPremium() on strength, volume, consistency
-- `apps/api/src/modules/chat/chat.service.ts` — Uses ForbiddenPremiumException + TIER_LIMITS constant
+- `apps/web/src/features/landing/components/LandingPage.tsx` — Composition component (31 lines)
+- `apps/web/src/features/landing/components/AnimatedSection.tsx` — Framer-motion scroll animation wrapper
+- `apps/web/src/features/landing/components/SectionTitle.tsx` — Reusable section header
+- `apps/web/src/features/landing/components/Navbar.tsx` — Navigation with smooth scroll
+- `apps/web/src/features/landing/components/HeroSection.tsx` — Hero with dashboard preview image
+- `apps/web/src/features/landing/components/StatsBar.tsx` — Animated number counters
+- `apps/web/src/features/landing/components/ProblemSection.tsx` — Problem cards
+- `apps/web/src/features/landing/components/SolutionSection.tsx` — Bento grid with product images
+- `apps/web/src/features/landing/components/HowItWorksSection.tsx` — Step cards with icons + images
+- `apps/web/src/features/landing/components/FeaturesSection.tsx` — Feature cards grid
+- `apps/web/src/features/landing/components/PricingSection.tsx` — Pricing plans with MOST POPULAR badge
+- `apps/web/src/features/landing/components/TestimonialsSection.tsx` — Testimonial cards
+- `apps/web/src/features/landing/components/FinalCTASection.tsx` — CTA with avatar row
+- `apps/web/src/features/landing/components/Footer.tsx` — Footer with link columns
+- `apps/web/src/features/landing/constants.ts` — Added image paths and icons for steps/solutions
+- `apps/web/src/app/page.tsx` — Added SEO metadata
+- `apps/web/e2e/visual-landing.spec.ts` — Playwright visual regression tests (6 tests)
+- `apps/web/public/images/landing/` — 8 landing page images from Pencil design
 
 ## Key Decisions
-- Made UsersModule @Global() so PremiumGuard can inject UsersService without explicit imports in each feature module
-- Used composite decorator pattern (@RequiresPremium) to bundle guard + Swagger response in one call
-- View/log endpoints remain free (users can see their existing plans/data), only AI generation and advanced analytics are premium-gated
-- Chat keeps its unique daily-limit enforcement in the service layer (more granular than binary premium check)
+- Split original 425-line LandingPage into 14 component files (max 90 lines each)
+- Used `h-screen overflow-y-auto` on main for scroll container (body has `overflow: hidden`)
+- Framer-motion `useReducedMotion` with `initial={false}` fallback for accessibility
+- Playwright tests scroll `<main>` element then unlock overflow for fullPage screenshots
+- Copied design images from Pencil `/images/` directory to `apps/web/public/images/landing/`

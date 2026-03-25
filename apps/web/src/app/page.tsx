@@ -1,35 +1,18 @@
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { formatDate } from "@ai-fitness/utils";
-import Link from "next/link";
+import { LandingPage } from "@/features/landing";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "ForgeFit — Your AI Trainer, Always On",
+  description:
+    "Get personalized workout plans, nutrition guidance, and 24/7 expert advice for $20/month instead of $400. Join 50,000+ people transforming their lives.",
+  openGraph: {
+    title: "ForgeFit — Your AI Trainer, Always On",
+    description:
+      "Personalized workout plans, nutrition guidance, and 24/7 AI coaching. Start your free trial today.",
+    type: "website",
+  },
+};
 
 export default function Home() {
-  const today = formatDate(new Date());
-
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-background text-foreground">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="font-heading text-4xl font-bold text-primary">
-            AI Fitness Coach
-          </CardTitle>
-          <CardDescription className="text-lg">
-            Your personal AI-powered fitness companion
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col items-center gap-4">
-          <p className="text-sm text-muted-foreground">{today}</p>
-          <Button asChild>
-            <Link href="/onboarding">Get Started</Link>
-          </Button>
-        </CardContent>
-      </Card>
-    </main>
-  );
+  return <LandingPage />;
 }

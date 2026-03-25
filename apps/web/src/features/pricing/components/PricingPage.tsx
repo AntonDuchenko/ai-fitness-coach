@@ -74,7 +74,7 @@ export function PricingPage() {
               <span className="font-semibold text-success">
                 You save ~{formatCurrency(38000)} every month
               </span>
-              <span>AI Fitness Coach: {premiumLabels.monthly} / month</span>
+              <span>ForgeFit: {premiumLabels.monthly} / month</span>
             </CardContent>
           </Card>
         </section>

@@ -26,7 +26,7 @@ export function ChatEmptyState({ onPick, disabled }: ChatEmptyStateProps) {
       </div>
       <div className="max-w-lg space-y-3 text-center">
         <h2 className="font-heading text-2xl font-bold tracking-tight sm:text-[28px]">
-          Welcome to AI Pocket Trainer
+          Welcome to ForgeFit
         </h2>
         <p className="text-[15px] leading-relaxed text-muted-foreground">
           Your personal AI fitness coach is ready to help.

@@ -16,8 +16,23 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "AI Fitness Coach",
-  description: "Your personal AI-powered fitness companion",
+  title: "ForgeFit",
+  description: "Forge your best self — AI-powered fitness coaching",
+  icons: {
+    icon: [
+      { url: "/images/logo/logo_64.png", sizes: "64x64", type: "image/png" },
+      {
+        url: "/images/logo/logo_192.png",
+        sizes: "192x192",
+        type: "image/png",
+      },
+    ],
+    apple: {
+      url: "/images/logo/logo_512.png",
+      sizes: "512x512",
+      type: "image/png",
+    },
+  },
 };
 
 export default function RootLayout({
