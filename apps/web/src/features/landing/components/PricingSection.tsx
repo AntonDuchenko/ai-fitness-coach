@@ -1,89 +1,96 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { AnimatedSection } from "@/features/landing/components/AnimatedSection";
-import { SectionTitle } from "@/features/landing/components/SectionTitle";
 import { pricingPlans } from "@/features/landing/constants";
 import { cn } from "@/lib/utils";
+import { CircleCheckBig } from "lucide-react";
 import Link from "next/link";
 
 const ctaLinks: Record<string, string> = {
   "Get Started": "/signup",
-  "Start Free Trial": "/signup",
-  "Contact Sales": "/contact",
+  "Go Premium": "/signup",
+  "Select Teams": "/signup",
 };
 
 export function PricingSection() {
   return (
-    <section id="pricing" className="bg-black px-6 py-20 lg:px-10">
-      <AnimatedSection>
-        <SectionTitle
-          eyebrow="PRICING"
-          title="Invest In Your Best Self"
-          subtitle="Less than one training session with a personal trainer."
-          dark
-        />
-      </AnimatedSection>
-      <AnimatedSection delay={0.15}>
-        <Card className="mx-auto mt-8 max-w-5xl border-white/10 bg-zinc-900 text-zinc-100">
-          <CardContent className="flex flex-col items-center justify-between gap-2 p-6 text-center text-sm md:flex-row">
-            <p className="text-zinc-400">Personal Trainer: $400/mo</p>
-            <p className="font-heading text-xl font-bold text-emerald-500">
-              You save $381 every month
-            </p>
-            <p className="text-zinc-400">ForgeFit: $19/mo</p>
-          </CardContent>
-        </Card>
-      </AnimatedSection>
-      <div className="mx-auto mt-8 grid max-w-7xl items-end gap-4 lg:grid-cols-3">
-        {pricingPlans.map((plan, i) => (
-          <AnimatedSection key={plan.name} delay={i * 0.1}>
-            <Card
-              className={cn(
-                "h-full border-white/10 bg-zinc-900 text-zinc-100",
-                plan.featured &&
-                  "border-primary bg-gradient-to-b from-zinc-800 to-zinc-900",
-              )}
-            >
-              {plan.featured && (
-                <div className="py-2 text-center text-xs font-bold tracking-widest text-primary">
-                  MOST POPULAR
-                </div>
-              )}
-              <CardContent className="space-y-5 p-8">
-                <p
-                  className={cn(
-                    "text-xs font-semibold tracking-widest text-zinc-400",
-                    plan.featured && "text-primary",
-                  )}
-                >
+    <section id="pricing" className="relative overflow-hidden bg-background px-6 py-24 md:px-8">
+      <div className="pointer-events-none absolute bottom-0 right-0 size-[600px] translate-x-1/2 translate-y-1/2 rounded-full bg-primary/15 opacity-20 blur-[120px]" />
+
+      <div className="relative z-10 mx-auto max-w-7xl">
+        <AnimatedSection>
+          <div className="mb-16 text-center">
+            <h2 className="font-heading text-3xl font-bold text-white md:text-5xl">
+              Simple, Honest Pricing
+            </h2>
+          </div>
+        </AnimatedSection>
+
+        <div className="grid grid-cols-1 items-stretch gap-8 md:grid-cols-3">
+          {pricingPlans.map((plan, i) => (
+            <AnimatedSection key={plan.name} delay={i * 0.1}>
+              <div
+                className={cn(
+                  "flex h-full flex-col rounded-[2rem] border p-10",
+                  plan.featured
+                    ? "relative border-2 border-primary bg-card shadow-[0_0_50px_rgba(37,99,235,0.2)]"
+                    : "border-border/10 bg-card",
+                )}
+              >
+                {plan.featured && (
+                  <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary px-4 py-1 text-xs font-black uppercase tracking-widest text-primary-foreground">
+                    Most Popular
+                  </div>
+                )}
+
+                <h3 className="mb-2 text-xl font-bold text-white">
                   {plan.name}
-                </p>
-                <div>
-                  <p className="font-heading text-6xl font-bold">
+                </h3>
+                <div className="mb-8">
+                  <span className="text-5xl font-black text-white">
                     {plan.price}
-                  </p>
-                  <p className="text-zinc-400">{plan.suffix}</p>
+                  </span>
+                  <span className="text-muted-foreground">{plan.suffix}</span>
                 </div>
-                <ul className="space-y-2 text-sm text-zinc-200">
-                  {plan.features.map((f) => (
-                    <li key={f}>✓ {f}</li>
+
+                <ul className="mb-10 flex-grow space-y-4">
+                  {plan.features.map((feature) => (
+                    <li
+                      key={feature}
+                      className={cn(
+                        "flex items-center gap-3",
+                        plan.featured
+                          ? "font-medium text-white"
+                          : "text-muted-foreground",
+                      )}
+                    >
+                      <CircleCheckBig
+                        className={cn(
+                          "size-5 shrink-0",
+                          plan.featured
+                            ? "fill-success text-success-foreground"
+                            : "text-success",
+                        )}
+                      />
+                      {feature}
+                    </li>
                   ))}
                 </ul>
+
                 <Button
                   asChild
-                  className="w-full"
+                  className="w-full rounded-xl py-4 font-bold"
                   variant={plan.featured ? "default" : "outline"}
                 >
                   <Link href={ctaLinks[plan.cta] ?? "/signup"}>
                     {plan.cta}
                   </Link>
                 </Button>
-              </CardContent>
-            </Card>
-          </AnimatedSection>
-        ))}
+              </div>
+            </AnimatedSection>
+          ))}
+        </div>
       </div>
     </section>
   );

@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npx shadcn@latest add button input card dialog sonner --yes --overwrite)"
+      "Bash(npx shadcn@latest add button input card dialog sonner --yes --overwrite)",
+      "mcp__stitch__list_screens",
+      "mcp__stitch__get_screen",
+      "WebFetch(domain:contribution.usercontent.google.com)"
     ]
   }
 }

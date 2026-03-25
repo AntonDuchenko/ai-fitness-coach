@@ -1,46 +1,55 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
 import { AnimatedSection } from "@/features/landing/components/AnimatedSection";
-import { SectionTitle } from "@/features/landing/components/SectionTitle";
 import { problemCards } from "@/features/landing/constants";
+import { cn } from "@/lib/utils";
 
 export function ProblemSection() {
   return (
-    <section className="bg-gradient-to-b from-zinc-800 to-black px-6 py-20 lg:px-10">
-      <AnimatedSection>
-        <SectionTitle
-          eyebrow="THE PROBLEM"
-          title="Why 73% Never Reach Their Goals"
-          subtitle="Traditional fitness is expensive, generic, and leaves you without support when it matters most."
-          dark
-        />
-      </AnimatedSection>
-      <div className="mx-auto mt-12 grid max-w-7xl gap-4">
-        {problemCards.map((card, i) => (
-          <AnimatedSection key={card.title} delay={i * 0.1}>
-            <Card className="border-red-500/20 bg-zinc-950/90 text-zinc-100">
-              <CardContent className="flex flex-col gap-4 p-6 md:flex-row md:items-center md:justify-between">
-                <div className="max-w-4xl">
-                  <h3 className="font-heading text-2xl font-bold">
-                    {card.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-zinc-400">
-                    {card.description}
-                  </p>
+    <section className="bg-gradient-to-b from-card to-background px-6 py-24 md:px-8">
+      <div className="mx-auto max-w-7xl">
+        <AnimatedSection>
+          <div className="mb-16 text-center md:mb-20">
+            <h2 className="mb-6 font-heading text-3xl font-bold text-white md:text-5xl">
+              Why Traditional Fitness{" "}
+              <span className="text-destructive">Fails</span> Most People
+            </h2>
+            <p className="mx-auto hidden max-w-2xl text-lg leading-relaxed text-muted-foreground md:block">
+              Most programs are designed for the &ldquo;average person,&rdquo;
+              but nobody is average. That&rsquo;s why traditional methods often
+              lead to plateaus and frustration.
+            </p>
+          </div>
+        </AnimatedSection>
+
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
+          {problemCards.map((card, i) => (
+            <AnimatedSection key={card.title} delay={i * 0.1}>
+              {/* Mobile: border-l card */}
+              <div className="rounded-2xl border-l-4 border-primary bg-card p-8 shadow-xl md:hidden">
+                <card.icon className="mb-4 size-7 text-primary" />
+                <h3 className="mb-3 font-heading text-xl font-bold text-white">
+                  {card.title}
+                </h3>
+                <p className="leading-relaxed text-muted-foreground">
+                  {card.description}
+                </p>
+              </div>
+              {/* Desktop: icon card */}
+              <div className="group hidden h-full flex-col rounded-3xl bg-card p-10 transition-all duration-300 hover:bg-accent md:flex">
+                <div className={cn("mb-8 flex size-14 items-center justify-center rounded-2xl transition-transform group-hover:scale-110", card.iconBg, card.iconColor)}>
+                  <card.icon className="size-7" />
                 </div>
-                <div className="min-w-32 text-left md:text-right">
-                  <p className="font-heading text-4xl font-extrabold text-primary">
-                    {card.metric}
-                  </p>
-                  <p className="text-xs uppercase tracking-wide text-zinc-400">
-                    {card.metricLabel}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </AnimatedSection>
-        ))}
+                <h3 className="mb-4 text-2xl font-bold text-white">
+                  {card.title}
+                </h3>
+                <p className="leading-relaxed text-muted-foreground">
+                  {card.description}
+                </p>
+              </div>
+            </AnimatedSection>
+          ))}
+        </div>
       </div>
     </section>
   );

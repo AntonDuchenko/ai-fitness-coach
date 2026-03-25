@@ -173,3 +173,26 @@ body {
 body {
   font-family: var(--font-sans);
 }
+
+/* Custom scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: oklch(0.3 0.015 265) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: oklch(0.3 0.015 265);
+  border-radius: 9999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.4 0.015 265);
+}
