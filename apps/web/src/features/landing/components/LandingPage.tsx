@@ -1,5 +1,6 @@
 "use client";
 
+import { GuestRoute } from "@/components/common/GuestRoute";
 import { BentoGridSection } from "@/features/landing/components/BentoGridSection";
 import { FAQSection } from "@/features/landing/components/FAQSection";
 import { FinalCTASection } from "@/features/landing/components/FinalCTASection";
@@ -15,6 +16,7 @@ import { TestimonialsSection } from "@/features/landing/components/TestimonialsS
 
 export function LandingPage() {
   return (
+    <GuestRoute>
     <main className="h-screen overflow-y-auto bg-background text-foreground">
       <Navbar />
       <HeroSection />
@@ -29,5 +31,6 @@ export function LandingPage() {
       <Footer />
       <ScrollToTop />
     </main>
+    </GuestRoute>
   );
 }

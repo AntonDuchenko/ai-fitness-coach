@@ -1,6 +1,7 @@
 "use client";
 
 import { BrandLogo } from "@/components/common/BrandLogo";
+import { GuestRoute } from "@/components/common/GuestRoute";
 import { AuthHero } from "./AuthHero";
 
 interface AuthLayoutProps {
@@ -9,6 +10,7 @@ interface AuthLayoutProps {
 
 export function AuthLayout({ children }: AuthLayoutProps) {
   return (
+    <GuestRoute>
     <div className="min-h-screen bg-background">
       {/* Desktop: centered card with rounded corners */}
       <div className="hidden min-h-screen items-center justify-center p-6 lg:flex">
@@ -37,5 +39,6 @@ export function AuthLayout({ children }: AuthLayoutProps) {
         </main>
       </div>
     </div>
+    </GuestRoute>
   );
 }
