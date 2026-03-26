@@ -6,7 +6,7 @@ function GoogleBrandIcon() {
   return (
     <svg
       aria-hidden="true"
-      className="size-[14px]"
+      className="size-5"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
     >
@@ -34,7 +34,7 @@ function AppleBrandIcon() {
   return (
     <svg
       aria-hidden="true"
-      className="size-[16px]"
+      className="size-5"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
     >
@@ -48,36 +48,25 @@ function AppleBrandIcon() {
 
 export function SocialButtons() {
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center gap-3">
-        <div className="h-px flex-1 bg-[#1F1F23]" />
-        <span className="text-xs text-muted-foreground md:hidden">or</span>
-        <span className="hidden text-xs text-muted-foreground md:inline">
-          or continue with
-        </span>
-        <div className="h-px flex-1 bg-[#1F1F23]" />
-      </div>
-
-      <div className="flex gap-3">
-        <Button
-          type="button"
-          variant="outline"
-          className="h-[43px] flex-1 border-[#1F1F23] bg-[#1F2937] text-sm font-medium text-white hover:bg-[#1F2937]/80"
-          aria-label="Sign in with Google"
-        >
-          <GoogleBrandIcon />
-          Google
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          className="h-[43px] flex-1 border-[#1F1F23] bg-[#161618] text-sm font-medium text-white hover:bg-[#161618]/80"
-          aria-label="Sign in with Apple"
-        >
-          <AppleBrandIcon />
-          Apple
-        </Button>
-      </div>
+    <div className="grid grid-cols-2 gap-4">
+      <Button
+        type="button"
+        variant="outline"
+        className="h-[52px] rounded-xl border-border/20 bg-accent text-sm font-semibold hover:bg-accent/80"
+        aria-label="Continue with Google"
+      >
+        <GoogleBrandIcon />
+        Google
+      </Button>
+      <Button
+        type="button"
+        variant="outline"
+        className="h-[52px] rounded-xl border-border/20 bg-accent text-sm font-semibold hover:bg-accent/80"
+        aria-label="Continue with Apple"
+      >
+        <AppleBrandIcon />
+        Apple
+      </Button>
     </div>
   );
 }

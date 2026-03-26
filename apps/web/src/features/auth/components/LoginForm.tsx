@@ -3,8 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { BrandLogo } from "@/components/common/BrandLogo";
-import { Loader2, Lock, ShieldCheck, Users } from "lucide-react";
+import { ArrowRight, Loader2, Mail } from "lucide-react";
 import Link from "next/link";
 import type { AuthFormErrors, AuthFormFields } from "../types";
 import { PasswordInput } from "./PasswordInput";
@@ -18,9 +17,6 @@ interface LoginFormProps {
   onSubmit: (e: React.FormEvent) => void;
 }
 
-const inputClass =
-  "h-[45px] rounded-[10px] border-[#1F1F23] bg-[#161618] px-3.5 md:h-10";
-
 export function LoginForm({
   fields,
   errors,
@@ -29,113 +25,106 @@ export function LoginForm({
   onSubmit,
 }: LoginFormProps) {
   return (
-    <div className="flex w-full max-w-[342px] flex-col gap-8 md:max-w-[528px] lg:max-w-[424px]">
-      <div className="flex flex-col gap-2">
-        <BrandLogo size={44} className="hidden md:block" />
-        <h1 className="font-heading text-[42px] font-bold leading-none text-foreground md:text-[34px] lg:text-[36px]">
-          Welcome back
-        </h1>
-        <p className="text-[24px] text-muted-foreground md:text-[17px] lg:text-[15px]">
-          Sign in to your account to continue
+    <div className="flex w-full flex-col">
+      {/* Heading */}
+      <div className="mb-10">
+        <h2 className="mb-2 font-heading text-3xl font-bold text-foreground">
+          Welcome Back
+        </h2>
+        <p className="text-muted-foreground">
+          Sign in to continue your fitness journey.
         </p>
       </div>
 
       {errors.server && (
-        <div className="rounded-lg border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+        <div className="mb-6 rounded-lg border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive">
           {errors.server}
         </div>
       )}
 
-      <form onSubmit={onSubmit} className="flex flex-col gap-6 md:gap-5">
-        <div className="flex flex-col gap-5">
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="email" className="text-[16px] md:text-[14px]">
-              Email
-            </Label>
+      {/* Form first */}
+      <form onSubmit={onSubmit} className="space-y-6">
+        <div className="space-y-2">
+          <Label htmlFor="email" className="ml-1 text-sm font-medium">
+            Email Address
+          </Label>
+          <div className="relative">
+            <Mail className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" />
             <Input
               id="email"
               type="email"
-              placeholder="you@example.com"
+              placeholder="name@example.com"
               value={fields.email}
               onChange={(e) => onUpdateField("email", e.target.value)}
               aria-invalid={!!errors.email}
               autoComplete="email"
-              className={inputClass}
+              className="h-[52px] border-none bg-background dark:bg-background pl-12 rounded-xl"
             />
-            {errors.email && (
-              <p className="text-xs text-destructive">{errors.email}</p>
-            )}
           </div>
+          {errors.email && (
+            <p className="text-xs text-destructive">{errors.email}</p>
+          )}
+        </div>
 
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="password" className="text-[16px] md:text-[14px]">
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <Label htmlFor="password" className="ml-1 text-sm font-medium">
               Password
             </Label>
-            <PasswordInput
-              id="password"
-              value={fields.password}
-              onChange={(v) => onUpdateField("password", v)}
-              error={errors.password}
-              className={inputClass}
-            />
-          </div>
-
-          <div className="flex justify-end">
-            <span className="cursor-pointer text-[16px] font-medium text-primary hover:underline md:text-[13px]">
+            <span className="cursor-pointer text-xs font-semibold text-primary hover:opacity-80">
               Forgot password?
             </span>
           </div>
+          <PasswordInput
+            id="password"
+            value={fields.password}
+            onChange={(v) => onUpdateField("password", v)}
+            error={errors.password}
+            className="h-[52px] border-none bg-background dark:bg-background rounded-xl"
+          />
         </div>
 
-        <div className="flex flex-col gap-5">
-          <Button
-            type="submit"
-            className="w-full"
-            size="lg"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              "Sign In"
-            )}
-          </Button>
-          <SocialButtons />
-        </div>
+        <Button
+          type="submit"
+          className="h-[52px] w-full gap-2 rounded-xl font-heading font-bold shadow-lg shadow-primary/20"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? (
+            <Loader2 className="size-4 animate-spin" />
+          ) : (
+            <>
+              Sign In
+              <ArrowRight className="size-4" />
+            </>
+          )}
+        </Button>
       </form>
 
-      <div className="flex items-center justify-center gap-1">
-        <span className="text-[14px] text-muted-foreground md:text-[13px]">
-          Don&apos;t have an account?
-        </span>
+      {/* Divider */}
+      <div className="relative my-10">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-border/30" />
+        </div>
+        <div className="relative flex justify-center">
+          <span className="bg-background px-4 text-xs font-bold uppercase tracking-widest text-muted-foreground lg:bg-card">
+            or continue with
+          </span>
+        </div>
+      </div>
+
+      {/* Social login */}
+      <SocialButtons />
+
+      {/* Footer */}
+      <p className="mt-12 text-center text-sm text-muted-foreground">
+        Don&apos;t have an account?
         <Link
           href="/signup"
-          className="text-[14px] font-semibold text-primary hover:underline md:text-[13px]"
+          className="ml-1 font-bold text-primary hover:underline"
         >
           Sign up
         </Link>
-      </div>
-
-      <div className="flex items-center justify-center gap-4 md:gap-6">
-        <div className="flex items-center gap-1.5">
-          <ShieldCheck className="size-3.5 text-muted-foreground" />
-          <span className="text-[12px] text-muted-foreground md:text-[11px]">
-            SSL Encrypted
-          </span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <Lock className="size-3.5 text-muted-foreground" />
-          <span className="text-[12px] text-muted-foreground md:text-[11px]">
-            Secure Login
-          </span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <Users className="size-3.5 text-muted-foreground" />
-          <span className="text-[12px] text-muted-foreground md:text-[11px]">
-            10K+ Users
-          </span>
-        </div>
-      </div>
+      </p>
     </div>
   );
 }
