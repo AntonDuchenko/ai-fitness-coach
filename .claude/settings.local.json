@@ -5,7 +5,8 @@
       "mcp__stitch__list_screens",
       "mcp__stitch__get_screen",
       "WebFetch(domain:contribution.usercontent.google.com)",
-      "Bash(npx --filter web next build)"
+      "Bash(npx --filter web next build)",
+      "mcp__stitch__list_projects"
     ]
   }
 }

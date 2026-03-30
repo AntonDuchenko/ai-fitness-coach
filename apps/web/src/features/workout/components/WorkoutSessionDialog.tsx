@@ -45,7 +45,7 @@ export function WorkoutSessionDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="h-[100dvh] max-h-[100dvh] w-full max-w-lg gap-0 overflow-hidden rounded-none border-0 p-0"
+        className="flex h-[100dvh] max-h-[100dvh] w-full !max-w-full flex-col gap-0 overflow-hidden rounded-none border-0 p-0 sm:!max-w-full"
       >
         <DialogTitle className="sr-only">Workout session</DialogTitle>
         <DialogDescription className="sr-only">

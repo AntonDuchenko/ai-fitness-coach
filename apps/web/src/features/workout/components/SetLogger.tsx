@@ -1,17 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { Minus, Plus } from "lucide-react";
+import { Check, Lock, Minus, Plus, Square } from "lucide-react";
 import type { SessionSet } from "../workoutLog.types";
 
 interface SetLoggerProps {
@@ -21,109 +11,168 @@ interface SetLoggerProps {
   className?: string;
 }
 
-export function SetLogger({
-  sets,
-  onChange,
-  onMarkDone,
-  className,
-}: SetLoggerProps) {
+function findActiveIndex(sets: SessionSet[]): number {
+  const firstUndone = sets.findIndex((s) => !s.done);
+  return firstUndone === -1 ? sets.length : firstUndone;
+}
+
+export function SetLogger({ sets, onChange, onMarkDone, className }: SetLoggerProps) {
+  const activeIdx = findActiveIndex(sets);
+
   return (
-    <div className={cn("w-full overflow-x-auto", className)}>
-      <table className="w-full min-w-[340px] border-collapse text-sm">
+    <div className={cn("glass-panel overflow-hidden rounded-3xl shadow-2xl", className)}>
+      <table className="w-full border-collapse text-left">
         <thead>
-          <tr className="text-left text-[11px] text-muted-foreground">
-            <th className="pb-2 pr-1 font-medium">#</th>
-            <th className="pb-2 pr-1 font-medium">Target</th>
-            <th className="pb-2 pr-2 font-medium">Weight</th>
-            <th className="pb-2 pr-1 font-medium">Reps</th>
-            <th className="pb-2 pr-1 font-medium">RPE</th>
-            <th className="pb-2 w-8 text-center font-medium">✓</th>
+          <tr className="bg-m3-surface-low/50 text-[10px] font-black uppercase tracking-widest text-m3-outline">
+            <th className="w-16 px-6 py-4 text-center">Set</th>
+            <th className="px-2 py-4">Target</th>
+            <th className="px-2 py-4">Weight (kg)</th>
+            <th className="px-2 py-4">Reps</th>
+            <th className="hidden px-2 py-4 sm:table-cell">RPE</th>
+            <th className="w-20 px-6 py-4 text-right">Done</th>
           </tr>
         </thead>
-        <tbody>
-          {sets.map((row, i) => (
-            <tr key={row.setNumber} className="border-t border-border/60">
-              <td className="py-2 pr-1 align-middle text-foreground tabular-nums">
-                {row.setNumber}
-              </td>
-              <td className="py-2 pr-1 align-middle text-muted-foreground tabular-nums">
-                {row.targetReps}
-              </td>
-              <td className="py-2 pr-2 align-middle">
-                <div className="flex max-w-[120px] items-center gap-0.5">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="icon"
-                    className="size-8 shrink-0"
-                    onClick={() => {
-                      const w = parseFloat(row.weight) || 0;
-                      onChange(i, { weight: String(Math.max(0, w - 2.5)) });
-                    }}
-                    aria-label="Decrease weight"
-                  >
-                    <Minus className="size-3.5" />
-                  </Button>
-                  <Input
-                    inputMode="decimal"
-                    className="h-8 min-w-0 flex-1 px-1.5 text-center text-sm tabular-nums"
-                    value={row.weight}
-                    onChange={(e) => onChange(i, { weight: e.target.value })}
-                    aria-label={`Weight set ${row.setNumber}`}
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="icon"
-                    className="size-8 shrink-0"
-                    onClick={() => {
-                      const w = parseFloat(row.weight) || 0;
-                      onChange(i, { weight: String(w + 2.5) });
-                    }}
-                    aria-label="Increase weight"
-                  >
-                    <Plus className="size-3.5" />
-                  </Button>
-                </div>
-              </td>
-              <td className="py-2 pr-1 align-middle">
-                <Input
-                  inputMode="numeric"
-                  className="h-8 w-12 px-1.5 text-center text-sm tabular-nums"
-                  value={row.reps}
-                  onChange={(e) => onChange(i, { reps: e.target.value })}
-                  aria-label={`Reps set ${row.setNumber}`}
-                />
-              </td>
-              <td className="py-2 pr-1 align-middle">
-                <Select
-                  value={row.rpe ? row.rpe : "__none__"}
-                  onValueChange={(v) =>
-                    onChange(i, { rpe: v === "__none__" ? "" : v })
-                  }
+        <tbody className="divide-y divide-m3-outline-variant/10">
+          {sets.map((row, i) => {
+            const isCompleted = row.done;
+            const isActive = i === activeIdx;
+            const isFuture = i > activeIdx;
+
+            return (
+              <tr
+                key={row.setNumber}
+                className={cn(
+                  "transition-colors",
+                  isCompleted && "bg-m3-secondary-container/5",
+                  isActive && "border-l-4 border-m3-primary bg-m3-primary/5",
+                  isFuture && "opacity-40 grayscale-[0.5]",
+                )}
+              >
+                {/* Set number */}
+                <td
+                  className={cn(
+                    "px-6 py-6 text-center font-heading font-bold",
+                    isCompleted && "text-m3-secondary",
+                    isActive && "text-m3-primary",
+                    isFuture && "text-m3-outline",
+                  )}
                 >
-                  <SelectTrigger size="sm" className="h-8 w-[4.5rem] px-1.5">
-                    <SelectValue placeholder="—" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="__none__">—</SelectItem>
-                    {Array.from({ length: 10 }, (_, n) => n + 1).map((n) => (
-                      <SelectItem key={n} value={String(n)}>
-                        {n}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </td>
-              <td className="py-2 align-middle text-center">
-                <Checkbox
-                  checked={row.done}
-                  onCheckedChange={(c) => onMarkDone(i, c === true)}
-                  aria-label={`Set ${row.setNumber} complete`}
-                />
-              </td>
-            </tr>
-          ))}
+                  {row.setNumber}
+                </td>
+
+                {/* Target reps */}
+                <td className="px-2 py-6 text-sm font-medium">{row.targetReps}</td>
+
+                {/* Weight */}
+                <td className="px-2 py-6">
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      className="flex size-8 items-center justify-center rounded-lg bg-m3-surface-highest text-m3-outline transition-colors hover:bg-m3-surface-bright"
+                      onClick={() => {
+                        const w = parseFloat(row.weight) || 0;
+                        onChange(i, { weight: String(Math.max(0, w - 2.5)) });
+                      }}
+                      aria-label="Decrease weight"
+                    >
+                      <Minus className="size-3.5" />
+                    </button>
+                    {isFuture ? (
+                      <div className="flex h-8 w-16 items-center justify-center rounded-lg bg-m3-surface-lowest font-bold text-m3-outline">
+                        {row.weight || "0"}
+                      </div>
+                    ) : (
+                      <input
+                        type="number"
+                        inputMode="decimal"
+                        className="h-8 w-16 rounded-lg border-none bg-m3-surface-lowest p-0 text-center font-bold text-m3-on-surface focus:ring-1 focus:ring-m3-primary"
+                        value={row.weight}
+                        onChange={(e) => onChange(i, { weight: e.target.value })}
+                        aria-label={`Weight set ${row.setNumber}`}
+                      />
+                    )}
+                    <button
+                      type="button"
+                      className="flex size-8 items-center justify-center rounded-lg bg-m3-surface-highest text-m3-outline transition-colors hover:bg-m3-surface-bright"
+                      onClick={() => {
+                        const w = parseFloat(row.weight) || 0;
+                        onChange(i, { weight: String(w + 2.5) });
+                      }}
+                      aria-label="Increase weight"
+                    >
+                      <Plus className="size-3.5" />
+                    </button>
+                  </div>
+                </td>
+
+                {/* Reps */}
+                <td className="px-2 py-6">
+                  {isFuture ? (
+                    <div className="flex h-8 w-12 items-center justify-center rounded-lg bg-m3-surface-lowest font-bold text-m3-outline">
+                      {row.reps || "0"}
+                    </div>
+                  ) : (
+                    <input
+                      type="number"
+                      inputMode="numeric"
+                      className="h-8 w-12 rounded-lg border-none bg-m3-surface-lowest p-0 text-center font-bold text-m3-on-surface focus:ring-1 focus:ring-m3-primary"
+                      value={row.reps}
+                      onChange={(e) => onChange(i, { reps: e.target.value })}
+                      aria-label={`Reps set ${row.setNumber}`}
+                    />
+                  )}
+                </td>
+
+                {/* RPE */}
+                <td className="hidden px-2 py-6 sm:table-cell">
+                  {isFuture ? (
+                    <span className="text-xs font-bold text-m3-outline">-</span>
+                  ) : (
+                    <select
+                      className="cursor-pointer border-none bg-transparent text-xs font-bold text-m3-outline focus:ring-0"
+                      value={row.rpe || ""}
+                      onChange={(e) => onChange(i, { rpe: e.target.value })}
+                      aria-label={`RPE set ${row.setNumber}`}
+                    >
+                      <option value="">-</option>
+                      {Array.from({ length: 10 }, (_, n) => n + 1).map((n) => (
+                        <option key={n} value={String(n)}>
+                          {n}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                </td>
+
+                {/* Done button */}
+                <td className="px-6 py-6 text-right">
+                  {isCompleted ? (
+                    <button
+                      type="button"
+                      onClick={() => onMarkDone(i, false)}
+                      className="kinetic-shadow flex size-10 items-center justify-center rounded-xl bg-m3-secondary text-m3-on-secondary shadow-lg"
+                      aria-label={`Unmark set ${row.setNumber}`}
+                    >
+                      <Check className="size-5 font-bold" />
+                    </button>
+                  ) : isFuture ? (
+                    <div className="flex size-10 items-center justify-center rounded-xl bg-m3-surface-highest text-m3-outline/30">
+                      <Lock className="size-4" />
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => onMarkDone(i, true)}
+                      className="flex size-10 items-center justify-center rounded-xl border border-m3-outline-variant/30 bg-m3-surface-highest text-m3-outline transition-all hover:border-m3-primary/50"
+                      aria-label={`Mark set ${row.setNumber} done`}
+                    >
+                      <Square className="size-4" />
+                    </button>
+                  )}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>

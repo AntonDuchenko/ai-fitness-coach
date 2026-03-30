@@ -1,18 +1,11 @@
 {
-  "task": "Redesign auth pages based on Stitch design",
-  "taskTitle": "Auth pages redesign — Stitch Login/Sign Up",
-  "phase": "summary",
-  "status": "completed",
-  "iterations": { "review": 1, "test": 0 },
+  "task": "Redesign workouts page based on Stitch design",
+  "taskTitle": "Workout Plan Page Redesign (Stitch Design System)",
+  "phase": "developer",
+  "status": "running",
+  "iterations": { "review": 0, "test": 0 },
   "maxIterations": { "review": 3, "test": 3 },
-  "startedAt": "2026-03-26T10:00:00Z",
-  "completedAt": "2026-03-26T10:30:00Z",
+  "startedAt": "2026-03-26T12:00:00Z",
   "projectInitialized": true,
-  "phases": {
-    "init": { "status": "completed" },
-    "architect": { "status": "completed" },
-    "developer": { "status": "completed", "passes": 2 },
-    "reviewer": { "status": "approved", "iterations": 1 },
-    "tester": { "status": "passed", "iterations": 0 }
-  }
+  "phases": {}
 }

@@ -1,33 +1,28 @@
 "use client";
 
-import { useState } from "react";
 import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { MobileDrawer } from "@/features/chat/components/MobileDrawer";
-import { cn } from "@/lib/utils";
+import { useState } from "react";
 import { isPlanNotFound } from "../hooks/useWorkoutPlan";
 import { dayKey, useWorkoutPlanView } from "../hooks/useWorkoutPlanView";
 import { RegeneratePlanDialog } from "./RegeneratePlanDialog";
-import { WorkoutDayDetailPanel } from "./WorkoutDayDetailPanel";
-import { WorkoutSessionDialog } from "./WorkoutSessionDialog";
+import { WorkoutDayCard } from "./WorkoutDayCard";
+import { WorkoutDesktopHeader } from "./WorkoutDesktopHeader";
+import { WorkoutDetailPanel } from "./WorkoutDetailPanel";
+import { WorkoutMobileDayPills } from "./WorkoutMobileDayPills";
 import { WorkoutMobileHeader } from "./WorkoutMobileHeader";
 import { WorkoutPlanEmpty } from "./WorkoutPlanEmpty";
 import { WorkoutPlanError } from "./WorkoutPlanError";
 import { WorkoutPlanSkeleton } from "./WorkoutPlanSkeleton";
-import { WorkoutWeekContent } from "./WorkoutWeekContent";
+import { WorkoutSessionDialog } from "./WorkoutSessionDialog";
 
 export function WorkoutPlanScreen() {
   const v = useWorkoutPlanView();
   const [workoutSessionOpen, setWorkoutSessionOpen] = useState(false);
 
-  if (v.isLoading) {
-    return <WorkoutPlanSkeleton />;
-  }
+  if (v.isLoading) return <WorkoutPlanSkeleton />;
 
-  if (v.isError && isPlanNotFound(v.error)) {
-    return <WorkoutPlanEmpty />;
-  }
+  if (v.isError && isPlanNotFound(v.error)) return <WorkoutPlanEmpty />;
 
   if (v.isError || !v.plan) {
     return (
@@ -40,84 +35,106 @@ export function WorkoutPlanScreen() {
     );
   }
 
-  const planHeader = (
-    <>
-      <h1 className="font-heading text-base font-semibold">Workout Plan</h1>
-      <p className="text-[12px] text-muted-foreground">
-        Week {v.selectedWeek} of {v.plan.durationWeeks} · {v.plan.name}
-      </p>
-    </>
-  );
+  const canStart =
+    Boolean(v.plan.id && v.selectedDayKey) &&
+    Boolean(v.selectedSlot?.workout?.exercises.length);
 
   return (
-    <div className="flex h-[100dvh] flex-col bg-background text-foreground lg:flex-row">
+    <div className="flex h-[100dvh] flex-col bg-m3-surface text-m3-on-surface lg:flex-row">
+      {/* Desktop sidebar */}
       <DashboardSidebar className="hidden lg:flex" />
 
       <MobileDrawer open={v.menuOpen} onClose={() => v.setMenuOpen(false)}>
         <DashboardSidebar className="h-full border-r-0" />
       </MobileDrawer>
 
-      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
-        <WorkoutMobileHeader onOpenMenu={() => v.setMenuOpen(true)} />
+      {/* Main content */}
+      <div className="relative flex min-h-0 min-w-0 flex-1 flex-col">
+        <div className="pointer-events-none absolute inset-0 glow-bg" />
 
-        <div className="flex flex-col gap-2 border-b border-border px-4 py-3 lg:hidden">
-          <div className="flex items-start justify-between gap-2">
-            <div className="min-w-0">{planHeader}</div>
-            <Button
-              type="button"
-              variant="secondary"
-              size="sm"
-              className="shrink-0"
-              onClick={() => v.setRegenOpen(true)}
-              disabled={v.regenerate.isPending}
-            >
-              Regenerate
-            </Button>
+        {/* Desktop header */}
+        <div className="hidden lg:block">
+          <WorkoutDesktopHeader
+            planName={v.plan.name}
+            currentWeek={v.currentWeek}
+            durationWeeks={v.durationWeeks}
+            progressPct={v.progressPct}
+            onRegenerate={() => v.setRegenOpen(true)}
+            isRegenerating={v.regenerate.isPending}
+          />
+        </div>
+
+        {/* Mobile header */}
+        <WorkoutMobileHeader onMoreClick={() => v.setMenuOpen(true)} />
+
+        {/* Desktop two-panel layout */}
+        <div className="hidden min-h-0 flex-1 gap-8 p-8 lg:flex">
+          {/* Left: day list (35%) */}
+          <section className="w-[35%] space-y-6 overflow-y-auto">
+            <div className="flex items-center justify-between">
+              <h3 className="font-heading text-lg font-bold text-gray-300">
+                Weekly Schedule
+              </h3>
+            </div>
+            <div className="space-y-3">
+              {v.slots.map((slot) => (
+                <WorkoutDayCard
+                  key={dayKey(slot.date)}
+                  slot={slot}
+                  selected={dayKey(slot.date) === v.selectedDayKey}
+                  onSelect={() => v.onSelectDay(slot)}
+                />
+              ))}
+            </div>
+          </section>
+
+          {/* Right: detail panel (65%) */}
+          <section className="glass-card flex min-h-[716px] w-[65%] flex-col rounded-3xl border border-m3-outline-variant/10 shadow-2xl">
+            <WorkoutDetailPanel
+              slot={v.selectedSlot}
+              canStart={canStart}
+              onStartWorkout={() => setWorkoutSessionOpen(true)}
+            />
+          </section>
+        </div>
+
+        {/* Mobile layout */}
+        <div className="min-h-0 flex-1 overflow-y-auto pb-40 pt-20 lg:hidden">
+          <WorkoutMobileDayPills
+            planName={v.plan.name}
+            currentWeek={v.currentWeek}
+            durationWeeks={v.durationWeeks}
+            slots={v.slots}
+            selectedDayKey={v.selectedDayKey}
+            onSelectDay={v.onSelectDay}
+          />
+
+          {/* Inline detail */}
+          <div className="px-6">
+            <WorkoutDetailPanel
+              slot={v.selectedSlot}
+              canStart={canStart}
+              onStartWorkout={() => setWorkoutSessionOpen(true)}
+              className="px-0"
+            />
           </div>
         </div>
 
-        <header className="hidden h-[72px] shrink-0 items-center gap-3 border-b border-border px-6 lg:flex">
-          <div className="min-w-0 flex-1">{planHeader}</div>
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() => v.setRegenOpen(true)}
-            disabled={v.regenerate.isPending}
-          >
-            Regenerate plan
-          </Button>
-        </header>
-
-        <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
-          <WorkoutWeekContent
-            durationWeeks={v.durationWeeks}
-            selectedWeek={v.selectedWeek}
-            onSelectWeek={v.setSelectedWeek}
-            currentWeek={v.currentWeek}
-            progressPct={v.progressPct}
-            slots={v.slots}
-            logsLoading={v.logsLoading}
-            selectedDayKey={v.selectedDayKey}
-            onSelectDay={v.onSelectDay}
-            dayKey={dayKey}
-          />
-
-          <aside
-            className={cn(
-              "hidden w-full max-w-md shrink-0 border-l border-border bg-card/30 lg:flex lg:max-w-[420px]",
-            )}
-          >
-            <WorkoutDayDetailPanel
-              slot={v.selectedSlot}
-              planId={v.plan.id}
-              dayKey={v.selectedDayKey ?? undefined}
-              onStartWorkout={() => setWorkoutSessionOpen(true)}
-              className="h-full min-h-0"
-            />
-          </aside>
-        </div>
+        {/* Mobile sticky start button */}
+        {canStart && (
+          <div className="fixed bottom-0 left-0 z-[60] w-full px-6 pb-4 lg:hidden">
+            <button
+              type="button"
+              onClick={() => setWorkoutSessionOpen(true)}
+              className="w-full rounded-2xl bg-m3-primary-container py-5 font-heading text-lg font-extrabold uppercase tracking-tight text-m3-on-primary-container shadow-[0_12px_24px_rgba(77,142,255,0.3)] transition-all duration-200 active:scale-95"
+            >
+              Start Workout
+            </button>
+          </div>
+        )}
       </div>
 
+      {/* Dialogs */}
       <RegeneratePlanDialog
         open={v.regenOpen}
         onOpenChange={v.setRegenOpen}
@@ -137,25 +154,6 @@ export function WorkoutPlanScreen() {
           exercises={v.selectedSlot.workout.exercises}
         />
       ) : null}
-
-      <Dialog
-        open={v.mobileDetailOpen}
-        onOpenChange={v.setMobileDetailOpen}
-      >
-        <DialogContent
-          showCloseButton
-          className="flex h-[90dvh] max-h-[90dvh] w-full max-w-lg flex-col gap-0 overflow-hidden p-0 sm:max-w-lg"
-        >
-          <DialogTitle className="sr-only">Workout details</DialogTitle>
-          <WorkoutDayDetailPanel
-            slot={v.selectedSlot}
-            planId={v.plan.id}
-            dayKey={v.selectedDayKey ?? undefined}
-            onStartWorkout={() => setWorkoutSessionOpen(true)}
-            className="min-h-0 flex-1"
-          />
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
