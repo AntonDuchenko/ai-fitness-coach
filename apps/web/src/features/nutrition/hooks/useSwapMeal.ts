@@ -42,9 +42,7 @@ export function useSwapMeal() {
     },
     onError: (err) => {
       toast.error(
-        err instanceof Error
-          ? err.message
-          : "Failed to generate alternatives",
+        err instanceof Error ? err.message : "Failed to generate alternatives",
       );
       setAlternatives([]);
     },
@@ -60,25 +58,28 @@ export function useSwapMeal() {
       await queryClient.cancelQueries({ queryKey: PLAN_KEY });
       const previous = queryClient.getQueryData(PLAN_KEY);
 
-      queryClient.setQueryData(PLAN_KEY, (old: Record<string, unknown> | undefined) => {
-        if (!old) return old;
-        const mealPlan = old.mealPlan as unknown[];
-        if (!Array.isArray(mealPlan)) return old;
-        const updated = [...mealPlan];
-        updated[data.mealIndex] = {
-          mealType: data.recipe.mealType,
-          name: data.recipe.name,
-          calories: data.recipe.calories,
-          protein: data.recipe.protein,
-          carbs: data.recipe.carbs,
-          fat: data.recipe.fat,
-          ingredients: data.recipe.ingredients,
-          instructions: data.recipe.instructions,
-          prepTime: data.recipe.prepTime,
-          cookTime: data.recipe.cookTime,
-        };
-        return { ...old, mealPlan: updated };
-      });
+      queryClient.setQueryData(
+        PLAN_KEY,
+        (old: Record<string, unknown> | undefined) => {
+          if (!old) return old;
+          const mealPlan = old.mealPlan as unknown[];
+          if (!Array.isArray(mealPlan)) return old;
+          const updated = [...mealPlan];
+          updated[data.mealIndex] = {
+            mealType: data.recipe.mealType,
+            name: data.recipe.name,
+            calories: data.recipe.calories,
+            protein: data.recipe.protein,
+            carbs: data.recipe.carbs,
+            fat: data.recipe.fat,
+            ingredients: data.recipe.ingredients,
+            instructions: data.recipe.instructions,
+            prepTime: data.recipe.prepTime,
+            cookTime: data.recipe.cookTime,
+          };
+          return { ...old, mealPlan: updated };
+        },
+      );
 
       return { previous };
     },
@@ -91,9 +92,7 @@ export function useSwapMeal() {
       if (context?.previous) {
         queryClient.setQueryData(PLAN_KEY, context.previous);
       }
-      toast.error(
-        err instanceof Error ? err.message : "Failed to apply swap",
-      );
+      toast.error(err instanceof Error ? err.message : "Failed to apply swap");
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: PLAN_KEY });

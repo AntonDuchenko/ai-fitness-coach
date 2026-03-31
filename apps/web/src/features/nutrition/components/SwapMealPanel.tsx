@@ -1,32 +1,12 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import { ArrowDown, ArrowUp, Sparkles, X } from "lucide-react";
+import { useState } from "react";
 import type { NutritionMeal, NutritionRecipe } from "../types";
-import { MacroComparison } from "./MacroComparison";
 
 const SWAP_SKELETON_KEYS = ["a", "b", "c"] as const;
-
-function MacroPillsForRecipe({ r }: { r: NutritionRecipe }) {
-  return (
-    <div className="flex flex-wrap gap-2">
-      <Badge variant="default" className="rounded-full">
-        {r.calories} kcal
-      </Badge>
-      <Badge variant="success" className="rounded-full">
-        {Math.round(r.protein)}g P
-      </Badge>
-      <Badge variant="outline" className="rounded-full">
-        {Math.round(r.carbs)}g C
-      </Badge>
-      <Badge variant="destructive" className="rounded-full">
-        {Math.round(r.fat)}g F
-      </Badge>
-    </div>
-  );
-}
 
 export function SwapMealPanel({
   currentMeal,
@@ -35,7 +15,6 @@ export function SwapMealPanel({
   applying,
   onGenerateAlternatives,
   onUseAlternative,
-  className,
 }: {
   currentMeal: NutritionMeal | undefined;
   alternatives: NutritionRecipe[];
@@ -43,94 +22,221 @@ export function SwapMealPanel({
   applying: boolean;
   onGenerateAlternatives: () => void;
   onUseAlternative: (alt: NutritionRecipe) => void;
-  className?: string;
 }) {
+  const [open, setOpen] = useState(false);
+  const hasContent = loading || alternatives.length > 0 || currentMeal;
+
+  if (!hasContent && !open) return null;
+
   return (
-    <aside
-      className={cn(
-        "w-full rounded-2xl border border-border/60 bg-card/60 p-4 lg:max-w-[420px]",
-        className,
+    <>
+      {/* Backdrop (mobile & desktop) */}
+      {open && (
+        <div
+          className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm lg:hidden"
+          onClick={() => setOpen(false)}
+          onKeyDown={() => {}}
+          role="presentation"
+        />
       )}
-      aria-label="Swap Meal"
-    >
-      <header className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <h2 className="font-heading text-base font-semibold">Swap Meal</h2>
-          <p className="mt-1 text-[12px] text-muted-foreground">
-            {currentMeal
-              ? `Current: ${currentMeal.name}`
-              : "Select a meal and click Swap to see alternatives"}
-          </p>
-        </div>
-      </header>
 
-      {currentMeal && alternatives.length === 0 && !loading ? (
-        <Button
-          type="button"
-          className="mt-4 w-full"
-          onClick={onGenerateAlternatives}
-          disabled={loading}
-        >
-          Generate Alternatives
-        </Button>
-      ) : null}
-
-      <div className="mt-4 flex flex-col gap-3">
-        {loading ? (
-          <>
-            {SWAP_SKELETON_KEYS.map((k) => (
-              <Skeleton key={k} className="h-44 w-full rounded-xl" />
-            ))}
-          </>
-        ) : null}
-
-        {alternatives.map((alt) => (
-          <div
-            key={alt.name}
-            className="rounded-2xl border border-border/60 bg-card/60 p-3"
+      {/* Side sheet */}
+      <aside
+        className={cn(
+          "fixed right-0 top-0 z-[61] flex h-full w-full max-w-lg flex-col border-l border-m3-outline-variant/20 bg-m3-surface shadow-[-20px_0_50px_rgba(0,0,0,0.5)] transition-transform duration-300 lg:relative lg:z-auto lg:w-[380px] lg:translate-x-0 lg:shadow-none",
+          open ? "translate-x-0" : "translate-x-full lg:translate-x-0",
+          !hasContent && "lg:hidden",
+        )}
+        aria-label="Swap Meal"
+      >
+        {/* Header */}
+        <div className="sticky top-0 z-20 flex items-center justify-between border-b border-m3-outline-variant/10 bg-m3-surface/80 p-6 backdrop-blur-md">
+          <h2 className="font-heading text-xl font-bold text-m3-on-surface">
+            Swap Your Meal
+          </h2>
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            className="flex size-10 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-m3-surface-high lg:hidden"
           >
-            <p className="font-heading text-sm font-semibold">{alt.name}</p>
-            <p className="mt-1 text-[12px] text-muted-foreground">
-              {alt.mealType}
-            </p>
-            <div className="mt-3">
-              <MacroPillsForRecipe r={alt} />
-            </div>
-            {currentMeal ? (
-              <div className="mt-2">
-                <MacroComparison
-                  current={{
-                    calories: currentMeal.calories,
-                    protein: currentMeal.protein,
-                    carbs: currentMeal.carbs,
-                    fat: currentMeal.fat,
-                  }}
-                  alternative={{
-                    calories: alt.calories,
-                    protein: alt.protein,
-                    carbs: alt.carbs,
-                    fat: alt.fat,
-                  }}
-                />
-              </div>
-            ) : null}
-            <Button
-              type="button"
-              className="mt-3 w-full"
-              onClick={() => onUseAlternative(alt)}
-              disabled={loading || applying}
-            >
-              {applying ? "Applying..." : "Use This"}
-            </Button>
-          </div>
-        ))}
+            <X className="size-5" aria-hidden />
+          </button>
+        </div>
 
-        {!loading && alternatives.length === 0 && !currentMeal ? (
-          <p className="text-sm text-muted-foreground">
-            Click &quot;Swap Meal&quot; on any meal card to see alternatives.
-          </p>
-        ) : null}
+        {/* Current Meal */}
+        {currentMeal && (
+          <section className="p-6">
+            <h3 className="mb-4 text-[10px] font-bold uppercase tracking-widest text-m3-outline">
+              Current Meal
+            </h3>
+            <div className="rounded-2xl border border-m3-outline-variant/10 bg-m3-surface-low p-5">
+              <h4 className="mb-3 text-lg font-bold text-m3-on-surface">
+                {currentMeal.name}
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                <MacroPill label={`${currentMeal.calories} kcal`} />
+                <MacroPill
+                  label={`${Math.round(currentMeal.protein)}g Protein`}
+                  accent
+                />
+                <MacroPill label={`${Math.round(currentMeal.carbs)}g Carbs`} />
+                <MacroPill label={`${Math.round(currentMeal.fat)}g Fat`} />
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Generate / Alternatives */}
+        <section className="flex-1 overflow-y-auto px-6 pb-4">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-[10px] font-bold uppercase tracking-widest text-m3-outline">
+              AI Alternatives
+            </h3>
+            {currentMeal && alternatives.length === 0 && !loading && (
+              <button
+                type="button"
+                onClick={onGenerateAlternatives}
+                className="flex cursor-pointer items-center gap-1 text-xs font-bold text-m3-primary-container hover:underline"
+              >
+                <Sparkles className="size-3.5" aria-hidden />
+                Generate Alternatives
+              </button>
+            )}
+          </div>
+
+          <div className="space-y-4">
+            {loading &&
+              SWAP_SKELETON_KEYS.map((k) => (
+                <Skeleton key={k} className="h-36 w-full rounded-2xl" />
+              ))}
+
+            {alternatives.map((alt) => (
+              <AlternativeCard
+                key={alt.name}
+                alt={alt}
+                currentMeal={currentMeal}
+                applying={applying}
+                onUse={() => onUseAlternative(alt)}
+              />
+            ))}
+          </div>
+        </section>
+      </aside>
+    </>
+  );
+}
+
+function AlternativeCard({
+  alt,
+  currentMeal,
+  applying,
+  onUse,
+}: {
+  alt: NutritionRecipe;
+  currentMeal: NutritionMeal | undefined;
+  applying: boolean;
+  onUse: () => void;
+}) {
+  const protDiff = currentMeal
+    ? Math.round(alt.protein - currentMeal.protein)
+    : 0;
+  const calDiff = currentMeal
+    ? Math.round(alt.calories - currentMeal.calories)
+    : 0;
+
+  return (
+    <div className="group rounded-2xl border border-m3-outline-variant/10 bg-m3-surface-low p-5 transition-all hover:border-m3-primary-container/30">
+      <div className="mb-3 flex items-start justify-between">
+        <div>
+          <h4 className="font-bold text-m3-on-surface">{alt.name}</h4>
+          <div className="mt-2 flex gap-2">
+            <span className="rounded bg-m3-surface-highest px-2 py-0.5 text-[10px] text-m3-outline">
+              {alt.calories} kcal
+            </span>
+            <span className="rounded bg-m3-primary-container/10 px-2 py-0.5 text-[10px] font-bold text-m3-primary-container">
+              {Math.round(alt.protein)}g Protein
+            </span>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={onUse}
+          disabled={applying}
+          className="cursor-pointer rounded-lg bg-m3-primary-container px-4 py-2 text-xs font-bold text-m3-on-primary-container opacity-0 transition-opacity group-hover:opacity-100 active:scale-95"
+        >
+          {applying ? "..." : "Use This"}
+        </button>
       </div>
-    </aside>
+
+      {currentMeal && (protDiff !== 0 || calDiff !== 0) && (
+        <div className="flex items-center gap-4 border-t border-m3-outline-variant/5 pt-3">
+          {protDiff !== 0 && (
+            <DiffIndicator
+              value={protDiff}
+              unit="g protein"
+              positive={protDiff > 0}
+            />
+          )}
+          {calDiff !== 0 && (
+            <DiffIndicator value={calDiff} unit="kcal" positive={calDiff < 0} />
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function DiffIndicator({
+  value,
+  unit,
+  positive,
+}: {
+  value: number;
+  unit: string;
+  positive: boolean;
+}) {
+  const isUp = value > 0;
+  return (
+    <div className="flex items-center gap-1">
+      {isUp ? (
+        <ArrowUp
+          className={cn(
+            "size-3.5",
+            positive ? "text-m3-secondary" : "text-m3-error",
+          )}
+        />
+      ) : (
+        <ArrowDown
+          className={cn(
+            "size-3.5",
+            positive ? "text-m3-secondary" : "text-m3-error",
+          )}
+        />
+      )}
+      <span
+        className={cn(
+          "text-[11px] font-bold",
+          positive ? "text-m3-secondary" : "text-m3-error",
+        )}
+      >
+        {isUp ? "+" : ""}
+        {value} {unit}
+      </span>
+    </div>
+  );
+}
+
+function MacroPill({ label, accent }: { label: string; accent?: boolean }) {
+  return (
+    <span
+      className={cn(
+        "rounded-full border px-3 py-1 text-xs font-medium",
+        accent
+          ? "border-m3-primary-container/10 bg-m3-primary-container/10 font-bold text-m3-primary-container"
+          : "border-m3-outline-variant/20 bg-m3-surface-highest text-m3-outline",
+      )}
+    >
+      {label}
+    </span>
   );
 }

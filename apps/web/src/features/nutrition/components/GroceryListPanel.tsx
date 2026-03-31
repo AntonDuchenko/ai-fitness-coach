@@ -1,11 +1,17 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
+import { ChevronDown, Clipboard, ShoppingCart } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
+
+const CATEGORY_ICONS: Record<string, string> = {
+  proteins: "text-m3-primary-container",
+  carbs: "text-m3-secondary",
+  fats: "text-[var(--m3-tertiary)]",
+  vegetables: "text-m3-secondary",
+  dairy: "text-m3-primary-container",
+};
 
 export function GroceryListPanel({
   groceryList,
@@ -21,27 +27,21 @@ export function GroceryListPanel({
     return entries;
   }, [groceryList]);
 
-  const toggleItem = (category: string, item: string, next: boolean) => {
+  const totalItems = categories.reduce(
+    (sum, [, items]) => sum + items.length,
+    0,
+  );
+  const checkedCount = Object.values(checked).filter(Boolean).length;
+
+  const toggleItem = (category: string, item: string) => {
     const key = `${category}::${item}`;
-    setChecked((prev) => ({ ...prev, [key]: next }));
+    setChecked((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const exportToEmail = async () => {
-    const selected: Record<string, string[]> = {};
-    for (const [category, items] of categories) {
-      const picked = items.filter((it) => checked[`${category}::${it}`]);
-      if (picked.length) selected[category] = picked;
-    }
-
-    const text =
-      Object.keys(selected).length > 0
-        ? Object.entries(selected)
-            .map(([cat, items]) => `${cat}: ${items.join(", ")}`)
-            .join("\n")
-        : categories
-            .map(([cat, items]) => `${cat}: ${items.join(", ")}`)
-            .join("\n");
-
+  const copyList = async () => {
+    const text = categories
+      .map(([cat, items]) => `${cat}: ${items.join(", ")}`)
+      .join("\n");
     try {
       await navigator.clipboard.writeText(text);
       toast.success("Grocery list copied to clipboard");
@@ -51,71 +51,103 @@ export function GroceryListPanel({
   };
 
   return (
-    <section className="rounded-2xl border border-border/60 bg-card/60 p-4 lg:p-6">
-      <header className="flex items-start justify-between gap-4">
-        <div>
-          <h2 className="font-heading text-base font-semibold">
-            Your Grocery List
-          </h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Check items and export when ready.
-          </p>
-        </div>
-        <Badge variant="outline" className="rounded-full">
-          {categories.reduce((sum, [, items]) => sum + items.length, 0)} items
-        </Badge>
-      </header>
+    <div className="space-y-4">
+      <div className="mb-2 flex items-center justify-between">
+        <h4 className="font-heading text-xl font-bold text-m3-on-surface">
+          Weekly Shopping
+        </h4>
+        <button
+          type="button"
+          onClick={copyList}
+          className="flex cursor-pointer items-center gap-1 text-sm font-semibold text-m3-primary-container hover:underline"
+        >
+          <Clipboard className="size-4" aria-hidden />
+          Copy List
+        </button>
+      </div>
 
-      <div className="mt-4 grid gap-4">
-        {categories.map(([category, items]) => (
-          <div
+      {categories.map(([category, items]) => {
+        const remaining = items.filter(
+          (it) => !checked[`${category}::${it}`],
+        ).length;
+        return (
+          <details
             key={category}
-            className="rounded-xl border border-border/60 bg-card/30 p-3"
+            className="group rounded-2xl border border-m3-outline-variant/5 bg-m3-surface-low"
+            open
           >
-            <p className="font-heading text-sm font-semibold">
-              {category.charAt(0).toUpperCase() + category.slice(1)}
-            </p>
-            <div className="mt-3 flex flex-col gap-2">
+            <summary className="flex cursor-pointer list-none items-center justify-between p-5 hover:bg-m3-surface-high">
+              <div className="flex items-center gap-4">
+                <div
+                  className={cn(
+                    "flex size-10 items-center justify-center rounded-xl bg-m3-surface-highest/30",
+                    CATEGORY_ICONS[category] ?? "text-m3-outline",
+                  )}
+                >
+                  <ShoppingCart className="size-5" aria-hidden />
+                </div>
+                <div>
+                  <h5 className="font-semibold text-m3-on-surface">
+                    {category.charAt(0).toUpperCase() + category.slice(1)}
+                  </h5>
+                  <p className="text-[10px] text-m3-outline">
+                    {remaining} item{remaining !== 1 ? "s" : ""} remaining
+                  </p>
+                </div>
+              </div>
+              <ChevronDown
+                className="size-5 text-m3-outline transition-transform group-open:rotate-180"
+                aria-hidden
+              />
+            </summary>
+            <div className="space-y-3 px-5 pb-5">
               {items.map((item) => {
                 const key = `${category}::${item}`;
                 const isChecked = Boolean(checked[key]);
                 return (
-                  <div
+                  <label
                     key={key}
-                    aria-label={`Grocery item: ${item}`}
-                    className={cn(
-                      "flex items-center gap-3 rounded-lg border border-transparent px-2 py-1 transition-colors hover:border-border",
-                      isChecked && "border-border",
-                    )}
+                    className="flex cursor-pointer items-center justify-between rounded-xl border border-m3-outline-variant/10 bg-m3-surface-lowest p-4 transition-colors hover:border-m3-primary-container/30"
                   >
-                    <Checkbox
-                      checked={isChecked}
-                      onCheckedChange={(v) =>
-                        toggleItem(category, item, v === true)
-                      }
-                      aria-label={`Grocery item: ${item}`}
-                    />
-                    <span className="text-sm text-muted-foreground">
-                      {item}
-                    </span>
-                  </div>
+                    <div className="flex items-center gap-4">
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={() => toggleItem(category, item)}
+                        className="size-5 rounded border-m3-outline-variant bg-transparent text-m3-primary-container accent-m3-primary-container"
+                      />
+                      <span
+                        className={cn(
+                          "text-sm font-medium text-m3-on-surface",
+                          isChecked && "line-through opacity-50",
+                        )}
+                      >
+                        {item}
+                      </span>
+                    </div>
+                  </label>
                 );
               })}
             </div>
-          </div>
-        ))}
-      </div>
+          </details>
+        );
+      })}
 
-      <footer className="mt-5 flex flex-col gap-3 rounded-xl border border-border/60 bg-card/30 p-3 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm text-muted-foreground">
-          {Object.values(checked).filter(Boolean).length} of{" "}
-          {categories.reduce((sum, [, items]) => sum + items.length, 0)} items
-          checked
-        </p>
-        <Button type="button" variant="outline" onClick={exportToEmail}>
-          Export to Email
-        </Button>
-      </footer>
-    </section>
+      <div className="flex flex-col items-center justify-between gap-4 rounded-3xl border border-m3-primary-container/10 bg-m3-surface-highest p-6 md:flex-row">
+        <div className="flex items-center gap-4">
+          <div className="flex size-12 items-center justify-center rounded-full bg-m3-secondary/20 text-m3-secondary">
+            <ShoppingCart className="size-6" aria-hidden />
+          </div>
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-m3-outline">
+              Items Checked
+            </p>
+            <h4 className="font-heading text-2xl font-extrabold text-m3-on-surface">
+              {checkedCount} / {totalItems}
+            </h4>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

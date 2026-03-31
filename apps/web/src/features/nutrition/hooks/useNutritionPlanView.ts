@@ -88,19 +88,13 @@ function safeParseGroceryList(value: unknown): Record<string, string[]> {
   return out;
 }
 
-function mealTypeLabel(type: string): string {
-  const t = type.trim();
-  if (!t) return "Meal";
-  return t;
-}
-
 export function useNutritionPlanView() {
   const queryClient = useQueryClient();
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<NutritionTab>("mealPlan");
 
-  const [selectedDay, setSelectedDay] = useState(1); // UI-only for now (API mealPlan is daily)
+  const [selectedPage, setSelectedPage] = useState(1);
   const [selectedMealIndex, setSelectedMealIndex] = useState(0);
 
   const planQuery = useQuery({
@@ -133,10 +127,10 @@ export function useNutritionPlanView() {
     if (plan) setLocalMealPlan(plan.mealPlan);
   }, [plan]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: trigger-only deps — reset selection when page or meal count changes
   useEffect(() => {
-    // Keep index in range when plan changes.
-    if (selectedMealIndex > localMealPlan.length - 1) setSelectedMealIndex(0);
-  }, [localMealPlan.length, selectedMealIndex]);
+    setSelectedMealIndex(0);
+  }, [selectedPage, localMealPlan.length]);
 
   const regenerate = useMutation({
     mutationFn: () =>
@@ -156,7 +150,12 @@ export function useNutritionPlanView() {
 
   const groceryList = plan?.groceryList ?? {};
 
-  const selectedMeal = localMealPlan[selectedMealIndex];
+  const MEALS_PER_PAGE = 3;
+
+  // selectedMealIndex is page-relative; globalMealIndex is for the full array
+  const globalMealIndex =
+    (selectedPage - 1) * MEALS_PER_PAGE + selectedMealIndex;
+  const selectedMeal = localMealPlan[globalMealIndex];
 
   const swap = useSwapMeal();
 
@@ -190,11 +189,12 @@ export function useNutritionPlanView() {
     staleTime: 2 * 60 * 1000,
   });
 
-  const onSwapMeal = (idx: number) => {
-    setSelectedMealIndex(idx);
-    const meal = localMealPlan[idx];
+  const onSwapMeal = (pageRelativeIdx: number) => {
+    setSelectedMealIndex(pageRelativeIdx);
+    const globalIdx = (selectedPage - 1) * MEALS_PER_PAGE + pageRelativeIdx;
+    const meal = localMealPlan[globalIdx];
     if (meal) {
-      swap.requestSwap(idx, meal);
+      swap.requestSwap(globalIdx, meal);
     }
   };
 
@@ -244,14 +244,25 @@ export function useNutritionPlanView() {
     };
   }, [localMealPlan, plan]);
 
-  const dayButtons = useMemo(
-    () => Array.from({ length: 7 }, (_, i) => i + 1),
-    [],
+  const totalPages = Math.max(
+    1,
+    Math.ceil(localMealPlan.length / MEALS_PER_PAGE),
   );
 
-  const onToggleGrocery = () => {
-    // UI-only state will live in GroceryListPanel.
-  };
+  const pageButtons = useMemo(
+    () => Array.from({ length: totalPages }, (_, i) => i + 1),
+    [totalPages],
+  );
+
+  // Reset page if out of range after plan change
+  useEffect(() => {
+    if (selectedPage > totalPages) setSelectedPage(1);
+  }, [totalPages, selectedPage]);
+
+  const paginatedMeals = useMemo(() => {
+    const start = (selectedPage - 1) * MEALS_PER_PAGE;
+    return localMealPlan.slice(start, start + MEALS_PER_PAGE);
+  }, [localMealPlan, selectedPage]);
 
   return {
     menuOpen,
@@ -263,16 +274,16 @@ export function useNutritionPlanView() {
     refetchPlan: planQuery.refetch,
 
     plan,
-    localMealPlan,
+    paginatedMeals,
     selectedMealIndex,
     setSelectedMealIndex,
     selectedMeal,
 
     activeTab,
     setActiveTab,
-    selectedDay,
-    setSelectedDay,
-    dayButtons,
+    selectedPage,
+    setSelectedPage,
+    pageButtons,
 
     macroTargets: plan
       ? {
@@ -302,15 +313,12 @@ export function useNutritionPlanView() {
     onSwapMeal,
     onUseAlternative,
     onGenerateAlternatives: () => {
-      if (selectedMeal && selectedMealIndex >= 0) {
-        swap.requestSwap(selectedMealIndex, selectedMeal);
+      if (selectedMeal && globalMealIndex >= 0) {
+        swap.requestSwap(globalMealIndex, selectedMeal);
       }
     },
 
     regenerate,
-
-    mealTypeLabel,
-    onToggleGrocery,
   };
 }
 

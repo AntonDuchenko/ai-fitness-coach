@@ -1,11 +1,19 @@
 {
-  "task": "Redesign workouts page based on Stitch design",
-  "taskTitle": "Workout Plan Page Redesign (Stitch Design System)",
-  "phase": "developer",
-  "status": "running",
-  "iterations": { "review": 0, "test": 0 },
+  "task": "Redesign nutrition page from Stitch design",
+  "taskTitle": "Nutrition Page Redesign — Pixel-Perfect from Stitch",
+  "phase": "summary",
+  "status": "completed",
+  "iterations": { "review": 1, "test": 0 },
   "maxIterations": { "review": 3, "test": 3 },
-  "startedAt": "2026-03-26T12:00:00Z",
+  "startedAt": "2026-03-30T12:00:00Z",
+  "completedAt": "2026-03-30T12:45:00Z",
   "projectInitialized": true,
-  "phases": {}
+  "phases": {
+    "init": "completed",
+    "architect": "completed",
+    "developer": "completed",
+    "reviewer": "approved",
+    "tester": "passed",
+    "summary": "completed"
+  }
 }

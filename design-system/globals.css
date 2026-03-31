@@ -65,6 +65,7 @@
   --color-m3-outline-variant: var(--m3-outline-variant);
   --color-m3-secondary: var(--m3-secondary);
   --color-m3-secondary-container: var(--m3-secondary-container);
+  --color-m3-tertiary: var(--m3-tertiary);
   --color-m3-error: var(--m3-error);
   --color-m3-error-container: var(--m3-error-container);
 
@@ -141,6 +142,7 @@
   --m3-outline-variant: #D1D5DB;
   --m3-secondary: #10B981;
   --m3-secondary-container: #059669;
+  --m3-tertiary: #F59E0B;
   --m3-error: #DC2626;
   --m3-error-container: #FEE2E2;
 }
@@ -210,6 +212,7 @@
   --m3-outline-variant: #424754;
   --m3-secondary: #4AE176;
   --m3-secondary-container: #00B954;
+  --m3-tertiary: #FFB786;
   --m3-error: #FFB4AB;
   --m3-error-container: #93000A;
 }

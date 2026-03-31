@@ -9,7 +9,11 @@ type Macros = {
   fat: number;
 };
 
-function DiffLabel({ label, diff, unit }: { label: string; diff: number; unit: string }) {
+function DiffLabel({
+  label,
+  diff,
+  unit,
+}: { label: string; diff: number; unit: string }) {
   const rounded = Math.round(diff);
   if (rounded === 0) return null;
 
@@ -18,7 +22,7 @@ function DiffLabel({ label, diff, unit }: { label: string; diff: number; unit: s
     <span
       className={cn(
         "text-[11px] font-medium",
-        isPositive ? "text-success" : "text-destructive",
+        isPositive ? "text-m3-secondary" : "text-m3-error",
       )}
     >
       {isPositive ? "+" : ""}
@@ -44,20 +48,13 @@ export function MacroComparison({
 
   const hasDiffs = diffs.some((d) => Math.round(d.diff) !== 0);
   if (!hasDiffs) {
-    return (
-      <p className="text-[11px] text-muted-foreground">Identical macros</p>
-    );
+    return <p className="text-[11px] text-m3-outline">Identical macros</p>;
   }
 
   return (
     <div className="flex flex-wrap gap-x-3 gap-y-1">
       {diffs.map((d) => (
-        <DiffLabel
-          key={d.label}
-          label={d.label}
-          diff={d.diff}
-          unit={d.unit}
-        />
+        <DiffLabel key={d.label} label={d.label} diff={d.diff} unit={d.unit} />
       ))}
     </div>
   );
