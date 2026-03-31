@@ -23,7 +23,7 @@ export function ProgressScreen() {
 
   if (d.initialLoading) {
     return (
-      <div className="flex h-[100dvh] flex-col bg-background text-foreground lg:flex-row">
+      <div className="flex h-[100dvh] flex-col bg-m3-surface text-m3-on-surface lg:flex-row">
         <DashboardSidebar className="hidden lg:flex" />
         <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
           <ProgressPageSkeleton />
@@ -33,7 +33,7 @@ export function ProgressScreen() {
   }
 
   return (
-    <div className="flex h-[100dvh] flex-col overflow-hidden bg-background text-foreground lg:flex-row">
+    <div className="flex h-[100dvh] flex-col overflow-hidden bg-m3-surface text-m3-on-surface lg:flex-row">
       <DashboardSidebar className="hidden lg:flex" />
       <MobileDrawer open={menuOpen} onClose={() => setMenuOpen(false)}>
         <DashboardSidebar className="h-full border-r-0" />
@@ -46,70 +46,87 @@ export function ProgressScreen() {
           onOpenMenu={() => setMenuOpen(true)}
         />
 
-        <header className="hidden h-[72px] shrink-0 items-center border-b border-border px-6 lg:flex">
-          <div>
-            <h1 className="font-heading text-base font-semibold">Progress</h1>
-            <p className="text-[12px] text-muted-foreground">
-              Weight, strength, consistency and volume
-            </p>
-          </div>
-        </header>
-
-        <div className="flex flex-1 flex-col gap-6 overflow-auto p-4 lg:p-6">
-          <ProgressToolbar
-            period={period}
-            onPeriodChange={setPeriod}
-            logOpen={logOpen}
-            onLogOpenChange={setLogOpen}
-          />
+        <main className="glow-bg flex-1 overflow-auto p-6 lg:p-10">
+          {/* Header */}
+          <header className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            <div className="space-y-2">
+              <h2 className="font-heading text-4xl font-extrabold tracking-tight text-m3-on-surface">
+                Progress
+              </h2>
+              <p className="font-medium text-muted-foreground">
+                Your journey to peak performance, visualised.
+              </p>
+            </div>
+            <ProgressToolbar
+              period={period}
+              onPeriodChange={setPeriod}
+              logOpen={logOpen}
+              onLogOpenChange={setLogOpen}
+            />
+          </header>
 
           {d.weight.isError || d.consistency.isError ? (
-            <p className="text-sm text-destructive">
+            <p className="mb-6 text-sm text-destructive">
               Some progress data could not be loaded. Refresh the page or try
               again later.
             </p>
           ) : null}
 
-          <ProgressQuickStats
-            weightLabel={d.stats.weightLabel}
-            weightSub={d.stats.weightSub}
-            workoutsLabel={d.stats.workoutsLabel}
-            workoutsSub={d.stats.workoutsSub}
-            streakLabel={d.stats.streakLabel}
-            streakSub={d.stats.streakSub}
-            strengthLabel={d.stats.strengthLabel}
-            strengthSub={d.stats.strengthSub}
-          />
-
-          <WeightProgressChartCard
-            logs={d.weight.data?.logs ?? []}
-            startWeight={d.weight.data?.startWeight ?? null}
-            targetWeight={d.summary.data?.weight.targetWeight ?? null}
-            isLoading={d.weight.isLoading}
-          />
-
-          <div className="grid gap-6 lg:grid-cols-2">
-            <StrengthProgressCard
-              exercises={d.exerciseOptions}
-              selectedExercise={d.selectedExercise}
-              onExerciseChange={d.setSelectedExercise}
-              data={d.strength.data}
-              isLoading={d.strength.isLoading}
-              isError={d.strength.isError}
+          {/* Stat cards */}
+          <section className="mb-10">
+            <ProgressQuickStats
+              weightLabel={d.stats.weightLabel}
+              weightSub={d.stats.weightSub}
+              workoutsLabel={d.stats.workoutsLabel}
+              workoutsSub={d.stats.workoutsSub}
+              streakLabel={d.stats.streakLabel}
+              streakSub={d.stats.streakSub}
+              strengthLabel={d.stats.strengthLabel}
+              strengthSub={d.stats.strengthSub}
             />
-            <ConsistencyHeatmapCard
-              data={d.consistency.data}
-              isLoading={d.consistency.isLoading}
-            />
+          </section>
+
+          {/* Main grid */}
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+            {/* Weight chart full width */}
+            <div className="lg:col-span-12">
+              <WeightProgressChartCard
+                logs={d.weight.data?.logs ?? []}
+                startWeight={d.weight.data?.startWeight ?? null}
+                targetWeight={d.summary.data?.weight.targetWeight ?? null}
+                isLoading={d.weight.isLoading}
+              />
+            </div>
+
+            {/* Strength + Consistency */}
+            <div className="lg:col-span-7">
+              <StrengthProgressCard
+                exercises={d.exerciseOptions}
+                selectedExercise={d.selectedExercise}
+                onExerciseChange={d.setSelectedExercise}
+                data={d.strength.data}
+                isLoading={d.strength.isLoading}
+                isError={d.strength.isError}
+              />
+            </div>
+            <div className="lg:col-span-5">
+              <ConsistencyHeatmapCard
+                data={d.consistency.data}
+                isLoading={d.consistency.isLoading}
+              />
+            </div>
+
+            {/* Volume section full width */}
+            <div className="lg:col-span-12">
+              <VolumeSectionCard
+                weekly={d.volume.data}
+                muscleRows={d.muscleRows}
+                imbalanceMessage={d.imbalance}
+                isLoadingWeekly={d.volume.isLoading}
+              />
+            </div>
           </div>
-
-          <VolumeSectionCard
-            weekly={d.volume.data}
-            muscleRows={d.muscleRows}
-            imbalanceMessage={d.imbalance}
-            isLoadingWeekly={d.volume.isLoading}
-          />
-        </div>
+        </main>
       </div>
     </div>
   );

@@ -21,6 +21,10 @@ export class UserResponseDto {
 
   @Expose()
   @ApiProperty()
+  onboardingCompleted!: boolean;
+
+  @Expose()
+  @ApiProperty()
   createdAt!: Date;
 
   constructor(partial: Partial<UserResponseDto>) {

@@ -1,7 +1,13 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dumbbell, Flame, Scale, TrendingUp } from "lucide-react";
+import { cn } from "@/lib/utils";
+import {
+  Dumbbell,
+  Flame,
+  Scale,
+  TrendingUp,
+  type LucideIcon,
+} from "lucide-react";
 
 interface ProgressQuickStatsProps {
   weightLabel: string;
@@ -14,61 +20,83 @@ interface ProgressQuickStatsProps {
   strengthSub: string;
 }
 
-export function ProgressQuickStats({
-  weightLabel,
-  weightSub,
-  workoutsLabel,
-  workoutsSub,
-  streakLabel,
-  streakSub,
-  strengthLabel,
-  strengthSub,
-}: ProgressQuickStatsProps) {
-  const items = [
-    {
-      title: "Body weight",
-      label: weightLabel,
-      sub: weightSub,
-      Icon: Scale,
-    },
-    {
-      title: "Workouts",
-      label: workoutsLabel,
-      sub: workoutsSub,
-      Icon: Dumbbell,
-    },
-    {
-      title: "Streak",
-      label: streakLabel,
-      sub: streakSub,
-      Icon: Flame,
-    },
-    {
-      title: "Strength",
-      label: strengthLabel,
-      sub: strengthSub,
-      Icon: TrendingUp,
-    },
-  ] as const;
+const STAT_ITEMS: {
+  key: string;
+  title: string;
+  Icon: LucideIcon;
+  iconColor: string;
+  subColor: string;
+  labelProp: keyof ProgressQuickStatsProps;
+  subProp: keyof ProgressQuickStatsProps;
+}[] = [
+  {
+    key: "weight",
+    title: "Body Weight",
+    Icon: Scale,
+    iconColor: "text-m3-primary",
+    subColor: "text-m3-secondary",
+    labelProp: "weightLabel",
+    subProp: "weightSub",
+  },
+  {
+    key: "workouts",
+    title: "Workouts",
+    Icon: Dumbbell,
+    iconColor: "text-m3-primary",
+    subColor: "text-m3-primary",
+    labelProp: "workoutsLabel",
+    subProp: "workoutsSub",
+  },
+  {
+    key: "streak",
+    title: "Current Streak",
+    Icon: Flame,
+    iconColor: "text-m3-secondary",
+    subColor: "text-m3-tertiary",
+    labelProp: "streakLabel",
+    subProp: "streakSub",
+  },
+  {
+    key: "strength",
+    title: "Strength",
+    Icon: TrendingUp,
+    iconColor: "text-m3-primary",
+    subColor: "text-m3-secondary",
+    labelProp: "strengthLabel",
+    subProp: "strengthSub",
+  },
+];
 
+export function ProgressQuickStats(props: ProgressQuickStatsProps) {
   return (
-    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      {items.map(({ title, label, sub, Icon }) => (
-        <Card key={title}>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {STAT_ITEMS.map(
+        ({ key, title, Icon, iconColor, subColor, labelProp, subProp }) => (
+          <div
+            key={key}
+            className="group relative overflow-hidden rounded-3xl bg-m3-surface-high p-6"
+          >
+            <div className="absolute -bottom-4 -right-4 opacity-5 transition-opacity group-hover:opacity-10">
+              <Icon className="size-20" aria-hidden />
+            </div>
+            <p className="mb-4 flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+              <Icon className={cn("size-4", iconColor)} aria-hidden />
               {title}
-            </CardTitle>
-            <Icon className="size-4 text-primary" aria-hidden />
-          </CardHeader>
-          <CardContent>
-            <p className="font-heading text-2xl font-semibold tracking-tight">
-              {label}
             </p>
-            <p className="text-xs text-muted-foreground">{sub}</p>
-          </CardContent>
-        </Card>
-      ))}
+            <p className="font-heading text-3xl font-extrabold tracking-tight">
+              {props[labelProp]}
+            </p>
+            <p
+              className={cn(
+                "mt-4 flex items-center gap-1 text-xs font-bold",
+                subColor,
+              )}
+            >
+              {props[subProp]}
+            </p>
+          </div>
+        ),
+      )}
     </div>
   );
 }

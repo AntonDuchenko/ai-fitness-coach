@@ -6,21 +6,19 @@ import { useEffect } from "react";
 
 interface GuestRouteProps {
   children: React.ReactNode;
-  redirectTo?: string;
 }
 
-export function GuestRoute({
-  children,
-  redirectTo = "/dashboard",
-}: GuestRouteProps) {
-  const { isAuthenticated, isLoading } = useAuth();
+export function GuestRoute({ children }: GuestRouteProps) {
+  const { user, isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      router.push(redirectTo);
+      router.push(
+        user?.onboardingCompleted ? "/dashboard" : "/onboarding",
+      );
     }
-  }, [isLoading, isAuthenticated, router, redirectTo]);
+  }, [isLoading, isAuthenticated, user, router]);
 
   if (isLoading) {
     return (

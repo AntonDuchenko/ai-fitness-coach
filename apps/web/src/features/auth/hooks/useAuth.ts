@@ -39,7 +39,7 @@ export function useAuthProvider(): AuthContextType {
     onSuccess: (data) => {
       setTokens(data.accessToken, data.refreshToken);
       queryClient.setQueryData(["auth", "me"], data.user);
-      router.push("/dashboard");
+      router.push(data.user.onboardingCompleted ? "/dashboard" : "/onboarding");
     },
   });
 
@@ -52,7 +52,7 @@ export function useAuthProvider(): AuthContextType {
     onSuccess: (data) => {
       setTokens(data.accessToken, data.refreshToken);
       queryClient.setQueryData(["auth", "me"], data.user);
-      router.push("/dashboard");
+      router.push("/onboarding");
     },
   });
 

@@ -1,12 +1,5 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { AlertTriangle } from "lucide-react";
 import type { VolumeProgressResponse } from "../types";
 import type { MuscleVolumeRow } from "../utils/muscleVolume";
@@ -27,15 +20,17 @@ export function VolumeSectionCard({
   isLoadingWeekly,
 }: VolumeSectionCardProps) {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="font-heading">Volume by Muscle Group</CardTitle>
-        <CardDescription>
-          Track total training volume and detect imbalances
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-8">
-        <div>
+    <div className="overflow-hidden rounded-[2rem] border border-m3-outline-variant/10 bg-m3-surface-low p-8">
+      <div className="flex flex-col gap-12 md:flex-row">
+        <div className="flex-1">
+          <div className="mb-8">
+            <h3 className="mb-1 font-heading text-xl font-bold text-m3-on-surface">
+              Muscle Group Focus
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              Volume distribution by set count
+            </p>
+          </div>
           <MuscleGroupChart muscleRows={muscleRows} />
           {imbalanceMessage ? (
             <output
@@ -51,11 +46,18 @@ export function VolumeSectionCard({
           ) : null}
         </div>
 
-        <div>
-          <h3 className="mb-2 text-sm font-medium">Weekly volume</h3>
+        <div className="flex-1">
+          <div className="mb-8">
+            <h3 className="mb-1 font-heading text-xl font-bold text-m3-on-surface">
+              Weekly Load
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              Total volume moved (kg)
+            </p>
+          </div>
           <WeeklyVolumeChart weekly={weekly} isLoading={isLoadingWeekly} />
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

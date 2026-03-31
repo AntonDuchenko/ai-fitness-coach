@@ -8,7 +8,7 @@ interface MarkdownContentProps {
 
 export function MarkdownContent({ content }: MarkdownContentProps) {
   return (
-    <div className="prose-chat text-[13px] leading-relaxed text-foreground sm:text-sm">
+    <div className="text-[13px] leading-relaxed text-foreground sm:text-sm">
       <ReactMarkdown
         components={{
           p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,

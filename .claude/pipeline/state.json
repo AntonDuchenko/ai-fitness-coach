@@ -1,12 +1,12 @@
 {
-  "task": "Redesign nutrition page from Stitch design",
-  "taskTitle": "Nutrition Page Redesign — Pixel-Perfect from Stitch",
+  "task": "Redesign Progress Overview, Log Weight Dialog, Progress Dashboard Widgets from Stitch designs",
+  "taskTitle": "Pixel-perfect redesign of Progress pages from Stitch",
   "phase": "summary",
   "status": "completed",
   "iterations": { "review": 1, "test": 0 },
   "maxIterations": { "review": 3, "test": 3 },
-  "startedAt": "2026-03-30T12:00:00Z",
-  "completedAt": "2026-03-30T12:45:00Z",
+  "startedAt": "2026-03-31T12:00:00Z",
+  "completedAt": "2026-03-31T13:00:00Z",
   "projectInitialized": true,
   "phases": {
     "init": "completed",

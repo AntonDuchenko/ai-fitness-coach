@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Plus } from "lucide-react";
 import {
   PROGRESS_PERIOD_LABELS,
   PROGRESS_PERIOD_VALUES,
@@ -30,33 +31,37 @@ export function ProgressToolbar({
   onLogOpenChange,
 }: ProgressToolbarProps) {
   return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-        <Label htmlFor="period-range" className="sr-only">
-          Date range
-        </Label>
-        <Select
-          value={period}
-          onValueChange={(v) => onPeriodChange(v as ProgressPeriod)}
+    <div className="flex items-center gap-4">
+      <Label htmlFor="period-range" className="sr-only">
+        Date range
+      </Label>
+      <Select
+        value={period}
+        onValueChange={(v) => onPeriodChange(v as ProgressPeriod)}
+      >
+        <SelectTrigger
+          id="period-range"
+          className="w-[180px] rounded-xl border-none bg-m3-surface-high text-sm font-semibold"
         >
-          <SelectTrigger id="period-range" className="w-full sm:w-[220px]">
-            <SelectValue placeholder="Period" />
-          </SelectTrigger>
-          <SelectContent>
-            {PROGRESS_PERIOD_VALUES.map((p) => (
-              <SelectItem key={p} value={p}>
-                {PROGRESS_PERIOD_LABELS[p]}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="flex shrink-0 gap-2">
-        <Button type="button" onClick={() => onLogOpenChange(true)}>
-          Log weight
-        </Button>
-        <LogWeightDialog open={logOpen} onOpenChange={onLogOpenChange} />
-      </div>
+          <SelectValue placeholder="Period" />
+        </SelectTrigger>
+        <SelectContent>
+          {PROGRESS_PERIOD_VALUES.map((p) => (
+            <SelectItem key={p} value={p}>
+              {PROGRESS_PERIOD_LABELS[p]}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <Button
+        type="button"
+        onClick={() => onLogOpenChange(true)}
+        className="rounded-xl bg-m3-primary-container px-6 py-3 font-bold text-m3-on-primary-container shadow-lg shadow-m3-primary-container/20 hover:brightness-105"
+      >
+        <Plus className="mr-2 size-4" aria-hidden />
+        Log Weight
+      </Button>
+      <LogWeightDialog open={logOpen} onOpenChange={onLogOpenChange} />
     </div>
   );
 }

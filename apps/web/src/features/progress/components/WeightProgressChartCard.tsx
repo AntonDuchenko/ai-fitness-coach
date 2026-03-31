@@ -1,12 +1,5 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState } from "react";
 import type { WeightLogResponse } from "../types";
@@ -32,64 +25,68 @@ export function WeightProgressChartCard({
 
   if (isLoading) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="font-heading">Weight progress</CardTitle>
-          <CardDescription>Trend, goal and starting reference</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Skeleton className="h-[320px] w-full rounded-lg" />
-        </CardContent>
-      </Card>
+      <div className="rounded-[2rem] border border-m3-outline-variant/10 bg-m3-surface-low p-8 shadow-2xl">
+        <div className="mb-10">
+          <Skeleton className="mb-1 h-6 w-40" />
+          <Skeleton className="h-4 w-64" />
+        </div>
+        <Skeleton className="h-64 w-full rounded-lg" />
+      </div>
     );
   }
 
   if (logs.length === 0) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="font-heading">Weight progress</CardTitle>
-          <CardDescription>
-            Log weight a few times to see your trend chart.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
-            No weight entries in this period.
-          </p>
-        </CardContent>
-      </Card>
+      <div className="rounded-[2rem] border border-m3-outline-variant/10 bg-m3-surface-low p-8 shadow-2xl">
+        <h3 className="mb-1 font-heading text-xl font-bold text-m3-on-surface">
+          Weight Progress
+        </h3>
+        <p className="text-sm text-muted-foreground">
+          Log weight a few times to see your trend chart.
+        </p>
+      </div>
     );
   }
 
   return (
-    <Card>
-      <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+    <div className="rounded-[2rem] border border-m3-outline-variant/10 bg-m3-surface-low p-8 shadow-2xl">
+      <div className="mb-10 flex items-center justify-between">
         <div>
-          <CardTitle className="font-heading">Weight progress</CardTitle>
-          <CardDescription>
-            Line chart with start / goal guides and trend. Click a point for
-            details.
-          </CardDescription>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        <WeightChart
-          logs={logs}
-          startWeight={startWeight}
-          targetWeight={targetWeight}
-          onPointClick={setPicked}
-        />
-        {picked ? (
+          <h3 className="mb-1 font-heading text-xl font-bold text-m3-on-surface">
+            Weight Progress
+          </h3>
           <p className="text-sm text-muted-foreground">
-            Selected:{" "}
-            <span className="font-medium text-foreground">
-              {picked.weight} kg
-            </span>{" "}
-            on {new Date(picked.date).toLocaleDateString()}
+            Tracking your physical evolution
           </p>
-        ) : null}
-      </CardContent>
-    </Card>
+        </div>
+        <div className="flex gap-3">
+          <div className="flex items-center gap-2 rounded-full bg-m3-surface-high px-3 py-1.5 text-xs font-semibold">
+            <span className="size-2 rounded-full bg-m3-primary" />
+            Actual
+          </div>
+          <div className="flex items-center gap-2 rounded-full bg-m3-surface-high px-3 py-1.5 text-xs font-semibold">
+            <span className="h-0.5 w-2 border-t border-dashed border-m3-outline" />
+            Trend
+          </div>
+        </div>
+      </div>
+
+      <WeightChart
+        logs={logs}
+        startWeight={startWeight}
+        targetWeight={targetWeight}
+        onPointClick={setPicked}
+      />
+
+      {picked ? (
+        <p className="mt-4 text-sm text-muted-foreground">
+          Selected:{" "}
+          <span className="font-medium text-foreground">
+            {picked.weight} kg
+          </span>{" "}
+          on {new Date(picked.date).toLocaleDateString()}
+        </p>
+      ) : null}
+    </div>
   );
 }

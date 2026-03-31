@@ -1,13 +1,5 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -17,7 +9,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Star } from "lucide-react";
 import { useMemo } from "react";
 import type { StrengthProgressResponse } from "../types";
 import { StrengthChart } from "./StrengthChart";
@@ -45,40 +36,42 @@ export function StrengthProgressCard({
   }, [data]);
 
   return (
-    <Card className="min-w-0">
-      <CardHeader>
-        <CardTitle className="font-heading">Strength progress</CardTitle>
-        <CardDescription>
-          Max weight and volume per logged session
-        </CardDescription>
-        <div className="pt-2">
-          <Label htmlFor="exercise-select" className="sr-only">
-            Exercise
-          </Label>
-          {exercises.length > 0 ? (
-            <Select value={selectedExercise} onValueChange={onExerciseChange}>
-              <SelectTrigger
-                id="exercise-select"
-                className="w-full max-w-full sm:w-[280px]"
-              >
-                <SelectValue placeholder="Choose exercise" />
-              </SelectTrigger>
-              <SelectContent>
-                {exercises.map((name) => (
-                  <SelectItem key={name} value={name}>
-                    {name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          ) : (
-            <p className="text-sm text-muted-foreground" id="exercise-select">
-              Log workouts to unlock exercise progression.
-            </p>
-          )}
+    <div className="flex flex-col overflow-hidden rounded-[2rem] border border-m3-outline-variant/10 bg-m3-surface-low p-8">
+      <div className="mb-8 flex items-start justify-between">
+        <div>
+          <h3 className="mb-1 font-heading text-xl font-bold text-m3-on-surface">
+            Strength Progress
+          </h3>
+          <div className="mt-2">
+            <Label htmlFor="exercise-select" className="sr-only">
+              Exercise
+            </Label>
+            {exercises.length > 0 ? (
+              <Select value={selectedExercise} onValueChange={onExerciseChange}>
+                <SelectTrigger
+                  id="exercise-select"
+                  className="w-full max-w-full rounded-lg border-none bg-m3-surface-high text-xs font-bold text-m3-primary sm:w-[280px]"
+                >
+                  <SelectValue placeholder="Choose exercise" />
+                </SelectTrigger>
+                <SelectContent>
+                  {exercises.map((name) => (
+                    <SelectItem key={name} value={name}>
+                      {name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            ) : (
+              <p className="text-sm text-muted-foreground" id="exercise-select">
+                Log workouts to unlock exercise progression.
+              </p>
+            )}
+          </div>
         </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
+      </div>
+
+      <div className="min-h-[220px] flex-1">
         {isLoading ? (
           <Skeleton className="h-[220px] w-full rounded-lg" />
         ) : isError ? (
@@ -95,16 +88,13 @@ export function StrengthProgressCard({
           </p>
         ) : (
           <>
-            {prWeight !== null ? (
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="success" className="gap-1 font-normal">
-                  <Star className="size-3" aria-hidden />
-                  PR {prWeight} kg
-                </Badge>
-              </div>
-            ) : null}
+            {prWeight !== null && (
+              <p className="mb-3 text-xs font-bold text-m3-secondary">
+                PR: {prWeight} kg
+              </p>
+            )}
             <StrengthChart data={data} />
-            <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
+            <div className="mt-4 flex flex-wrap gap-4 text-xs text-muted-foreground">
               <span>
                 Start:{" "}
                 <span className="font-medium text-foreground">
@@ -132,7 +122,7 @@ export function StrengthProgressCard({
             </div>
           </>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

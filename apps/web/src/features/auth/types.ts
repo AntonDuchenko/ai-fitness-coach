@@ -3,6 +3,7 @@ export interface User {
   email: string;
   name: string | null;
   isPremium: boolean;
+  onboardingCompleted: boolean;
   createdAt: string;
 }
 
