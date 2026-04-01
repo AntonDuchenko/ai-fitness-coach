@@ -9,11 +9,17 @@ export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findByEmail(email: string) {
-    return this.prisma.user.findUnique({ where: { email } });
+    return this.prisma.user.findUnique({
+      where: { email },
+      include: { profile: { select: { onboardingCompleted: true } } },
+    });
   }
 
   async findById(id: string) {
-    return this.prisma.user.findUnique({ where: { id } });
+    return this.prisma.user.findUnique({
+      where: { id },
+      include: { profile: { select: { onboardingCompleted: true } } },
+    });
   }
 
   async create(data: { email: string; passwordHash: string; name?: string }) {

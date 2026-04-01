@@ -27,7 +27,12 @@ export class UserResponseDto {
   @ApiProperty()
   createdAt!: Date;
 
-  constructor(partial: Partial<UserResponseDto>) {
+  constructor(partial: Partial<UserResponseDto> & { profile?: { onboardingCompleted: boolean } | null }) {
     Object.assign(this, partial);
+    if (partial.profile) {
+      this.onboardingCompleted = partial.profile.onboardingCompleted;
+    } else if (this.onboardingCompleted === undefined) {
+      this.onboardingCompleted = false;
+    }
   }
 }

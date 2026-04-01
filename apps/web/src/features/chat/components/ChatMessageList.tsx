@@ -1,8 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { Check, Copy } from "lucide-react";
+import { Bot, Check, Copy } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useTypewriter } from "../hooks/useTypewriter";
 import type { ChatMessage } from "../types";
@@ -23,7 +22,14 @@ export function ChatMessageList({
   onAnimationDone,
 }: ChatMessageListProps) {
   return (
-    <div className="flex flex-col gap-4 sm:gap-6">
+    <div className="flex flex-col gap-6 sm:gap-8">
+      {/* Date Divider */}
+      <div className="flex justify-center">
+        <span className="rounded-full bg-m3-surface-low px-4 py-1 text-[10px] font-black uppercase tracking-widest text-m3-outline">
+          Today
+        </span>
+      </div>
+
       {messages.map((m) =>
         m.role === "user" ? (
           <UserRow
@@ -67,20 +73,22 @@ function AssistantRow({
   }, [content]);
 
   return (
-    <div className="group flex max-w-full gap-2 sm:gap-3">
-      <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-primary-foreground sm:size-9 sm:text-[11px]">
-        AI
+    <div className="group flex max-w-3xl gap-3 sm:gap-4">
+      <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-m3-primary-container/20">
+        <Bot className="size-4 text-m3-primary" aria-hidden />
       </div>
-      <div className="min-w-0 max-w-[min(580px,85%)] rounded-xl bg-card px-3.5 py-3 sm:px-4">
-        {animate ? (
-          <TypewriterContent content={content} onDone={onAnimationDone} />
-        ) : (
-          <MarkdownContent content={content} />
-        )}
-        <div className="mt-2 flex items-center gap-2">
-          <p className="text-[10px] text-muted-foreground sm:text-[11px]">
-            {time}
-          </p>
+      <div className="min-w-0 space-y-2">
+        <div className="rounded-2xl rounded-tl-none border border-white/5 bg-m3-surface-high p-5 shadow-xl backdrop-blur-sm">
+          {animate ? (
+            <TypewriterContent content={content} onDone={onAnimationDone} />
+          ) : (
+            <MarkdownContent content={content} />
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="ml-1 text-[10px] font-bold uppercase text-m3-outline">
+            Coach &bull; {time}
+          </span>
           <Button
             type="button"
             variant="ghost"
@@ -90,9 +98,9 @@ function AssistantRow({
             aria-label={copied ? "Copied" : "Copy message"}
           >
             {copied ? (
-              <Check className="size-3 text-success" />
+              <Check className="size-3 text-m3-secondary" />
             ) : (
-              <Copy className="size-3 text-muted-foreground" />
+              <Copy className="size-3 text-m3-outline" />
             )}
           </Button>
         </div>
@@ -127,23 +135,19 @@ function UserRow({
   initials: string;
 }) {
   return (
-    <div className="flex w-full justify-end">
-      <div className="flex max-w-[min(420px,85%)] items-start gap-2 sm:gap-3">
-        <div className="min-w-0 flex-1 rounded-xl bg-primary px-3.5 py-3 text-primary-foreground sm:px-4">
-          <p className="whitespace-pre-wrap text-[13px] leading-relaxed sm:text-sm">
+    <div className="flex max-w-2xl flex-row-reverse gap-3 self-end sm:gap-4">
+      <div className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-m3-surface-high text-[10px] font-bold text-m3-on-surface">
+        {initials}
+      </div>
+      <div className="space-y-2 text-right">
+        <div className="rounded-2xl rounded-tr-none bg-m3-primary-container p-5 shadow-lg shadow-m3-primary-container/10">
+          <p className="text-left text-[15px] font-semibold leading-relaxed text-m3-on-primary-container">
             {content}
           </p>
-          <p
-            className={cn(
-              "mt-2 text-[10px] text-primary-foreground/60 sm:text-[11px]",
-            )}
-          >
-            {time}
-          </p>
         </div>
-        <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-secondary text-[9px] font-bold text-secondary-foreground sm:size-9 sm:text-[11px]">
-          {initials}
-        </div>
+        <span className="mr-1 text-[10px] font-bold uppercase text-m3-outline">
+          Read &bull; {time}
+        </span>
       </div>
     </div>
   );

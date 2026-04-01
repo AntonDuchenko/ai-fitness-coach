@@ -1,9 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, Menu } from "lucide-react";
-import Link from "next/link";
+import { Bot, Menu, Zap } from "lucide-react";
 
 interface ChatMobileHeaderProps {
   title: string;
@@ -19,45 +17,52 @@ export function ChatMobileHeader({
   onOpenMenu,
 }: ChatMobileHeaderProps) {
   return (
-    <header className="flex h-[60px] shrink-0 items-center gap-3 border-b border-border bg-sidebar px-4 lg:hidden">
-      <Button
-        type="button"
-        variant="secondary"
-        size="icon-sm"
-        className="rounded-lg border-0 bg-sidebar-accent text-sidebar-foreground"
-        aria-label="Open menu"
-        onClick={onOpenMenu}
-      >
-        <Menu className="size-4" />
-      </Button>
-      <div className="size-7 shrink-0 rounded-md bg-primary" aria-hidden />
-      <span className="min-w-0 flex-1 truncate font-heading text-sm font-semibold">
-        {title}
-      </span>
-      <Button
-        type="button"
-        variant="secondary"
-        size="icon-sm"
-        className="shrink-0 rounded-lg border-0 bg-sidebar-accent text-sidebar-foreground"
-        aria-label="Open dashboard"
-        asChild
-      >
-        <Link href="/dashboard">
-          <LayoutDashboard className="size-4" />
-        </Link>
-      </Button>
-      {usageCompact ? (
-        <div
-          className={cn(
-            "shrink-0 rounded-xl px-2.5 py-1 text-[11px] font-medium",
-            isLimitReached
-              ? "bg-secondary text-destructive"
-              : "bg-secondary text-muted-foreground",
-          )}
+    <header className="flex items-center justify-between bg-m3-surface px-4 py-4 lg:hidden">
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          className="-ml-1 rounded-lg p-2 text-m3-on-surface transition-opacity hover:opacity-80 active:scale-95"
+          aria-label="Open menu"
+          onClick={onOpenMenu}
         >
-          {usageCompact}
+          <Menu className="size-5" />
+        </button>
+        <div className="flex flex-col">
+          <div className="flex items-center gap-2">
+            <span className="font-heading text-lg font-bold tracking-tight text-m3-on-surface">
+              {title}
+            </span>
+            <span
+              className="size-2 rounded-full bg-m3-secondary shadow-[0_0_8px_rgba(74,225,118,0.5)]"
+              aria-hidden
+            />
+          </div>
+          <span className="text-[10px] font-medium uppercase tracking-wider text-m3-outline">
+            Online Mentor
+          </span>
         </div>
-      ) : null}
+      </div>
+
+      <div className="flex items-center gap-3">
+        {usageCompact ? (
+          <div
+            className={cn(
+              "flex items-center gap-1.5 rounded-full border border-m3-outline-variant/15 px-3 py-1.5",
+              isLimitReached
+                ? "bg-m3-error-container/20 text-m3-error"
+                : "bg-m3-surface-high text-m3-on-surface",
+            )}
+          >
+            <Zap className="size-3.5 text-m3-primary" aria-hidden />
+            <span className="text-xs font-semibold tracking-wide">
+              {usageCompact}
+            </span>
+          </div>
+        ) : null}
+        <div className="flex size-10 items-center justify-center overflow-hidden rounded-full border border-m3-primary/20 bg-m3-surface-container">
+          <Bot className="size-5 text-m3-primary" aria-hidden />
+        </div>
+      </div>
     </header>
   );
 }

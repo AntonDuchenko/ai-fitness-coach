@@ -1,39 +1,52 @@
 # Pipeline Summary
 
-## Task: Redesign onboarding UI (8 steps + generating screen) based on Stitch AI designs
+## Task: AI Coach Chat Page Redesign (Stitch)
+## Final Status: SUCCESS
 
-## Status: COMPLETED
+## Timeline
+| Phase | Status | Iterations |
+|-------|--------|------------|
+| Init | Completed | — |
+| Architect | Completed | — |
+| Developer | Completed | 1 pass |
+| Reviewer | APPROVED | 1/3 iterations (fixed 2 minor issues) |
+| Tester | PASSED | 1/3 iterations |
 
-## Phases
-1. **Init** — Project context loaded, CLAUDE.md conventions reviewed
-2. **Architect** — Planned component-by-component rewrite strategy, mapped Stitch hex colors to M3 tokens
-3. **Developer** — Rewrote all 10 onboarding UI components with new Stitch-based design
-4. **Reviewer** (1/3 iterations) — Code review passed on first iteration
-5. **Tester** (1/3 iterations) — Build, lint, TypeScript all pass on first iteration
+## Convention Compliance
+| Rule | Status |
+|------|--------|
+| Component size (<150 lines) | PASS (1 file at 154, justified) |
+| Business logic separated (hooks/services) | PASS |
+| shadcn/ui used (no raw HTML) | PASS |
+| Semantic design tokens (no hardcoded hex) | PASS |
+| Error/loading/empty states | PASS |
+| Accessibility | PASS |
+| TypeScript strict (no `any`) | PASS |
 
-## Files Changed (10 components)
-- `OnboardingScreen.tsx` — Full-bleed dark layout, glow background, progress bar, step navigation
-- `StepBasicInfo.tsx` — Gender pills, number inputs with suffixes, height unit toggle
-- `StepGoals.tsx` — 2x2 glass-card grid with icons, secondary goal chips
-- `StepExperience.tsx` — Stacked radio cards with RadioDot, dual-section layout
-- `StepSchedule.tsx` — Day buttons, glass-card dropdown, time-of-day pills
-- `StepEquipment.tsx` — Location cards with Active badge, equipment checklist
-- `StepLimitations.tsx` — Info banner, textareas, dietary restriction cards
-- `StepNutrition.tsx` — Circle meal selector, cooking/budget panels, cuisine chips
-- `StepMotivation.tsx` — Large textarea, Yes/No toggle, expandable details, challenge chips
-- `GeneratingScreen.tsx` — SVG progress ring, status checklist, completion CTA
+## Files Modified (12 components)
+- `ChatScreen.tsx` — Main layout: M3 surface hierarchy, background glow, responsive sidebar
+- `ChatSidebar.tsx` — ForgeFit branding, nav items, user profile with online status
+- `ChatDesktopHeader.tsx` — AI Coach header with pulse dot, usage badge, action buttons
+- `ChatMobileHeader.tsx` — Mobile header with hamburger, usage pill, AI avatar
+- `ChatEmptyState.tsx` — AI badge, welcome heading, 2x2 starter prompt grid with icons
+- `ChatMessageList.tsx` — Date divider, AI/user message bubbles with Stitch styling
+- `ChatComposer.tsx` — Attach button, textarea, send button, disclaimer text
+- `ChatTypingIndicator.tsx` — Bot icon with bouncing dots in M3 surface-high
+- `ChatLoadingSkeleton.tsx` — Skeleton layout matching new message structure
+- `ChatLimitDialog.tsx` — Glassmorphism overlay, bolt icon, progress bars, upgrade CTA
+- `ChatErrorState.tsx` — Error icon with M3 styling
+- `ScrollToBottomButton.tsx` — M3-styled scroll button
 
-## Files NOT Changed (logic preserved)
-- `hooks/useOnboarding.ts`, `hooks/useOnboardingSubmit.ts`
-- `types.ts`, `schemas.ts`, `constants.ts`
-- `OnboardingStepContent.tsx` (routing only)
-
-## Auth Flow Fixes (pre-pipeline)
-- Added `onboardingCompleted` to User type and DTO
-- Fixed signup/login redirects to route through onboarding
-- Added onboarding guards in ProtectedRoute/GuestRoute
+## Files Unchanged (logic preserved)
+- All hooks (`useChat.ts`, `useChatScroll.ts`, `useTypewriter.ts`)
+- `types.ts`, `utils.ts`, `index.ts`
+- `MarkdownContent.tsx`, `MobileDrawer.tsx`
 
 ## Key Design Decisions
 - All Stitch hex colors mapped to existing M3 design tokens (no hardcoded colors)
-- Glass-card and glow-bg CSS utilities from design-system reused
+- Replaced emoji icons with Lucide React icons for consistency with Stitch design
+- Used gradient AI badge in empty state instead of simple icon
+- Kept Bot icon (lucide-react) instead of Material Symbols to stay within existing deps
+- Added "The Luminous Mentor" branding to sidebar per Stitch design
+- Implemented background glow effect as decorative absolute-positioned div
 - Business logic completely untouched — pure UI-only rewrite

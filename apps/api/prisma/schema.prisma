@@ -37,6 +37,7 @@ model User {
 
   // Relations
   profile        UserProfile?
+  conversations  Conversation[]
   chatMessages   ChatMessage[]
   workoutPlans   WorkoutPlan[]
   workoutLogs    WorkoutLog[]
@@ -123,10 +124,29 @@ model UserProfile {
 // CHAT
 // ============================================
 
+model Conversation {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title String? // Auto-generated from first user message
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  messages ChatMessage[]
+
+  @@index([userId, updatedAt])
+  @@index([userId])
+}
+
 model ChatMessage {
   id     String @id @default(cuid())
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  conversationId String?
+  conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 
   role    String // 'user' or 'assistant'
   content String @db.Text
@@ -141,6 +161,7 @@ model ChatMessage {
 
   createdAt DateTime @default(now())
 
+  @@index([conversationId, createdAt])
   @@index([userId, createdAt])
   @@index([userId])
 }

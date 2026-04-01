@@ -1,115 +1,148 @@
 "use client";
 
-import { BrandLogo } from "@/components/common/BrandLogo";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Dumbbell, LayoutDashboard, Plus } from "lucide-react";
+import {
+  Dumbbell,
+  LayoutDashboard,
+  MessageSquare,
+  Plus,
+  Settings,
+  Trash2,
+} from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import type { Conversation } from "../types";
 
 interface ChatSidebarProps {
-  conversationTitle: string;
-  hasMessages: boolean;
+  conversations: Conversation[];
+  activeConversationId: string | null;
+  onSelectConversation: (id: string) => void;
+  onNewChat: () => void;
+  onDeleteConversation: (id: string) => void;
   userInitials: string;
   displayName: string;
   planLabel: string;
-  onNewChat: () => void;
   className?: string;
 }
 
+const NAV_ITEMS = [
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/chat", label: "AI Coach", icon: MessageSquare, active: true },
+  { href: "/dashboard/workouts", label: "Training Plan", icon: Dumbbell },
+  { href: "/dashboard/settings", label: "Settings", icon: Settings },
+] as const;
+
 export function ChatSidebar({
-  conversationTitle,
-  hasMessages,
+  conversations,
+  activeConversationId,
+  onSelectConversation,
+  onNewChat,
+  onDeleteConversation,
   userInitials,
   displayName,
   planLabel,
-  onNewChat,
   className,
 }: ChatSidebarProps) {
-  const pathname = usePathname();
-
-  const appNav = [
-    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/dashboard/workouts", label: "Workouts", icon: Dumbbell },
-  ] as const;
-
   return (
     <aside
       className={cn(
-        "flex h-full w-[280px] shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground",
+        "flex h-full w-64 shrink-0 flex-col border-r border-white/5 bg-m3-surface p-6 shadow-[20px_0_40px_rgba(0,0,0,0.3)]",
         className,
       )}
     >
-      <div className="flex h-[72px] items-center gap-3 px-5">
-        <BrandLogo size={32} />
-        <span className="font-heading text-[15px] font-semibold tracking-tight">
+      <div className="mb-6">
+        <h1 className="font-heading text-2xl font-black tracking-tighter text-white">
           ForgeFit
-        </span>
-        <Button
-          type="button"
-          variant="secondary"
-          size="icon-sm"
-          className="ml-auto rounded-lg border-0 bg-sidebar-accent text-sidebar-foreground hover:bg-sidebar-accent/80"
-          aria-label="New chat"
-          onClick={onNewChat}
-          disabled={!hasMessages}
-        >
-          <Plus className="size-4" />
-        </Button>
+        </h1>
+        <p className="mt-1 text-xs font-medium uppercase tracking-widest text-m3-outline">
+          The Luminous Mentor
+        </p>
       </div>
-      <div className="h-px w-full bg-sidebar-border" />
-      <nav
-        className="flex flex-col gap-1 px-2 py-2"
-        aria-label="App navigation"
+
+      <Button
+        type="button"
+        className="mb-4 w-full gap-2 rounded-xl bg-m3-primary-container py-3 font-bold text-m3-on-primary-container shadow-lg shadow-m3-primary-container/20 transition-transform hover:bg-m3-primary-container/90 active:scale-[0.98]"
+        onClick={onNewChat}
       >
-        {appNav.map(({ href, label, icon: Icon }) => {
-          const active =
-            href === "/dashboard/workouts"
-              ? pathname?.startsWith("/dashboard/workouts")
-              : pathname === "/dashboard" || pathname === "/dashboard/";
+        <Plus className="size-4" />
+        New Chat
+      </Button>
+
+      <div className="mb-6 min-h-0 flex-1 overflow-y-auto">
+        <p className="mb-2 px-2 text-[10px] font-bold uppercase tracking-widest text-m3-outline">
+          Conversations
+        </p>
+        <div className="flex flex-col gap-0.5">
+          {conversations.map((c) => (
+            <button
+              key={c.id}
+              type="button"
+              onClick={() => onSelectConversation(c.id)}
+              className={cn(
+                "group flex items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm transition-all",
+                c.id === activeConversationId
+                  ? "bg-m3-surface-low text-white"
+                  : "text-m3-outline hover:bg-m3-surface-low/50 hover:text-white",
+              )}
+            >
+              <MessageSquare className="size-3.5 shrink-0" aria-hidden />
+              <span className="flex-1 truncate">
+                {c.title || "New chat"}
+              </span>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDeleteConversation(c.id);
+                }}
+                className="shrink-0 rounded p-0.5 opacity-0 transition-opacity hover:text-m3-error group-hover:opacity-100"
+                aria-label="Delete conversation"
+              >
+                <Trash2 className="size-3.5" />
+              </button>
+            </button>
+          ))}
+          {conversations.length === 0 && (
+            <p className="px-3 py-4 text-center text-xs text-m3-outline">
+              No conversations yet
+            </p>
+          )}
+        </div>
+      </div>
+
+      <nav className="mb-4 flex flex-col gap-1" aria-label="Main navigation">
+        {NAV_ITEMS.map(({ href, label, icon: Icon, ...rest }) => {
+          const isActive = "active" in rest;
           return (
             <Link
               key={href}
               href={href}
               className={cn(
-                "flex h-11 items-center gap-2 rounded-lg px-3 text-[13px] transition-colors",
-                active
-                  ? "bg-sidebar-accent text-sidebar-foreground"
-                  : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-foreground",
+                "flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium tracking-tight transition-all duration-300",
+                isActive
+                  ? "bg-m3-surface-low text-m3-primary-container shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]"
+                  : "text-m3-outline hover:bg-m3-surface-low hover:text-white",
               )}
             >
-              <Icon className="size-4 shrink-0 opacity-90" aria-hidden />
+              <Icon className="size-5" aria-hidden />
               {label}
             </Link>
           );
         })}
       </nav>
-      <div className="h-px w-full bg-sidebar-border" />
-      <div className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto px-2 py-3">
-        {hasMessages ? (
-          <div
-            className={cn(
-              "flex h-11 items-center rounded-lg bg-sidebar-accent px-3 text-[13px] text-sidebar-foreground",
-            )}
-          >
-            <span className="truncate">{conversationTitle}</span>
+
+      <div className="mt-auto flex items-center gap-3 border-t border-white/5 pt-4">
+        <div className="relative">
+          <div className="flex size-10 items-center justify-center rounded-full border border-white/10 bg-m3-primary-container text-xs font-bold text-m3-on-primary-container">
+            {userInitials}
           </div>
-        ) : (
-          <div className="flex flex-1 flex-col items-center justify-center px-4 py-6 text-center text-[13px] text-muted-foreground">
-            No conversations yet
-          </div>
-        )}
-      </div>
-      <div className="h-px w-full bg-sidebar-border" />
-      <div className="flex h-16 items-center gap-3 px-4">
-        <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
-          {userInitials}
+          <div className="absolute bottom-0 right-0 size-3 rounded-full border-2 border-m3-surface bg-m3-secondary" />
         </div>
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-[13px] font-medium">{displayName}</p>
-          <p className="truncate text-[11px] text-muted-foreground">
+        <div className="flex flex-col">
+          <span className="text-sm font-bold text-white">{displayName}</span>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-m3-outline">
             {planLabel}
-          </p>
+          </span>
         </div>
       </div>
     </aside>

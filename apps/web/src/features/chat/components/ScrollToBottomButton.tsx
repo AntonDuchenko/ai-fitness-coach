@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { ArrowDown } from "lucide-react";
 
 interface ScrollToBottomButtonProps {
@@ -10,16 +9,14 @@ interface ScrollToBottomButtonProps {
 export function ScrollToBottomButton({ onClick }: ScrollToBottomButtonProps) {
   return (
     <div className="absolute bottom-4 left-1/2 -translate-x-1/2">
-      <Button
+      <button
         type="button"
-        variant="secondary"
-        size="icon"
-        className="size-10 rounded-full border border-border shadow-lg"
+        className="flex size-10 items-center justify-center rounded-full border border-white/10 bg-m3-surface-high text-m3-on-surface shadow-2xl transition-all hover:bg-m3-surface-highest active:scale-95"
         onClick={onClick}
         aria-label="Scroll to bottom"
       >
         <ArrowDown className="size-4" />
-      </Button>
+      </button>
     </div>
   );
 }

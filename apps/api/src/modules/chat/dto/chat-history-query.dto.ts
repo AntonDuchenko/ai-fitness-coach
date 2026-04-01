@@ -1,8 +1,13 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsInt, IsOptional, Max, Min } from "class-validator";
+import { IsInt, IsOptional, IsString, Max, Min } from "class-validator";
 
 export class ChatHistoryQueryDto {
+  @ApiPropertyOptional({ example: "clxyz123" })
+  @IsOptional()
+  @IsString()
+  conversationId?: string;
+
   @ApiPropertyOptional({ example: 50, default: 50, minimum: 1, maximum: 100 })
   @IsOptional()
   @Type(() => Number)

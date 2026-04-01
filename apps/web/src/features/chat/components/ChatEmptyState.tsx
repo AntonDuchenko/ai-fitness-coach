@@ -1,13 +1,33 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Activity, Dumbbell, HeartPulse, Utensils } from "lucide-react";
 
 const STARTERS = [
-  { icon: "💪", label: "Create a workout plan" },
-  { icon: "🥗", label: "Plan my meals" },
-  { icon: "📊", label: "Track my progress" },
-  { icon: "🧘", label: "Recovery tips" },
+  {
+    icon: Dumbbell,
+    label: "Create a workout plan",
+    subtitle: "Personalized routines based on your goals",
+    colorClass: "bg-m3-primary/10 text-m3-primary group-hover:bg-m3-primary group-hover:text-white",
+  },
+  {
+    icon: Utensils,
+    label: "Plan my meals",
+    subtitle: "Nutrition strategies tailored to your metabolism",
+    colorClass: "bg-m3-secondary/10 text-m3-secondary group-hover:bg-m3-secondary group-hover:text-m3-surface",
+  },
+  {
+    icon: Activity,
+    label: "Track my progress",
+    subtitle: "Visualize your gains and health metrics",
+    colorClass: "bg-m3-tertiary/10 text-m3-tertiary group-hover:bg-m3-tertiary group-hover:text-m3-surface",
+  },
+  {
+    icon: HeartPulse,
+    label: "Recovery tips",
+    subtitle: "Optimize rest and injury prevention",
+    colorClass: "bg-m3-error/10 text-m3-error group-hover:bg-m3-error group-hover:text-white",
+  },
 ] as const;
 
 interface ChatEmptyStateProps {
@@ -16,73 +36,56 @@ interface ChatEmptyStateProps {
 }
 
 export function ChatEmptyState({ onPick, disabled }: ChatEmptyStateProps) {
-  const row1 = STARTERS.slice(0, 2);
-  const row2 = STARTERS.slice(2, 4);
-
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-8 px-6 py-10 sm:px-20">
-      <div className="flex size-[72px] items-center justify-center rounded-full bg-card">
-        <span className="font-heading text-2xl font-bold text-primary">AI</span>
+    <div className="flex flex-1 flex-col items-center justify-center px-4 py-10">
+      {/* AI Badge */}
+      <div className="mb-8 flex size-24 items-center justify-center rounded-full bg-gradient-to-br from-m3-primary-container to-m3-primary shadow-[0_0_50px_rgba(77,142,255,0.3)]">
+        <span className="text-4xl font-black tracking-tighter text-white">
+          AI
+        </span>
       </div>
-      <div className="max-w-lg space-y-3 text-center">
-        <h2 className="font-heading text-2xl font-bold tracking-tight sm:text-[28px]">
-          Welcome to ForgeFit
-        </h2>
-        <p className="text-[15px] leading-relaxed text-muted-foreground">
-          Your personal AI fitness coach is ready to help.
-          <br className="hidden sm:block" /> Ask me about workouts, nutrition,
-          or recovery.
-        </p>
-      </div>
-      <div className="flex w-full max-w-2xl flex-col gap-3">
-        <div className="flex flex-wrap justify-center gap-3">
-          {row1.map((s) => (
-            <StarterChip
-              key={s.label}
-              {...s}
-              disabled={disabled}
-              onPick={onPick}
-            />
-          ))}
-        </div>
-        <div className="flex flex-wrap justify-center gap-3">
-          {row2.map((s) => (
-            <StarterChip
-              key={s.label}
-              {...s}
-              disabled={disabled}
-              onPick={onPick}
-            />
-          ))}
-        </div>
+
+      {/* Heading */}
+      <h3 className="mb-4 text-center font-heading text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+        Welcome to ForgeFit
+      </h3>
+      <p className="mb-10 max-w-md text-center text-m3-on-surface leading-relaxed sm:text-lg">
+        Your personal AI fitness coach is ready to help you push boundaries
+        and achieve your peak performance.
+      </p>
+
+      {/* Starter Prompt Grid */}
+      <div className="grid w-full max-w-2xl grid-cols-2 gap-4">
+        {STARTERS.map(({ icon: Icon, label, subtitle, colorClass }) => (
+          <button
+            key={label}
+            type="button"
+            disabled={disabled}
+            className={cn(
+              "group flex items-start gap-4 rounded-2xl border border-white/5 bg-m3-surface-high p-5 text-left transition-all duration-300 hover:bg-m3-surface-highest disabled:opacity-50",
+              "max-sm:flex-col max-sm:gap-3",
+            )}
+            onClick={() => onPick(label)}
+          >
+            <div
+              className={cn(
+                "flex size-10 shrink-0 items-center justify-center rounded-xl transition-colors sm:size-12",
+                colorClass,
+              )}
+            >
+              <Icon className="size-5 sm:size-6" aria-hidden />
+            </div>
+            <div className="min-w-0">
+              <p className="font-heading text-sm font-bold text-white">
+                {label}
+              </p>
+              <p className="mt-1 text-xs leading-snug text-m3-outline sm:text-sm">
+                {subtitle}
+              </p>
+            </div>
+          </button>
+        ))}
       </div>
     </div>
-  );
-}
-
-function StarterChip({
-  icon,
-  label,
-  onPick,
-  disabled,
-}: {
-  icon: string;
-  label: string;
-  onPick: (text: string) => void;
-  disabled?: boolean;
-}) {
-  return (
-    <Button
-      type="button"
-      variant="outline"
-      disabled={disabled}
-      className={cn(
-        "h-auto gap-2 rounded-[10px] border-border bg-card px-4 py-2.5 text-[13px] font-medium text-foreground hover:bg-accent",
-      )}
-      onClick={() => onPick(label)}
-    >
-      <span aria-hidden>{icon}</span>
-      {label}
-    </Button>
   );
 }

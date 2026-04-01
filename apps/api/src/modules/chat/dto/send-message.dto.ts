@@ -1,5 +1,11 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import {
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+} from "class-validator";
 
 export class SendMessageDto {
   @ApiProperty({
@@ -12,4 +18,9 @@ export class SendMessageDto {
   @MinLength(1)
   @MaxLength(5000)
   message!: string;
+
+  @ApiPropertyOptional({ example: "clxyz123" })
+  @IsOptional()
+  @IsString()
+  conversationId?: string;
 }

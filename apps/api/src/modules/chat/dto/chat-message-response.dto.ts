@@ -10,6 +10,9 @@ export class ChatMessageResponseDto {
   @ApiProperty({ example: "Based on your goals, I recommend..." })
   content!: string;
 
+  @ApiPropertyOptional({ example: "clconv123" })
+  conversationId?: string | null;
+
   @ApiPropertyOptional({ example: "gpt-4o" })
   model?: string | null;
 

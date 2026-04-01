@@ -1,4 +1,4 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { TIER_LIMITS } from "../../common/constants/tier-limits";
 import { ForbiddenPremiumException } from "../../common/exceptions/forbidden-premium.exception";
 import { PrismaService } from "../../prisma/prisma.service";
@@ -7,6 +7,7 @@ import { ContextService } from "../ai/context.service";
 import { UsersService } from "../users/users.service";
 import { ChatMessageResponseDto } from "./dto/chat-message-response.dto";
 import { ChatUsageResponseDto } from "./dto/chat-usage-response.dto";
+import { ConversationResponseDto } from "./dto/conversation-response.dto";
 import { SendMessageResponseDto } from "./dto/send-message-response.dto";
 
 const FREE_TIER_DAILY_LIMIT = TIER_LIMITS.FREE.CHAT_MESSAGES_PER_DAY;
@@ -25,6 +26,7 @@ export class ChatService {
   async sendMessage(
     userId: string,
     message: string,
+    conversationId?: string,
   ): Promise<SendMessageResponseDto> {
     const user = await this.usersService.findById(userId);
 
@@ -37,9 +39,23 @@ export class ChatService {
       }
     }
 
-    const userMsg = await this.saveMessage(userId, "user", message);
+    const conversation = await this.resolveConversation(
+      userId,
+      message,
+      conversationId,
+    );
 
-    const context = await this.contextService.buildContext(userId);
+    const userMsg = await this.saveMessage(
+      userId,
+      "user",
+      message,
+      conversation.id,
+    );
+
+    const context = await this.contextService.buildContext(
+      userId,
+      conversation.id,
+    );
     const systemPrompt = this.contextService.buildSystemPrompt(context);
     const model = this.selectModel(message);
 
@@ -61,6 +77,7 @@ export class ChatService {
       userId,
       "assistant",
       aiResponseContent,
+      conversation.id,
       { model },
     );
 
@@ -68,18 +85,56 @@ export class ChatService {
     this.contextService.invalidateCache(userId);
 
     return new SendMessageResponseDto(
+      conversation.id,
       new ChatMessageResponseDto(userMsg),
       new ChatMessageResponseDto(aiMsg),
     );
+  }
+
+  async getConversations(userId: string): Promise<ConversationResponseDto[]> {
+    const conversations = await this.prisma.conversation.findMany({
+      where: { userId },
+      orderBy: { updatedAt: "desc" },
+    });
+    return conversations.map((c) => new ConversationResponseDto(c));
+  }
+
+  async createConversation(userId: string): Promise<ConversationResponseDto> {
+    const conversation = await this.prisma.conversation.create({
+      data: { userId },
+    });
+    return new ConversationResponseDto(conversation);
+  }
+
+  async deleteConversation(
+    userId: string,
+    conversationId: string,
+  ): Promise<void> {
+    const conversation = await this.prisma.conversation.findFirst({
+      where: { id: conversationId, userId },
+    });
+    if (!conversation) {
+      throw new NotFoundException("Conversation not found");
+    }
+    await this.prisma.conversation.delete({
+      where: { id: conversationId },
+    });
+    this.contextService.invalidateCache(userId);
   }
 
   async getHistory(
     userId: string,
     limit: number,
     offset: number,
+    conversationId?: string,
   ): Promise<ChatMessageResponseDto[]> {
+    const where: { userId: string; conversationId?: string } = { userId };
+    if (conversationId) {
+      where.conversationId = conversationId;
+    }
+
     const messages = await this.prisma.chatMessage.findMany({
-      where: { userId },
+      where,
       orderBy: { createdAt: "desc" },
       take: limit,
       skip: offset,
@@ -92,9 +147,7 @@ export class ChatService {
     await this.prisma.chatMessage.deleteMany({
       where: { userId },
     });
-
     this.contextService.invalidateCache(userId);
-
     this.logger.log(`Conversation cleared for user ${userId}`);
   }
 
@@ -148,7 +201,10 @@ Here's what I've prepared:
 
 Ready to start? Check out your plans in the dashboard, or ask me any questions you have!`;
 
-    await this.saveMessage(userId, "assistant", message);
+    const conversation = await this.prisma.conversation.create({
+      data: { userId, title: "Welcome" },
+    });
+    await this.saveMessage(userId, "assistant", message, conversation.id);
     this.logger.log(`Welcome message sent for user ${userId}`);
   }
 
@@ -157,8 +213,32 @@ Ready to start? Check out your plans in the dashboard, or ask me any questions y
 
 I ran into an issue generating your personalized plans. Don't worry — you can try again from your dashboard, or just ask me in the chat and I'll help you get set up!`;
 
-    await this.saveMessage(userId, "assistant", message);
+    const conversation = await this.prisma.conversation.create({
+      data: { userId, title: "Setup Issue" },
+    });
+    await this.saveMessage(userId, "assistant", message, conversation.id);
     this.logger.log(`Error notification message sent for user ${userId}`);
+  }
+
+  private async resolveConversation(
+    userId: string,
+    message: string,
+    conversationId?: string,
+  ) {
+    if (conversationId) {
+      const existing = await this.prisma.conversation.findFirst({
+        where: { id: conversationId, userId },
+      });
+      if (!existing) {
+        throw new NotFoundException("Conversation not found");
+      }
+      return existing;
+    }
+
+    const title = message.length > 50 ? `${message.slice(0, 47)}...` : message;
+    return this.prisma.conversation.create({
+      data: { userId, title },
+    });
   }
 
   private async checkAndResetDailyLimit(userId: string): Promise<number> {
@@ -192,6 +272,7 @@ I ran into an issue generating your personalized plans. Don't worry — you can 
     userId: string,
     role: string,
     content: string,
+    conversationId: string,
     metadata?: { model?: string; tokens?: number; cost?: number },
   ) {
     return this.prisma.chatMessage.create({
@@ -199,6 +280,7 @@ I ran into an issue generating your personalized plans. Don't worry — you can 
         userId,
         role,
         content,
+        conversationId,
         model: metadata?.model,
         tokens: metadata?.tokens,
         cost: metadata?.cost,

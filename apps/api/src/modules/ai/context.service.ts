@@ -20,11 +20,22 @@ export class ContextService {
     private readonly nutritionService: NutritionService,
   ) {}
 
-  async buildContext(userId: string): Promise<AiContext> {
-    const cached = this.cache.get(userId);
+  async buildContext(
+    userId: string,
+    conversationId?: string,
+  ): Promise<AiContext> {
+    const cacheKey = conversationId ? `${userId}:${conversationId}` : userId;
+    const cached = this.cache.get(cacheKey);
     if (cached && cached.expiresAt > Date.now()) {
       this.logger.debug(`Cache hit for user ${userId}`);
       return cached.data;
+    }
+
+    const messageWhere: { userId: string; conversationId?: string } = {
+      userId,
+    };
+    if (conversationId) {
+      messageWhere.conversationId = conversationId;
     }
 
     const [
@@ -36,7 +47,7 @@ export class ContextService {
     ] = await Promise.all([
       this.prisma.userProfile.findUnique({ where: { userId } }),
       this.prisma.chatMessage.findMany({
-        where: { userId },
+        where: messageWhere,
         orderBy: { createdAt: "desc" },
         take: 20,
       }),
@@ -69,7 +80,7 @@ export class ContextService {
       language: "auto",
     };
 
-    this.cache.set(userId, {
+    this.cache.set(cacheKey, {
       data: context,
       expiresAt: Date.now() + CACHE_TTL_MS,
     });

@@ -1,8 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard } from "lucide-react";
+import { Bot, LayoutDashboard, Zap } from "lucide-react";
 import Link from "next/link";
 
 interface ChatDesktopHeaderProps {
@@ -17,40 +16,53 @@ export function ChatDesktopHeader({
   isLimitReached,
 }: ChatDesktopHeaderProps) {
   return (
-    <header className="flex h-[72px] shrink-0 items-center gap-3 border-b border-border px-6">
-      <div className="min-w-0 flex-1">
-        <h1 className="font-heading text-base font-semibold tracking-tight">
-          {title}
-        </h1>
-        <div className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
-          <span className="size-2 rounded-full bg-success" aria-hidden />
-          <span>AI Online</span>
+    <header className="relative flex items-center justify-between bg-m3-surface/80 px-8 py-4 backdrop-blur-xl">
+      <div className="flex items-center gap-4">
+        <div className="flex size-10 items-center justify-center rounded-xl bg-m3-surface-high">
+          <Bot className="size-5 text-m3-primary" aria-hidden />
+        </div>
+        <div>
+          <div className="flex items-center gap-2">
+            <h2 className="font-heading text-lg font-bold text-white">
+              {title}
+            </h2>
+            <span
+              className="size-2 animate-pulse rounded-full bg-m3-secondary"
+              aria-hidden
+            />
+          </div>
+          <p className="text-[11px] font-medium uppercase tracking-wide text-m3-outline">
+            Always Active &bull; Ready to Evolve
+          </p>
         </div>
       </div>
-      <Button
-        type="button"
-        variant="outline"
-        size="sm"
-        className="shrink-0 gap-2"
-        asChild
-      >
-        <Link href="/dashboard">
-          <LayoutDashboard className="size-4" aria-hidden />
-          Dashboard
-        </Link>
-      </Button>
-      {usageLabel ? (
-        <div
-          className={cn(
-            "shrink-0 rounded-2xl px-3 py-1.5 text-xs font-medium",
-            isLimitReached
-              ? "bg-secondary text-destructive"
-              : "bg-secondary text-muted-foreground",
-          )}
+
+      <div className="flex items-center gap-4">
+        {usageLabel ? (
+          <div
+            className={cn(
+              "flex items-center gap-2 rounded-full px-3 py-1.5",
+              isLimitReached
+                ? "bg-m3-error-container/20 text-m3-error"
+                : "bg-m3-surface-high text-m3-on-surface",
+            )}
+          >
+            <Zap className="size-3.5" aria-hidden />
+            <span className="text-xs font-bold tracking-tight">
+              {usageLabel}
+            </span>
+          </div>
+        ) : null}
+        <Link
+          href="/dashboard"
+          className="rounded-full p-2 text-m3-outline transition-all hover:bg-white/5 active:opacity-70"
+          aria-label="Dashboard"
         >
-          {usageLabel}
-        </div>
-      ) : null}
+          <LayoutDashboard className="size-5" />
+        </Link>
+      </div>
+
+      <div className="absolute bottom-0 left-0 h-px w-full bg-m3-surface-low" />
     </header>
   );
 }

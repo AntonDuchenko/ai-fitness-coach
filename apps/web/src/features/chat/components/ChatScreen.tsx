@@ -1,9 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useRef, useState } from "react";
+import { useActiveConversation } from "../hooks/useActiveConversation";
 import { useChat } from "../hooks/useChat";
 import { useChatScrollBottom } from "../hooks/useChatScroll";
-import { chatUsageLabels, conversationTitle, userInitials } from "../utils";
+import { useConversations } from "../hooks/useConversations";
+import { chatUsageLabels, userInitials } from "../utils";
 import { ChatComposer } from "./ChatComposer";
 import { ChatDesktopHeader } from "./ChatDesktopHeader";
 import { ChatEmptyState } from "./ChatEmptyState";
@@ -18,133 +20,121 @@ import { MobileDrawer } from "./MobileDrawer";
 import { ScrollToBottomButton } from "./ScrollToBottomButton";
 
 export function ChatScreen() {
-  const {
-    user,
-    messages,
-    isHistoryLoading,
-    isHistoryError,
-    refetchHistory,
-    usage,
-    sendMessage,
-    isSending,
-    limitModalOpen,
-    setLimitModalOpen,
-    animatingMessageId,
-    onAnimationDone,
-  } = useChat();
-
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { conversations, isLoading: isConvLoading, deleteConversation, addConversationToCache } =
+    useConversations();
 
-  const title = useMemo(() => conversationTitle(messages), [messages]);
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const isNewChatMode = useRef(false);
+
+  const wrappedSetActiveId = useCallback((id: string | null) => {
+    isNewChatMode.current = id === null;
+    setActiveId(id);
+  }, []);
+
+  const {
+    user, messages, isHistoryLoading, isHistoryError, refetchHistory,
+    usage, sendMessage, sendMutationData, isSending,
+    limitModalOpen, setLimitModalOpen, animatingMessageId, onAnimationDone,
+  } = useChat(activeId);
+
+  useActiveConversation(
+    conversations, activeId, wrappedSetActiveId,
+    sendMutationData, addConversationToCache, isNewChatMode,
+  );
+
   const initials = userInitials(user?.name);
   const displayName = user?.name?.trim() || "Member";
   const planLabel = user?.isPremium ? "Pro Plan" : "Free Plan";
-  const {
-    full: usageFull,
-    compact: usageCompact,
-    isLimit: usageLimit,
-  } = chatUsageLabels(usage);
-
+  const { full: usageFull, compact: usageCompact, isLimit: usageLimit } =
+    chatUsageLabels(usage);
   const isAtLimit = Boolean(
     usage && !usage.isPremium && usage.dailyLimit > 0 && usage.remaining === 0,
   );
+  const { ref: scrollRef, showScrollButton, scrollToBottom } =
+    useChatScrollBottom(messages.length, isSending);
 
-  const {
-    ref: scrollRef,
-    showScrollButton,
-    scrollToBottom,
-  } = useChatScrollBottom(messages.length, isSending);
+  const activeConv = conversations.find((c) => c.id === activeId);
+  const headerTitle = activeConv?.title || "AI Coach";
+  const isNewChat = !activeId && isNewChatMode.current;
+  const showEmpty = isNewChat || messages.length === 0;
+  const loading = !isNewChat && ((activeId && isHistoryLoading) || isConvLoading);
 
-  const headerTitle = messages.length === 0 ? "New Chat" : title;
+  const handleNewChat = () => wrappedSetActiveId(null);
+  const handleDeleteConv = (id: string) => {
+    deleteConversation(id);
+    if (activeId === id) {
+      const rest = conversations.filter((c) => c.id !== id);
+      wrappedSetActiveId(rest.length > 0 ? rest[0].id : null);
+    }
+  };
+
+  const sidebarProps = {
+    conversations,
+    activeConversationId: activeId,
+    onDeleteConversation: handleDeleteConv,
+    userInitials: initials,
+    displayName,
+    planLabel,
+  };
 
   return (
-    <div className="flex h-[100dvh] flex-col bg-background text-foreground lg:flex-row">
+    <div className="flex h-[100dvh] overflow-hidden bg-m3-surface text-m3-on-surface">
       <ChatSidebar
-        className="hidden lg:flex"
-        conversationTitle={title}
-        hasMessages={messages.length > 0}
-        userInitials={initials}
-        displayName={displayName}
-        planLabel={planLabel}
-        onNewChat={scrollToBottom}
+        className="fixed left-0 top-0 z-40 hidden lg:flex"
+        onSelectConversation={setActiveId}
+        onNewChat={handleNewChat}
+        {...sidebarProps}
       />
-
-      <MobileDrawer
-        open={mobileMenuOpen}
-        onClose={() => setMobileMenuOpen(false)}
-      >
+      <MobileDrawer open={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)}>
         <ChatSidebar
-          conversationTitle={title}
-          hasMessages={messages.length > 0}
-          userInitials={initials}
-          displayName={displayName}
-          planLabel={planLabel}
-          onNewChat={() => {
-            scrollToBottom();
-            setMobileMenuOpen(false);
-          }}
+          onSelectConversation={(id) => { setActiveId(id); setMobileMenuOpen(false); }}
+          onNewChat={() => { handleNewChat(); setMobileMenuOpen(false); }}
+          {...sidebarProps}
         />
       </MobileDrawer>
 
-      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+      <main className="relative flex min-h-0 flex-1 flex-col bg-m3-surface-lowest lg:ml-64">
+        <div className="pointer-events-none absolute right-[-5%] top-[-10%] size-[500px] rounded-full bg-m3-primary-container/10 blur-[120px]" />
         <ChatMobileHeader
           title={headerTitle}
           usageCompact={usageCompact}
           isLimitReached={usageLimit}
           onOpenMenu={() => setMobileMenuOpen(true)}
         />
-
         <div className="hidden lg:block">
-          <ChatDesktopHeader
-            title={headerTitle}
-            usageLabel={usageFull}
-            isLimitReached={usageLimit}
-          />
+          <ChatDesktopHeader title={headerTitle} usageLabel={usageFull} isLimitReached={usageLimit} />
         </div>
 
         <div className="relative min-h-0 flex-1">
-          <div
-            ref={scrollRef}
-            className="h-full overflow-y-auto px-3 py-4 sm:px-8 sm:py-6"
-          >
-            {isHistoryLoading ? (
-              <ChatLoadingSkeleton />
-            ) : isHistoryError ? (
-              <ChatErrorState onRetry={() => refetchHistory()} />
-            ) : messages.length === 0 ? (
-              <ChatEmptyState
-                onPick={sendMessage}
-                disabled={isAtLimit || isSending}
-              />
-            ) : (
-              <>
-                <ChatMessageList
-                  messages={messages}
-                  userInitials={initials}
-                  animatingMessageId={animatingMessageId}
-                  onAnimationDone={onAnimationDone}
-                />
-                {isSending ? (
-                  <div className="mt-4 sm:mt-6">
-                    <ChatTypingIndicator />
-                  </div>
-                ) : null}
-              </>
-            )}
+          <div ref={scrollRef} className="h-full overflow-y-auto scroll-smooth p-4 sm:p-8">
+            <div className="mx-auto max-w-3xl space-y-8">
+              {loading ? (
+                <ChatLoadingSkeleton />
+              ) : isHistoryError ? (
+                <ChatErrorState onRetry={() => refetchHistory()} />
+              ) : showEmpty && !isSending ? (
+                <ChatEmptyState onPick={sendMessage} disabled={isAtLimit || isSending} />
+              ) : (
+                <>
+                  <ChatMessageList
+                    messages={messages}
+                    userInitials={initials}
+                    animatingMessageId={animatingMessageId}
+                    onAnimationDone={onAnimationDone}
+                  />
+                  {isSending && (
+                    <div className="mt-4 sm:mt-6"><ChatTypingIndicator /></div>
+                  )}
+                </>
+              )}
+            </div>
           </div>
-          {showScrollButton ? (
-            <ScrollToBottomButton onClick={scrollToBottom} />
-          ) : null}
+          {showScrollButton && <ScrollToBottomButton onClick={scrollToBottom} />}
         </div>
 
-        <div className="shrink-0 border-t border-border">
-          <ChatComposer
-            onSend={sendMessage}
-            disabled={isAtLimit}
-            isSending={isSending}
-          />
-        </div>
-      </div>
+        <ChatComposer onSend={sendMessage} disabled={isAtLimit} isSending={isSending} />
+      </main>
 
       <ChatLimitDialog open={limitModalOpen} onOpenChange={setLimitModalOpen} />
     </div>
