@@ -1,15 +1,15 @@
 "use client";
 
-import type { OnboardingData } from "../types";
 import type { StepErrors } from "../schemas";
+import type { OnboardingData } from "../types";
 import { StepBasicInfo } from "./StepBasicInfo";
-import { StepGoals } from "./StepGoals";
-import { StepExperience } from "./StepExperience";
-import { StepSchedule } from "./StepSchedule";
 import { StepEquipment } from "./StepEquipment";
+import { StepExperience } from "./StepExperience";
+import { StepGoals } from "./StepGoals";
 import { StepLimitations } from "./StepLimitations";
-import { StepNutrition } from "./StepNutrition";
 import { StepMotivation } from "./StepMotivation";
+import { StepNutrition } from "./StepNutrition";
+import { StepSchedule } from "./StepSchedule";
 
 type ToggleKey =
   | "secondaryGoals"
@@ -49,9 +49,7 @@ export function OnboardingStepContent({
         />
       );
     case 3:
-      return (
-        <StepExperience data={data} errors={errors} onUpdate={onUpdate} />
-      );
+      return <StepExperience data={data} errors={errors} onUpdate={onUpdate} />;
     case 4:
       return <StepSchedule data={data} errors={errors} onUpdate={onUpdate} />;
     case 5:

@@ -108,7 +108,7 @@ export function useOnboarding() {
   };
 
   const isGenerating = isSubmitting || isSubmitted;
-  const generationProgress = isSubmitting ? 0 : apiProgress;
+  const generationProgress = apiProgress;
   const error = submitError || statusError;
 
   return {

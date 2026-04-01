@@ -231,6 +231,17 @@
   --m3-error-container: #93000A;
 }
 
+button,
+[role="button"],
+a,
+select,
+[type="checkbox"],
+[type="radio"],
+label[for],
+summary {
+  cursor: pointer;
+}
+
 html,
 body {
   height: 100dvh;

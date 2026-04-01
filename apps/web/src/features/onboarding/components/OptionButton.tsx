@@ -21,8 +21,7 @@ export function OptionButton({
       type="button"
       variant={active ? "default" : "outline"}
       size="sm"
-      role="radio"
-      aria-checked={active}
+      aria-pressed={active}
       onClick={onClick}
       className={cn(
         "min-h-9 text-[11px] leading-tight capitalize sm:text-xs",

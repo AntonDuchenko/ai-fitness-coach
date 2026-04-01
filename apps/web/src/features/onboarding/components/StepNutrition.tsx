@@ -1,7 +1,5 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -9,10 +7,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { OnboardingData } from "../types";
+import { cn } from "@/lib/utils";
 import type { StepErrors } from "../schemas";
-import { OptionButton } from "./OptionButton";
-import { CheckRow } from "./CheckRow";
+import type { OnboardingData } from "../types";
 
 interface StepNutritionProps {
   data: OnboardingData;
@@ -24,7 +21,7 @@ interface StepNutritionProps {
   onToggle: (key: "cuisinePreferences", value: string) => void;
 }
 
-const COOKING_LEVELS = ["Beginner", "Intermediate", "Advanced", "Chef"];
+const COOKING_LEVELS = ["beginner", "intermediate", "advanced", "chef"];
 const CUISINES = [
   { value: "mediterranean", label: "Mediterranean" },
   { value: "asian", label: "Asian" },
@@ -39,101 +36,128 @@ export function StepNutrition({
   onToggle,
 }: StepNutritionProps) {
   return (
-    <div className="space-y-3">
-      <div>
-        <p className="mb-1.5 text-[11px] text-muted-foreground">
-          Meals per day
-        </p>
+    <div className="space-y-6">
+      {/* Meals Per Day */}
+      <div className="glass-card space-y-4 rounded-xl p-6">
+        <span className="block font-heading font-bold text-m3-on-surface">
+          Meals Per Day
+        </span>
         <div
-          className="grid grid-cols-5 gap-2"
+          className="flex items-center justify-between rounded-full bg-m3-surface-lowest p-2"
           role="radiogroup"
           aria-label="Meals per day"
         >
           {[2, 3, 4, 5, 6].map((n) => (
-            <OptionButton
+            <button
               key={n}
-              active={data.mealsPerDay === n}
-              label={`${n}`}
+              type="button"
+              aria-checked={data.mealsPerDay === n}
               onClick={() => onUpdate("mealsPerDay", n)}
-            />
+              className={cn(
+                "flex size-12 items-center justify-center rounded-full font-bold transition-all active:scale-90",
+                data.mealsPerDay === n
+                  ? "bg-m3-primary-container text-m3-on-primary-container shadow-lg shadow-m3-primary-container/20"
+                  : "text-zinc-500 hover:bg-white/5",
+              )}
+            >
+              {n}
+            </button>
           ))}
         </div>
       </div>
-      <div>
-        <p className="mb-1.5 text-[11px] text-muted-foreground">
-          Cooking Level
-        </p>
-        <Select
-          value={data.cookingLevel}
-          onValueChange={(v) => onUpdate("cookingLevel", v)}
-        >
-          <SelectTrigger
-            className="h-9 w-full text-xs"
-            aria-label="Cooking level"
+
+      {/* Cooking Level & Budget */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="glass-card space-y-3 rounded-xl p-6">
+          <span className="block font-heading font-bold text-m3-on-surface">
+            Cooking Level
+          </span>
+          <Select
+            value={data.cookingLevel}
+            onValueChange={(v) => onUpdate("cookingLevel", v)}
           >
-            <SelectValue placeholder="Select cooking level" />
-          </SelectTrigger>
-          <SelectContent>
-            {COOKING_LEVELS.map((level) => (
-              <SelectItem key={level} value={level.toLowerCase()}>
-                {level}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        {errors.cookingLevel && (
-          <p className="mt-1 text-[10px] text-destructive">
-            {errors.cookingLevel}
-          </p>
-        )}
+            <SelectTrigger className="w-full rounded-lg border-none bg-m3-surface-lowest py-3 pl-4 pr-10 text-m3-on-surface focus:ring-2 focus:ring-m3-primary/20">
+              <SelectValue placeholder="Select level" />
+            </SelectTrigger>
+            <SelectContent className="border-m3-outline-variant/20 bg-m3-surface-high text-m3-on-surface">
+              {COOKING_LEVELS.map((l) => (
+                <SelectItem key={l} value={l} className="capitalize">
+                  {l}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {errors.cookingLevel && (
+            <p className="text-xs text-destructive">{errors.cookingLevel}</p>
+          )}
+        </div>
+        <div className="glass-card space-y-3 rounded-xl p-6">
+          <span className="block font-heading font-bold text-m3-on-surface">
+            Food Budget
+          </span>
+          <div className="relative flex items-center">
+            <span className="absolute left-4 text-m3-outline">$</span>
+            <input
+              type="number"
+              value={data.foodBudget}
+              onChange={(e) => onUpdate("foodBudget", e.target.value)}
+              placeholder="400"
+              aria-label="Monthly food budget"
+              aria-invalid={!!errors.foodBudget}
+              className="w-full rounded-lg border-none bg-m3-surface-lowest py-3 pl-8 pr-16 text-m3-on-surface focus:outline-none focus:ring-2 focus:ring-m3-primary/20"
+            />
+            <span className="absolute right-4 text-xs font-medium text-m3-outline">
+              /MONTH
+            </span>
+          </div>
+          {errors.foodBudget && (
+            <p className="text-xs text-destructive">{errors.foodBudget}</p>
+          )}
+        </div>
       </div>
-      <p className="text-[11px] text-muted-foreground">Cuisine Preferences</p>
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-        {CUISINES.map((item) => (
-          <CheckRow
-            key={item.value}
-            id={`cuisine-${item.value}`}
-            active={data.cuisinePreferences.includes(item.value)}
-            label={item.label}
-            onClick={() => onToggle("cuisinePreferences", item.value)}
-          />
-        ))}
+
+      {/* Cuisine Preferences */}
+      <div className="glass-card space-y-4 rounded-xl p-6">
+        <span className="block font-heading font-bold text-m3-on-surface">
+          Cuisine Preferences
+        </span>
+        <div className="flex flex-wrap gap-2">
+          {CUISINES.map((c) => {
+            const active = data.cuisinePreferences.includes(c.value);
+            return (
+              <button
+                key={c.value}
+                type="button"
+                onClick={() => onToggle("cuisinePreferences", c.value)}
+                className={cn(
+                  "rounded-full px-4 py-2 text-sm font-semibold transition-all",
+                  active
+                    ? "bg-m3-primary-container text-m3-on-primary-container"
+                    : "bg-m3-surface-high text-m3-outline hover:bg-white/10",
+                )}
+              >
+                {c.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
-      <div>
-        <Label
-          htmlFor="dislikedFoods"
-          className="text-[11px] text-muted-foreground"
-        >
+
+      {/* Disliked Foods */}
+      <div className="glass-card space-y-3 rounded-xl p-6">
+        <span className="block font-heading font-bold text-m3-on-surface">
           Disliked Foods
-        </Label>
-        <Input
-          id="dislikedFoods"
+        </span>
+        <input
+          type="text"
           value={data.dislikedFoods}
           onChange={(e) => onUpdate("dislikedFoods", e.target.value)}
-          placeholder="e.g. broccoli, fish..."
-          className="mt-1.5 h-9 text-xs"
+          placeholder="e.g. Cilantro, Peanuts, Shellfish..."
+          className="w-full rounded-lg border-none bg-m3-surface-lowest px-4 py-3 text-m3-on-surface focus:outline-none focus:ring-2 focus:ring-m3-primary/20"
         />
-      </div>
-      <div>
-        <Label
-          htmlFor="foodBudget"
-          className="text-[11px] text-muted-foreground"
-        >
-          Monthly food budget ($)
-        </Label>
-        <Input
-          id="foodBudget"
-          value={data.foodBudget}
-          onChange={(e) => onUpdate("foodBudget", e.target.value)}
-          placeholder="Monthly food budget ($)"
-          aria-invalid={!!errors.foodBudget}
-          className="mt-1.5 h-9 text-xs"
-        />
-        {errors.foodBudget && (
-          <p className="mt-1 text-[10px] text-destructive">
-            {errors.foodBudget}
-          </p>
-        )}
+        <p className="text-xs italic text-m3-outline">
+          Separate multiple items with commas.
+        </p>
       </div>
     </div>
   );

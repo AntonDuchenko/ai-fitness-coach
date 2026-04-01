@@ -1,9 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { BrandLogo } from "@/components/common/BrandLogo";
-import { AlertCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { AlertCircle, ArrowRight, Check } from "lucide-react";
 
 interface GeneratingScreenProps {
   progress: number;
@@ -15,12 +14,15 @@ interface GeneratingScreenProps {
 }
 
 const STATUSES = [
-  "Analyzing your profile",
-  "Calculating optimal macros",
-  "Designing workout program",
+  "Analyzing profile",
+  "Calculating macros",
+  "Designing workout",
   "Creating meal plans",
-  "Finalizing your plan",
+  "Finalizing",
 ];
+
+const RING_RADIUS = 88;
+const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
 
 export function GeneratingScreen({
   progress,
@@ -31,71 +33,132 @@ export function GeneratingScreen({
   onRetry,
 }: GeneratingScreenProps) {
   const hasError = isFailed || error !== null;
+  const offset = RING_CIRCUMFERENCE - (progress / 100) * RING_CIRCUMFERENCE;
 
   return (
-    <div className="mx-auto max-h-[calc(100dvh-2rem)] w-full max-w-[430px] overflow-y-auto rounded-xl border border-border bg-card p-4 text-card-foreground shadow-2xl sm:p-6">
-      <div className="mb-6 flex items-center justify-center gap-2 text-xs text-muted-foreground sm:mb-8">
-        <BrandLogo size={16} /> ForgeFit
-      </div>
+    <div className="relative flex min-h-screen w-full flex-col items-center justify-center bg-m3-surface px-6 text-m3-on-surface">
+      <div className="glow-bg pointer-events-none fixed inset-0" />
 
-      {hasError ? (
-        <>
-          <div className="flex flex-col items-center gap-3">
-            <AlertCircle
-              className="size-10 text-destructive"
-              aria-hidden="true"
-            />
-            <h2 className="text-center font-heading text-xl font-bold sm:text-2xl">
-              Something went wrong
-            </h2>
-            <p className="text-center text-sm text-muted-foreground">
-              {error?.message || "Plan generation failed. Please try again."}
-            </p>
-          </div>
-          <Button className="mt-6 h-10 w-full" onClick={onRetry}>
-            Try Again
-          </Button>
-        </>
-      ) : (
-        <>
-          <h2 className="text-center font-heading text-xl font-bold sm:text-2xl">
-            Generating your plan...
-          </h2>
-          <p className="mt-2 text-center text-xs text-muted-foreground">
-            Our AI is creating a personalized fitness and nutrition plan just
-            for you.
+      {/* Branding */}
+      <nav className="absolute left-0 top-0 flex w-full items-center px-6 py-4">
+        <span className="font-heading text-xl font-black tracking-widest text-m3-primary">
+          FORGEFIT
+        </span>
+      </nav>
+
+      <section className="relative z-10 w-full max-w-xl">
+        {/* Header */}
+        <div className="mb-10 text-center">
+          <h1 className="mb-4 font-heading text-4xl font-extrabold tracking-tighter">
+            {hasError ? "Something went wrong" : "Generating your plan"}
+          </h1>
+          <p className="mx-auto max-w-md text-lg font-medium leading-relaxed text-m3-outline">
+            {hasError
+              ? error?.message || "Plan generation failed. Please try again."
+              : "Our AI is synchronizing your biometric data with our coaching protocols."}
           </p>
-          <p
-            className="mt-6 text-center font-heading text-3xl font-bold text-primary sm:text-4xl"
-            aria-live="polite"
-          >
-            {Math.round(progress)}%
-          </p>
-          <Progress
-            value={progress}
-            className="mt-4"
-            aria-label="Plan generation progress"
-          />
-          <div className="mt-6 space-y-2 text-sm" aria-live="polite">
-            {STATUSES.map((item, idx) => {
-              const done = idx < Math.floor(progress / 20);
-              return (
-                <p
-                  key={item}
-                  className={done ? "text-success" : "text-muted-foreground"}
-                >
-                  {done ? "\u25CF" : "\u25CB"} {item}
-                </p>
-              );
-            })}
-          </div>
-          {isComplete && (
-            <Button className="mt-6 h-10 w-full" onClick={onComplete}>
-              Go to Dashboard
+        </div>
+
+        {hasError ? (
+          <div className="flex flex-col items-center gap-6">
+            <AlertCircle className="size-16 text-m3-error" />
+            <Button
+              onClick={onRetry}
+              className="w-full rounded-xl bg-m3-primary-container py-5 text-lg font-bold text-m3-on-primary-container"
+            >
+              Try Again
             </Button>
-          )}
-        </>
-      )}
+          </div>
+        ) : (
+          <>
+            {/* Progress Card */}
+            <div className="glass-card mb-8 rounded-2xl border border-m3-outline-variant/15 p-8 shadow-2xl sm:p-12">
+              <div className="flex flex-col items-center gap-10 sm:flex-row">
+                {/* Circular Progress */}
+                <div className="relative flex size-48 shrink-0 items-center justify-center">
+                  <svg className="size-full -rotate-90" aria-hidden="true">
+                    <title>Generation progress</title>
+                    <circle
+                      cx="96"
+                      cy="96"
+                      r={RING_RADIUS}
+                      fill="transparent"
+                      stroke="currentColor"
+                      strokeWidth="8"
+                      className="text-m3-surface-high"
+                    />
+                    <circle
+                      cx="96"
+                      cy="96"
+                      r={RING_RADIUS}
+                      fill="transparent"
+                      stroke="currentColor"
+                      strokeWidth="8"
+                      strokeDasharray={RING_CIRCUMFERENCE}
+                      strokeDashoffset={offset}
+                      strokeLinecap="round"
+                      className="text-m3-secondary drop-shadow-[0_0_8px_rgba(74,225,118,0.4)] transition-all duration-700"
+                    />
+                  </svg>
+                  <div className="absolute flex flex-col items-center">
+                    <span className="font-heading text-4xl font-black text-m3-secondary">
+                      {Math.round(progress)}%
+                    </span>
+                    <span className="mt-1 text-xs font-bold uppercase tracking-widest text-m3-outline">
+                      {isComplete ? "Ready" : "Processing"}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Checklist */}
+                <div className="w-full flex-grow space-y-5" aria-live="polite">
+                  {STATUSES.map((item, idx) => {
+                    const done = idx < Math.floor(progress / 20);
+                    return (
+                      <div key={item} className="flex items-center gap-4">
+                        <div
+                          className={cn(
+                            "flex size-6 items-center justify-center rounded-full",
+                            done
+                              ? "bg-m3-secondary/20 text-m3-secondary"
+                              : "bg-m3-surface-high text-m3-outline",
+                          )}
+                        >
+                          {done && <Check className="size-3.5" />}
+                        </div>
+                        <span
+                          className={cn(
+                            "text-base font-medium tracking-tight",
+                            done ? "text-m3-on-surface" : "text-m3-outline",
+                          )}
+                        >
+                          {item}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* CTA */}
+            {isComplete && (
+              <div className="flex flex-col items-center gap-6">
+                <Button
+                  onClick={onComplete}
+                  className="flex w-full items-center justify-center gap-3 rounded-xl bg-m3-secondary-container py-5 text-lg font-bold text-white shadow-lg"
+                >
+                  Go to Dashboard
+                  <ArrowRight className="size-5" />
+                </Button>
+                <p className="text-sm font-medium text-m3-outline">
+                  Your transformation journey starts now.
+                </p>
+              </div>
+            )}
+          </>
+        )}
+      </section>
     </div>
   );
 }

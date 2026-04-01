@@ -1,8 +1,8 @@
 "use client";
 
 import { apiClient } from "@/lib/api-client";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { ONBOARDING_STORAGE_KEY } from "../constants";
 import type { OnboardingData } from "../types";
 
@@ -97,6 +97,7 @@ function mapOnboardingToProfile(data: OnboardingData) {
 }
 
 export function useOnboardingSubmit() {
+  const queryClient = useQueryClient();
   const [jobId, setJobId] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -126,10 +127,39 @@ export function useOnboardingSubmit() {
 
   const isComplete = statusQuery.data?.status === "complete";
   const isFailed = statusQuery.data?.status === "failed";
-  const progress = statusQuery.data?.progress ?? 0;
+  const apiProgress = statusQuery.data?.progress ?? 0;
+
+  // Simulate smooth progress: tick every 150ms, cap at 90% until backend says complete
+  const [displayProgress, setDisplayProgress] = useState(0);
+  const isGenerating = submitMutation.isPending || isSubmitted;
+
+  useEffect(() => {
+    if (!isGenerating) {
+      setDisplayProgress(0);
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setDisplayProgress((prev) => {
+        if (isComplete) return Math.min(prev + 4, 100);
+        if (isFailed) return prev;
+        // Slow down as we approach 90%
+        if (prev < 30) return prev + 3;
+        if (prev < 60) return prev + 2;
+        if (prev < 85) return prev + 1;
+        if (prev < 90) return prev + 0.5;
+        return prev;
+      });
+    }, 150);
+
+    return () => clearInterval(interval);
+  }, [isGenerating, isComplete, isFailed]);
 
   const handleComplete = () => {
     localStorage.removeItem(ONBOARDING_STORAGE_KEY);
+    queryClient.setQueryData(["auth", "me"], (prev: Record<string, unknown> | null) =>
+      prev ? { ...prev, onboardingCompleted: true } : prev,
+    );
   };
 
   return {
@@ -137,7 +167,7 @@ export function useOnboardingSubmit() {
     isSubmitting: submitMutation.isPending,
     submitError: submitMutation.error,
     isSubmitted,
-    progress,
+    progress: displayProgress,
     isComplete,
     isFailed,
     statusError: statusQuery.error,

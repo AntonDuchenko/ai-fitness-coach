@@ -41,10 +41,7 @@ export const stepSchemas = [
 
 export type StepErrors = Record<string, string>;
 
-export function validateStep(
-  step: number,
-  data: OnboardingData,
-): StepErrors {
+export function validateStep(step: number, data: OnboardingData): StepErrors {
   const schema = stepSchemas[step - 1];
   if (!schema) return {};
 
