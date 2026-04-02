@@ -1,6 +1,6 @@
 # Pipeline Summary
 
-## Task: AI Coach Chat Page Redesign (Stitch)
+## Task: Profile & Settings Page (from Stitch design)
 ## Final Status: SUCCESS
 
 ## Timeline
@@ -8,14 +8,14 @@
 |-------|--------|------------|
 | Init | Completed | — |
 | Architect | Completed | — |
-| Developer | Completed | 1 pass |
-| Reviewer | APPROVED | 1/3 iterations (fixed 2 minor issues) |
+| Developer | Completed | 2 passes |
+| Reviewer | APPROVED | 1/3 iterations |
 | Tester | PASSED | 1/3 iterations |
 
 ## Convention Compliance
 | Rule | Status |
 |------|--------|
-| Component size (<150 lines) | PASS (1 file at 154, justified) |
+| Component size (<150 lines) | PASS |
 | Business logic separated (hooks/services) | PASS |
 | shadcn/ui used (no raw HTML) | PASS |
 | Semantic design tokens (no hardcoded hex) | PASS |
@@ -23,30 +23,25 @@
 | Accessibility | PASS |
 | TypeScript strict (no `any`) | PASS |
 
-## Files Modified (12 components)
-- `ChatScreen.tsx` — Main layout: M3 surface hierarchy, background glow, responsive sidebar
-- `ChatSidebar.tsx` — ForgeFit branding, nav items, user profile with online status
-- `ChatDesktopHeader.tsx` — AI Coach header with pulse dot, usage badge, action buttons
-- `ChatMobileHeader.tsx` — Mobile header with hamburger, usage pill, AI avatar
-- `ChatEmptyState.tsx` — AI badge, welcome heading, 2x2 starter prompt grid with icons
-- `ChatMessageList.tsx` — Date divider, AI/user message bubbles with Stitch styling
-- `ChatComposer.tsx` — Attach button, textarea, send button, disclaimer text
-- `ChatTypingIndicator.tsx` — Bot icon with bouncing dots in M3 surface-high
-- `ChatLoadingSkeleton.tsx` — Skeleton layout matching new message structure
-- `ChatLimitDialog.tsx` — Glassmorphism overlay, bolt icon, progress bars, upgrade CTA
-- `ChatErrorState.tsx` — Error icon with M3 styling
-- `ScrollToBottomButton.tsx` — M3-styled scroll button
+## Files Created/Modified
+- `apps/web/src/features/profile/types.ts` — ProfileData interface matching API response
+- `apps/web/src/features/profile/hooks/useProfileQuery.ts` — TanStack Query hook for GET /users/profile
+- `apps/web/src/features/profile/hooks/useProfilePage.ts` — Orchestrator hook combining profile + auth + subscription
+- `apps/web/src/features/profile/components/ProfileHeader.tsx` — Avatar, name, email, premium badge
+- `apps/web/src/features/profile/components/PersonalInfoCard.tsx` — Age, gender, height, weight, target progress
+- `apps/web/src/features/profile/components/WeightProgressRing.tsx` — SVG circular progress indicator
+- `apps/web/src/features/profile/components/FitnessProfileCard.tsx` — Goal, level, frequency, equipment
+- `apps/web/src/features/profile/components/NutritionCard.tsx` — Meals, budget, cuisines, restrictions
+- `apps/web/src/features/profile/components/DailyTargetsCard.tsx` — Calories, macros, BMR/TDEE
+- `apps/web/src/features/profile/components/SubscriptionCard.tsx` — Billing info + manage button
+- `apps/web/src/features/profile/components/ProfileContent.tsx` — Layout shell with sidebar + all sections
+- `apps/web/src/features/profile/components/ProfileSkeleton.tsx` — Loading skeleton
+- `apps/web/src/features/profile/index.ts` — Public exports
+- `apps/web/src/app/dashboard/settings/page.tsx` — Updated to use ProfileContent
 
-## Files Unchanged (logic preserved)
-- All hooks (`useChat.ts`, `useChatScroll.ts`, `useTypewriter.ts`)
-- `types.ts`, `utils.ts`, `index.ts`
-- `MarkdownContent.tsx`, `MobileDrawer.tsx`
-
-## Key Design Decisions
-- All Stitch hex colors mapped to existing M3 design tokens (no hardcoded colors)
-- Replaced emoji icons with Lucide React icons for consistency with Stitch design
-- Used gradient AI badge in empty state instead of simple icon
-- Kept Bot icon (lucide-react) instead of Material Symbols to stay within existing deps
-- Added "The Luminous Mentor" branding to sidebar per Stitch design
-- Implemented background glow effect as decorative absolute-positioned div
-- Business logic completely untouched — pure UI-only rewrite
+## Key Decisions
+- Reused `/dashboard/settings` route instead of creating new `/dashboard/profile` to keep nav consistent
+- Used M3 design tokens (m3-surface-*, m3-primary-container) matching Stitch design system
+- Separate mobile/desktop layouts in each card (lg:hidden / hidden lg:block) matching design
+- Glass-card effect on mobile, solid bg-m3-surface-high on desktop per Stitch design
+- Extracted WeightProgressRing into separate component to keep PersonalInfoCard under 150 lines

@@ -8,7 +8,6 @@ import {
   Dumbbell,
   LayoutDashboard,
   LineChart,
-  Settings,
   Utensils,
 } from "lucide-react";
 import Link from "next/link";
@@ -20,7 +19,6 @@ const nav = [
   { href: "/dashboard/nutrition", label: "Nutrition", icon: Utensils },
   { href: "/dashboard/progress", label: "Progress", icon: LineChart },
   { href: "/chat", label: "AI Coach", icon: Bot },
-  { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ] as const;
 
 interface DashboardSidebarProps {
@@ -65,11 +63,9 @@ export function DashboardSidebar({ className }: DashboardSidebarProps) {
               ? pathname?.startsWith("/dashboard/workouts")
               : href === "/dashboard/progress"
                 ? pathname?.startsWith("/dashboard/progress")
-                : href === "/dashboard/settings"
-                  ? pathname?.startsWith("/dashboard/settings")
-                  : href === "/dashboard"
-                    ? pathname === "/dashboard" || pathname === "/dashboard/"
-                    : pathname === href;
+                : href === "/dashboard"
+                  ? pathname === "/dashboard" || pathname === "/dashboard/"
+                  : pathname === href;
           return (
             <Link
               key={href}
@@ -88,20 +84,30 @@ export function DashboardSidebar({ className }: DashboardSidebarProps) {
         })}
       </nav>
       <div className="mt-auto border-t border-sidebar-border/50 pt-6">
-      <div className="flex items-center gap-3 px-4 pb-6">
-        <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
-          {initials}
-        </div>
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-[13px] font-medium">{displayName}</p>
-          <p className={cn(
-            "truncate text-[9px] font-bold uppercase tracking-widest",
-            user?.isPremium ? "text-success" : "text-muted-foreground",
-          )}>
-            {planLabel}
-          </p>
-        </div>
-      </div>
+        <Link
+          href="/dashboard/settings"
+          className={cn(
+            "mx-2 flex items-center gap-3 rounded-lg px-3 py-3 transition-all duration-200",
+            pathname?.startsWith("/dashboard/settings")
+              ? "bg-primary/10"
+              : "hover:bg-secondary",
+          )}
+        >
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
+            {initials}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-[13px] font-medium">{displayName}</p>
+            <p
+              className={cn(
+                "truncate text-[9px] font-bold uppercase tracking-widest",
+                user?.isPremium ? "text-success" : "text-muted-foreground",
+              )}
+            >
+              {planLabel}
+            </p>
+          </div>
+        </Link>
       </div>
     </aside>
   );
