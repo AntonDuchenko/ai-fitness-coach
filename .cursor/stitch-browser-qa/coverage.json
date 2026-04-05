@@ -1,0 +1,985 @@
+{
+  "schema_version": 2,
+  "coverage_kind": "stitch_screens",
+  "description": "Один экран Stitch = одна строка. Сброс 2026-04-05: все status=pending, app_mapping очищен. Прогон: pnpm stitch:download-reference для референса; browser_resize числами + wait + reload для мобилки (см. stitch-browser-qa skill).",
+  "base_url": "http://localhost:3000",
+  "stitch_project_id": "7923897073544346409",
+  "last_sync_from_stitch_at": "2026-04-05T06:24:00.140Z",
+  "items": [
+    {
+      "order": 0,
+      "stitch_screen_id": "b62f1e67edd74697acb14bca09169ae8",
+      "stitch_title": "AI Coach Chat",
+      "status": "done",
+      "app_mapping": {
+        "ui_kind": "full_page",
+        "primary_url": "http://localhost:3000/chat",
+        "open_steps": [
+          "Sign in if redirected to /login (QA account)",
+          "Open /chat; desktop viewport ≥1024px for sidebar layout"
+        ],
+        "codebase_hits": [
+          "apps/web/src/app/chat/page.tsx",
+          "apps/web/src/features/chat/components/ChatScreen.tsx",
+          "apps/web/src/features/chat/components/ChatSidebar.tsx"
+        ]
+      },
+      "last_run_at": "2026-04-05T12:00:00.000Z",
+      "last_verdict": "PARTIAL",
+      "notes": "Strict pixelmatch ~35% diff: dynamic messages vs Stitch mock; layout/IA broadly aligned."
+    },
+    {
+      "order": 1,
+      "stitch_screen_id": "c0b7613b33014cefb2a61ca54d3e33f5",
+      "stitch_title": "AI Coach Chat Mobile",
+      "status": "done",
+      "app_mapping": {
+        "ui_kind": "full_page",
+        "primary_url": "http://localhost:3000/chat",
+        "open_steps": [
+          "Sign in if redirected to /login (QA account)",
+          "browser_resize ~390×844 (below lg); reload /chat for mobile header + drawer pattern"
+        ],
+        "codebase_hits": [
+          "apps/web/src/app/chat/page.tsx",
+          "apps/web/src/features/chat/components/ChatScreen.tsx",
+          "apps/web/src/features/chat/components/ChatMobileHeader.tsx",
+          "apps/web/src/features/chat/components/MobileDrawer.tsx"
+        ]
+      },
+      "last_run_at": "2026-04-05T10:05:00.000Z",
+      "last_verdict": "PARTIAL",
+      "notes": "Pixelmatch ~36.3% @0.1 vs Stitch ref (375×642 PNGs); IA matches mobile chat; content/state differs from static Stitch mock."
+    },
+    {
+      "order": 2,
+      "stitch_screen_id": "4654aa4bc95f4591952d1659642730e6",
+      "stitch_title": "AI Coach Empty State",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 3,
+      "stitch_screen_id": "6373f333037a440b8c3fe80deed4c17c",
+      "stitch_title": "AI Coach Empty State Mobile",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 4,
+      "stitch_screen_id": "93bdd1dbee6c4316a6e9b920a5f80e0a",
+      "stitch_title": "AI Coach Widget",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 5,
+      "stitch_screen_id": "808189c557d0495499de8dc474db3ad3",
+      "stitch_title": "AI Coach Widget Mobile",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 6,
+      "stitch_screen_id": "b03134ef6dac4851b9310fcd595535c2",
+      "stitch_title": "AI Pocket Trainer Dashboard V3",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 7,
+      "stitch_screen_id": "269656ea87a8403c8eb46d339aaf6d92",
+      "stitch_title": "AI Pocket Trainer Mobile Dashboard",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 8,
+      "stitch_screen_id": "7807d258fe784fdf930cf78e8d620bb1",
+      "stitch_title": "Daily Limit Reached",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 9,
+      "stitch_screen_id": "4612d1d8726844ccaf27f27dc97b89ee",
+      "stitch_title": "Daily Limit Reached Mobile",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 10,
+      "stitch_screen_id": "6d62253cd5404359a030ad2bd3364628",
+      "stitch_title": "Daily Macros Widget",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 11,
+      "stitch_screen_id": "bb72eae2e0c34cb2ac1b60cde3b2c09b",
+      "stitch_title": "Daily Macros Widget Mobile",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 12,
+      "stitch_screen_id": "08c7a415cbd940faad299a5af9acd62b",
+      "stitch_title": "ForgeFit Landing Page (Human-Centered)",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 13,
+      "stitch_screen_id": "e5d77f1e78fd49998291e97552151134",
+      "stitch_title": "ForgeFit Landing Page (Human-Centered)",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 14,
+      "stitch_screen_id": "cf45fef057ac490dafd93e0fb10cadd0",
+      "stitch_title": "ForgeFit Login Screen",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 15,
+      "stitch_screen_id": "cbb12ec0557e4e7892a6647819d7267a",
+      "stitch_title": "ForgeFit Mobile (Synced Backgrounds)",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 16,
+      "stitch_screen_id": "d845cb7ba6294b6dae0ec2fdc20c5aeb",
+      "stitch_title": "ForgeFit Mobile Login",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 17,
+      "stitch_screen_id": "79e04b9bfb1248e7b692914502030025",
+      "stitch_title": "ForgeFit Mobile Navigation Menu",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 18,
+      "stitch_screen_id": "d86f206282dd4e37b9c991b01e5c7b29",
+      "stitch_title": "ForgeFit Mobile Sign Up",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 19,
+      "stitch_screen_id": "cba5e3c38c114f5aabcf321d4446040a",
+      "stitch_title": "ForgeFit Sign Up Screen",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 20,
+      "stitch_screen_id": "03879779e3f2471e8d1db25a1a89e7ba",
+      "stitch_title": "Grocery List Mobile",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 21,
+      "stitch_screen_id": "aa41fc4552124204abab283736d00d33",
+      "stitch_title": "Grocery List View",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 22,
+      "stitch_screen_id": "f38f653d62a14692973b15ff71eebeeb",
+      "stitch_title": "Heatmap of ForgeFit Landing Page (Human-Centered)",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 23,
+      "stitch_screen_id": "31b6c38cb441473c877ab61c812304c2",
+      "stitch_title": "Log Weight Dialog",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 24,
+      "stitch_screen_id": "6eb04edf7e3e4f0d8f290acdaf5524e2",
+      "stitch_title": "Log Weight Mobile",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 25,
+      "stitch_screen_id": "3b41b7a380694d63aacffe65070aa2a5",
+      "stitch_title": "Nutrition Plan Mobile",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 26,
+      "stitch_screen_id": "e7429b998f0149f3bbac7961a76d36b8",
+      "stitch_title": "Nutrition Plan View",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 27,
+      "stitch_screen_id": "533243872e2944fbafb2676ee3b19d97",
+      "stitch_title": "Onboarding - Basic Info",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 28,
+      "stitch_screen_id": "52e99a7e3cc645f0a316b97045dd9697",
+      "stitch_title": "Onboarding - Basic Info Desktop",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 29,
+      "stitch_screen_id": "5ede21b36b634c14997cb8c8d0c29220",
+      "stitch_title": "Onboarding - Equipment",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 30,
+      "stitch_screen_id": "218bf813acd34a279cdc2da93302b240",
+      "stitch_title": "Onboarding - Equipment Desktop",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 31,
+      "stitch_screen_id": "27c4ddbf0e6c4d069278b61657b63995",
+      "stitch_title": "Onboarding - Experience",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 32,
+      "stitch_screen_id": "ec01c880667b46e7bf07aead55bfc0bf",
+      "stitch_title": "Onboarding - Experience Desktop",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 33,
+      "stitch_screen_id": "4ead4bbf543549f7979081e801ed38a5",
+      "stitch_title": "Onboarding - Goals",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 34,
+      "stitch_screen_id": "9a2024423b3446469bcd7d3f6cffeb04",
+      "stitch_title": "Onboarding - Goals Desktop",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 35,
+      "stitch_screen_id": "11de897695194daf877fe4e4d3fc1951",
+      "stitch_title": "Onboarding - Health",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 36,
+      "stitch_screen_id": "c7e375dd24f841f882399dc557a2c560",
+      "stitch_title": "Onboarding - Health Desktop",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 37,
+      "stitch_screen_id": "2c60892010cc4bee836ae9deaea441bb",
+      "stitch_title": "Onboarding - Loading",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 38,
+      "stitch_screen_id": "728e2f4f2a804783b9279c9539fa8062",
+      "stitch_title": "Onboarding - Loading Desktop",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 39,
+      "stitch_screen_id": "ebbe248b3a7541dc87ca8888634f859c",
+      "stitch_title": "Onboarding - Motivation",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 40,
+      "stitch_screen_id": "bc8a26401bcc46b0ab3938e56a304757",
+      "stitch_title": "Onboarding - Motivation Desktop",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 41,
+      "stitch_screen_id": "c880b8a9c11f48dfb4caa1e396c6dcb0",
+      "stitch_title": "Onboarding - Nutrition",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 42,
+      "stitch_screen_id": "c1bcecee586e4be2bf56abb87daf0e1c",
+      "stitch_title": "Onboarding - Nutrition Desktop",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 43,
+      "stitch_screen_id": "c700e198ab864f059bb0904c8a4aeb27",
+      "stitch_title": "Onboarding - Schedule",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 44,
+      "stitch_screen_id": "6f8f424f180b41c29689429b484ef00c",
+      "stitch_title": "Onboarding - Schedule Desktop",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 45,
+      "stitch_screen_id": "eae9070cfff2433595935356a54d98d4",
+      "stitch_title": "Profile & Settings",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 46,
+      "stitch_screen_id": "25de3485cdc343baa7fffc44664e951e",
+      "stitch_title": "Profile & Settings Mobile",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 47,
+      "stitch_screen_id": "388db90991cf4346b6e4d0c8c5c122fe",
+      "stitch_title": "Progress Dashboard Mobile",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 48,
+      "stitch_screen_id": "8c6b54de620d49389b6b41e0798b3962",
+      "stitch_title": "Progress Dashboard Widgets",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 49,
+      "stitch_screen_id": "710e4adf9e514b7da32445c04d21cdd4",
+      "stitch_title": "Progress Overview",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 50,
+      "stitch_screen_id": "d8a320f2b73d4906a0c4f6d87793afac",
+      "stitch_title": "Progress Overview Mobile",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 51,
+      "stitch_screen_id": "29331631ec8c45a2a780ede92f324702",
+      "stitch_title": "Recipe Detail Dialog",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 52,
+      "stitch_screen_id": "d434b676228a48dcbc113d71ace3d03a",
+      "stitch_title": "Recipe Detail Mobile",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 53,
+      "stitch_screen_id": "ab73df4f8c8e4844b17e64fbecdd19d2",
+      "stitch_title": "Recipes Mobile",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 54,
+      "stitch_screen_id": "70bd26e52954458185effe13fe53e5a8",
+      "stitch_title": "Recipes View",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 55,
+      "stitch_screen_id": "2441e3e19f3e4f16bad92738c7d2cf1e",
+      "stitch_title": "Regenerate Plan Modal",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 56,
+      "stitch_screen_id": "79c99942fdc942d6a697116ebe4f65e4",
+      "stitch_title": "Swap Meal Flow",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 57,
+      "stitch_screen_id": "d80139bfe5a4445a9a3a48277b628339",
+      "stitch_title": "Swap Meal Mobile",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 58,
+      "stitch_screen_id": "7362272395974928af88de8464a3645b",
+      "stitch_title": "Today's Workout Widget",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 59,
+      "stitch_screen_id": "f29bc8d541ed4805b6744323e15138ad",
+      "stitch_title": "Today's Workout Widget Mobile",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 60,
+      "stitch_screen_id": "6d3558d24e4c4b009a1b03e7aef6c6be",
+      "stitch_title": "Workout Logging Mobile View",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 61,
+      "stitch_screen_id": "57295545689a4f8bbb79f3028c9f1cf6",
+      "stitch_title": "Workout Logging Session",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 62,
+      "stitch_screen_id": "33cc41b9b047457cb5a4f69cfbab3934",
+      "stitch_title": "Workout Plan Mobile View",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    },
+    {
+      "order": 63,
+      "stitch_screen_id": "a88f1785361c46e7b011214625e344d4",
+      "stitch_title": "Workout Plan View",
+      "status": "pending",
+      "app_mapping": {
+        "ui_kind": "unknown",
+        "primary_url": "",
+        "open_steps": [],
+        "codebase_hits": []
+      },
+      "last_run_at": null,
+      "last_verdict": null,
+      "notes": ""
+    }
+  ]
+}

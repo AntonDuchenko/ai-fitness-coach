@@ -4,18 +4,26 @@ import { Textarea } from "@/components/ui/textarea";
 import { Paperclip, Send } from "lucide-react";
 import { useCallback, useState } from "react";
 
+const SUGGESTION_CHIPS = [
+  "How much water?",
+  "Pre-workout snacks",
+  "Credits",
+] as const;
+
 interface ChatComposerProps {
   onSend: (text: string) => void;
   disabled?: boolean;
   isSending?: boolean;
   placeholder?: string;
+  showSuggestions?: boolean;
 }
 
 export function ChatComposer({
   onSend,
   disabled,
   isSending,
-  placeholder = "Message your AI Coach...",
+  placeholder = "Ask your AI trainer anything...",
+  showSuggestions,
 }: ChatComposerProps) {
   const [value, setValue] = useState("");
 
@@ -70,6 +78,22 @@ export function ChatComposer({
             </button>
           </div>
         </div>
+
+        {showSuggestions && (
+          <div className="mt-3 flex flex-wrap justify-center gap-2">
+            {SUGGESTION_CHIPS.map((chip) => (
+              <button
+                key={chip}
+                type="button"
+                disabled={disabled || isSending}
+                className="rounded-full border border-white/5 bg-m3-surface-high px-3 py-1.5 text-xs font-medium text-m3-on-surface transition-colors hover:bg-m3-surface-highest disabled:opacity-50"
+                onClick={() => onSend(chip)}
+              >
+                {chip}
+              </button>
+            ))}
+          </div>
+        )}
 
         <p className="mt-3 text-center text-[10px] font-bold uppercase tracking-widest text-m3-outline/60">
           ForgeFit AI can make mistakes. Verify critical nutrition info.

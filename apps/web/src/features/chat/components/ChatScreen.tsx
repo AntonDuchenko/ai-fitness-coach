@@ -9,6 +9,7 @@ import { chatUsageLabels, userInitials } from "../utils";
 import { ChatComposer } from "./ChatComposer";
 import { ChatDesktopHeader } from "./ChatDesktopHeader";
 import { ChatEmptyState } from "./ChatEmptyState";
+import { ChatQuickActions } from "./ChatQuickActions";
 import { ChatErrorState } from "./ChatErrorState";
 import { ChatLimitDialog } from "./ChatLimitDialog";
 import { ChatLoadingSkeleton } from "./ChatLoadingSkeleton";
@@ -54,8 +55,6 @@ export function ChatScreen() {
   const { ref: scrollRef, showScrollButton, scrollToBottom } =
     useChatScrollBottom(messages.length, isSending);
 
-  const activeConv = conversations.find((c) => c.id === activeId);
-  const headerTitle = activeConv?.title || "AI Coach";
   const isNewChat = !activeId && isNewChatMode.current;
   const showEmpty = isNewChat || messages.length === 0;
   const loading = !isNewChat && ((activeId && isHistoryLoading) || isConvLoading);
@@ -97,13 +96,14 @@ export function ChatScreen() {
       <main className="relative flex min-h-0 flex-1 flex-col bg-m3-surface-lowest lg:ml-64">
         <div className="pointer-events-none absolute right-[-5%] top-[-10%] size-[500px] rounded-full bg-m3-primary-container/10 blur-[120px]" />
         <ChatMobileHeader
-          title={headerTitle}
+          title="AI Coach"
           usageCompact={usageCompact}
           isLimitReached={usageLimit}
           onOpenMenu={() => setMobileMenuOpen(true)}
+          userInitials={initials}
         />
         <div className="hidden lg:block">
-          <ChatDesktopHeader title={headerTitle} usageLabel={usageFull} isLimitReached={usageLimit} />
+          <ChatDesktopHeader title="AI Coach" usageLabel={usageFull} isLimitReached={usageLimit} />
         </div>
 
         <div className="relative min-h-0 flex-1">
@@ -133,7 +133,10 @@ export function ChatScreen() {
           {showScrollButton && <ScrollToBottomButton onClick={scrollToBottom} />}
         </div>
 
-        <ChatComposer onSend={sendMessage} disabled={isAtLimit} isSending={isSending} />
+        {!showEmpty && messages.length > 0 && (
+          <ChatQuickActions onPick={sendMessage} disabled={isAtLimit || isSending} />
+        )}
+        <ChatComposer onSend={sendMessage} disabled={isAtLimit} isSending={isSending} showSuggestions={!showEmpty && messages.length > 0} />
       </main>
 
       <ChatLimitDialog open={limitModalOpen} onOpenChange={setLimitModalOpen} />

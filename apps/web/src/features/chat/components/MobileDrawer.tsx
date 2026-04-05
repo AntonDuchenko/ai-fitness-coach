@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect } from "react";
+
 interface MobileDrawerProps {
   open: boolean;
   onClose: () => void;
@@ -5,16 +9,25 @@ interface MobileDrawerProps {
 }
 
 export function MobileDrawer({ open, onClose, children }: MobileDrawerProps) {
+  useEffect(() => {
+    if (!open) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [open, onClose]);
+
   if (!open) return null;
   return (
-    <>
+    <div className="fixed inset-0 z-50 lg:hidden">
       <button
         type="button"
-        className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+        className="absolute inset-0 bg-black/50"
         aria-label="Close menu"
         onClick={onClose}
       />
-      <div className="fixed inset-y-0 left-0 z-50 lg:hidden">{children}</div>
-    </>
+      <div className="relative z-10 h-full w-64">{children}</div>
+    </div>
   );
 }

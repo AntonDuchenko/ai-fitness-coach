@@ -1,0 +1,36 @@
+---
+description: Default Google Stitch project ID for design QA in this monorepo
+alwaysApply: true
+---
+
+# Stitch default project
+
+For **Stitch MCP** (`user-stitch`) in this repository, use this app unless the user specifies another project:
+
+- **`projectId`:** `7923897073544346409`
+- **Resource name:** `projects/7923897073544346409`
+
+For **stitch-browser-qa** / **`/stitch-qa-one-page`**: use this `projectId` in `get_project`, `list_screens`, `get_screen`, and in `state.json`. Do not call `list_projects` only to “pick a project” when QA targets this product.
+
+If the user explicitly provides a different **`projectId`**, use theirs.
+
+## QA coverage (Stitch-first)
+
+- **`.cursor/stitch-browser-qa/coverage.json`** — **`schema_version` 2**: one row per **Stitch screen** from `list_screens` (includes modals/widgets, not only unique URLs). Each item has **`stitch_screen_id`**, **`stitch_title`**, **`app_mapping`** (how to open in the app: route + steps).
+- **`.cursor/stitch-browser-qa/coverage-status.md`** — human table; agent rewrites from JSON after each run.
+
+**`/stitch-qa-one-page`** with no explicit screen: **sync `list_screens` if `items` empty**, then process the **next `pending`** Stitch row (by `order`). Agent **searches the codebase** to map each Stitch design to page/modal/sheet before Browser MCP.
+
+## QA report files
+
+Full reports go to **`.cursor/stitch-browser-qa/reports/`** as **`QA-*.md`** with a **descriptive name**; chat gets the path + one-line verdict only — see **`.cursor/rules/stitch-qa-reports.mdc`**.
+
+## Default app base URL (web)
+
+For **stitch-browser-qa** / Browser MCP against this monorepo’s Next.js app:
+
+- **`base_url`:** `http://localhost:3000`
+
+If the user does **not** give a full `targetUrl`, assume this origin. Combine with a path from the route-hints table in the **stitch-browser-qa** skill (e.g. `http://localhost:3000/login`). For the **home/landing** page use `http://localhost:3000` or `http://localhost:3000/`.
+
+If the user gives another origin (preview, staging), use theirs instead.

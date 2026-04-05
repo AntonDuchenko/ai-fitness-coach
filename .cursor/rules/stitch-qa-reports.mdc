@@ -1,0 +1,21 @@
+---
+description: Stitch-browser-qa must write full QA reports to reports/*.md, not dump the full report in chat
+alwaysApply: true
+---
+
+# Stitch QA — куда писать отчёт
+
+Для **`/stitch-qa-one-page`** и skill **stitch-browser-qa**:
+
+1. **Полный** QA-отчёт (все секции по шаблону skill) пиши **только в файл** Markdown под репозиторий:
+   - Каталог: **`.cursor/stitch-browser-qa/reports/`**
+   - Имя файла должно **отражать, что проверяли**: например `QA-Stitch-{краткое-описание-макета}-{контекст-роута}.md` (латиница и дефисы предпочтительны для путей; кириллица допустима, если так удобнее команде).
+   - При коллизии имён добавь суффикс: `_YYYY-MM-DD` или короткий `stitch_screen_id`.
+
+2. **В чат** пользователю — **коротко**: путь к созданному файлу (кликабельный относительный путь из корня репозитория), **однострочный вердикт** (PASS/FAIL/PARTIAL), при необходимости 1–2 bullets «главное». **Не** дублировать в чат полные таблицы и весь markdown отчёта.
+
+3. Создавай каталог `reports/`, если его ещё нет.
+
+4. **Референс Stitch для pixelmatch:** сначала **cursor-ide-browser** — новая вкладка → `browser_navigate` на `get_screen.screenshot.downloadUrl` → `browser_take_screenshot` в `artifacts/` (см. skill **stitch-browser-qa**). Не начинать с `curl` / `pnpm stitch:download-reference` (403 у CDN); скрипт — только последний fallback.
+
+5. В отчёте обязательна секция **«Где именно расходится дизайн»** (таблица по зонам: шапка, контент, CTA, отступы, типографика, цвета и т.д.) — не только процент pixelmatch.

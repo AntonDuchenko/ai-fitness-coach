@@ -1,13 +1,14 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Bot, Menu, Zap } from "lucide-react";
+import { Menu, Zap } from "lucide-react";
 
 interface ChatMobileHeaderProps {
   title: string;
   usageCompact: string | null;
   isLimitReached: boolean;
   onOpenMenu: () => void;
+  userInitials: string;
 }
 
 export function ChatMobileHeader({
@@ -15,6 +16,7 @@ export function ChatMobileHeader({
   usageCompact,
   isLimitReached,
   onOpenMenu,
+  userInitials,
 }: ChatMobileHeaderProps) {
   return (
     <header className="flex items-center justify-between bg-m3-surface px-4 py-4 lg:hidden">
@@ -59,8 +61,8 @@ export function ChatMobileHeader({
             </span>
           </div>
         ) : null}
-        <div className="flex size-10 items-center justify-center overflow-hidden rounded-full border border-m3-primary/20 bg-m3-surface-container">
-          <Bot className="size-5 text-m3-primary" aria-hidden />
+        <div className="flex size-10 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-m3-primary-container text-xs font-bold text-m3-on-primary-container">
+          {userInitials}
         </div>
       </div>
     </header>

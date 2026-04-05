@@ -65,7 +65,7 @@ export function ChatSidebar({
         onClick={onNewChat}
       >
         <Plus className="size-4" />
-        New Chat
+        Start New Session
       </Button>
 
       <div className="mb-6 min-h-0 flex-1 overflow-y-auto">

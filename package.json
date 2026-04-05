@@ -9,10 +9,15 @@
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",
     "test": "turbo test",
-    "clean": "turbo clean"
+    "clean": "turbo clean",
+    "stitch:download-reference": "node scripts/download-stitch-reference.mjs",
+    "stitch:regen-coverage-status": "node scripts/regen-coverage-status.mjs",
+    "stitch:analyze-diff": "node scripts/analyze-stitch-pixel-diff.mjs"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.0",
+    "pixelmatch": "^7.1.0",
+    "pngjs": "^7.0.0",
     "turbo": "^2.4.0",
     "typescript": "^5.7.0"
   },

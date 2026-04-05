@@ -31,3 +31,8 @@ pnpm-debug.log*
 
 # test
 coverage/
+
+# Cursor Stitch QA agent (local run state; skill + command stay tracked)
+.cursor/stitch-browser-qa/state.json
+.cursor/stitch-browser-qa/run.log.md
+.cursor/stitch-browser-qa/artifacts/

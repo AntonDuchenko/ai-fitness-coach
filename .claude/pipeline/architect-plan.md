@@ -1,96 +1,43 @@
-# Architect Plan: Profile & Settings Page
+# Architect Plan — Chat UI Fixes (QA Reports)
 
-## Overview
-Implement the Profile & Settings page matching the Stitch design (desktop + mobile).
-Replaces the current `/dashboard/settings` page which only shows SubscriptionManagement.
+## Task
+Fix UI discrepancies in `/chat` page (desktop + mobile) identified by stitch-browser-qa reports.
 
-## Data Source
-- **GET `/users/profile`** → ProfileResponseDto (all onboarding fields + calculated TDEE/BMR/macros)
-- **Auth context** → user name, email, isPremium, createdAt
-- **Subscription hook** → billing info, manage subscription action
-- **Auth hook** → logout action
+## Changes
 
-## Feature Structure
-```
-features/profile/
-  types.ts
-  hooks/useProfileQuery.ts
-  hooks/useProfilePage.ts
-  components/ProfileHeader.tsx
-  components/PersonalInfoCard.tsx
-  components/FitnessProfileCard.tsx
-  components/NutritionCard.tsx
-  components/DailyTargetsCard.tsx
-  components/SubscriptionCard.tsx
-  components/ProfileContent.tsx
-  index.ts
-```
+### 1. ChatMobileHeader — Replace Bot icon with user initials avatar
+- **File:** `apps/web/src/features/chat/components/ChatMobileHeader.tsx`
+- Add `userInitials` prop
+- Replace `<Bot>` icon with initials avatar circle (same style as sidebar profile)
 
-## Route
-- **Path:** `/dashboard/settings` (replaces current page)
-- **Pattern:** ProtectedRoute → ProfileContent
+### 2. ChatScreen — Pass fixed "AI Coach" title to headers
+- **File:** `apps/web/src/features/chat/components/ChatScreen.tsx`
+- Both `ChatMobileHeader` and `ChatDesktopHeader` should receive `"AI Coach"` as the title
+- Pass `userInitials` to `ChatMobileHeader`
 
-## Component Details
+### 3. ChatSidebar — Change CTA text
+- **File:** `apps/web/src/features/chat/components/ChatSidebar.tsx`
+- Change "New Chat" → "Start New Session"
 
-### ProfileContent.tsx (~100 lines)
-- Layout shell: DashboardSidebar (desktop) + WorkoutMobileHeader (mobile) + scrollable main
-- Renders all section components in order
-- Uses useProfilePage() hook for all data
+### 4. ChatComposer — Update placeholder + add suggestion chips
+- **File:** `apps/web/src/features/chat/components/ChatComposer.tsx`
+- Update default placeholder to "Ask your AI trainer anything..."
+- Add suggestion chips section below composer (visible in active chat, not empty state)
+- Chips: context-aware suggestions like "How much water?", "Pre-workout snacks", "Credits"
 
-### ProfileHeader.tsx (~50 lines)
-- Large avatar with initials (rounded-3xl desktop, rounded-full mobile)
-- Name (font-heading text-4xl), email, Premium badge, member since date
-- Glow effect background
+### 5. ChatScreen — Add quick action cards in mobile view
+- **File:** `apps/web/src/features/chat/components/ChatQuickActions.tsx` (new component)
+- Two cards: "Meal Ideas" and "Past Trends" with icons
+- Shown in mobile view below messages, above composer
+- Only visible when there are messages (active chat, not empty state)
 
-### PersonalInfoCard.tsx (~70 lines)
-- Glass card with "Personal Information" heading
-- Grid: Age, Gender, Height, Weight
-- Target weight progress indicator (circular 45% ring)
+### 6. MobileDrawer — Fix z-index for close overlay
+- **File:** `apps/web/src/features/chat/components/MobileDrawer.tsx`
+- Ensure the backdrop overlay has correct z-index and doesn't conflict with sidebar content
+- The overlay `z-40` but sidebar content is `z-50`, need to ensure click propagation is correct
 
-### FitnessProfileCard.tsx (~70 lines)
-- Glass card with "Fitness Profile" heading
-- Primary goal, experience level badge, frequency
-- Equipment chips
-
-### NutritionCard.tsx (~60 lines)
-- Glass card with "Nutrition" heading
-- Meals/day and budget stats
-- Cuisine preferences, dietary restrictions warning
-
-### DailyTargetsCard.tsx (~60 lines)
-- Primary-container background (blue accent card)
-- Large calorie number, macros grid (protein/carbs/fats)
-- BMR + TDEE footer
-
-### SubscriptionCard.tsx (~40 lines)
-- Glass card with credit card icon
-- Billing date + price
-- Manage Subscription button
-
-### Hooks
-
-**useProfileQuery.ts**
-- `useQuery` calling `GET /users/profile`
-- Returns: `{ profile, isLoading, isError, refetch }`
-
-**useProfilePage.ts**
-- Combines: useProfileQuery + useAuth + useSubscriptionManagement
-- Returns all data needed by components
-- Handles loading/error states
-
-## Design Tokens (M3)
-- Cards: `glass-card rounded-[24px]` (mobile) / `bg-m3-surface-high rounded-[1.5rem]` (desktop)
-- Accent card: `bg-m3-primary-container text-m3-on-primary-container`
-- Labels: `text-[10px] text-m3-outline uppercase tracking-widest`
-- Headings: `font-heading font-bold text-m3-primary`
-- Chips: `bg-m3-surface-lowest border border-m3-outline-variant/20 rounded-full`
-
-## Sidebar Update
-- Add "Profile" nav item or rename "Settings" to "Profile & Settings"
-- Update active state detection for `/dashboard/settings`
-
-## States
-- **Loading:** Skeleton cards
-- **Error:** Error message with retry
-- **Success:** Full profile display
-- **Empty:** Not possible (profile always exists after onboarding)
+## Convention Compliance
+- All components use shadcn/ui + Tailwind semantic tokens
+- No hardcoded hex colors
+- Components under 150 lines
+- Business logic stays in hooks
