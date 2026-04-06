@@ -1,40 +1,39 @@
-# Architect Plan — Chat UI Fixes (QA Reports)
+# Architect Plan — Design Fixes from QA Reports
 
 ## Task
-Fix UI discrepancies in `/chat` page (desktop + mobile) identified by stitch-browser-qa reports.
+Fix design divergences identified in QA reports for:
+- AI Coach Empty State (desktop) — composer/footer & right-side spacing
+- AI Coach Empty State Mobile — header subtitle & settings icon
+- AI Coach Widget (dashboard) — FREE TIER badge, chips layout, CTA, usage counter
 
 ## Changes
 
-### 1. ChatMobileHeader — Replace Bot icon with user initials avatar
+### 1. AiCoachCard — Match Stitch widget design
+- **File:** `apps/web/src/features/dashboard/components/AiCoachCard.tsx`
+- Add green "Free Tier" pill badge for non-premium users (below title area)
+- Change quick prompt chips from horizontal `flex-wrap` to vertical `flex-col` with `rounded-lg` instead of `rounded-full`
+- Change CTA button to full-width with `ArrowRight` icon instead of `MessageSquare`
+- Move usage counter below the CTA button (centered) instead of beside it
+- Add progress bar for message usage (messagesUsed/dailyLimit)
+
+### 2. ChatMobileHeader — Fix subtitle to show credits
 - **File:** `apps/web/src/features/chat/components/ChatMobileHeader.tsx`
-- Add `userInitials` prop
-- Replace `<Bot>` icon with initials avatar circle (same style as sidebar profile)
+- Change subtitle from "Online Mentor" to dynamic credits text (e.g. "3/5 Daily Credits")
+- Add settings gear icon button in the header right section
+- Need to receive `usageCompact` already — use it for subtitle
 
-### 2. ChatScreen — Pass fixed "AI Coach" title to headers
-- **File:** `apps/web/src/features/chat/components/ChatScreen.tsx`
-- Both `ChatMobileHeader` and `ChatDesktopHeader` should receive `"AI Coach"` as the title
-- Pass `userInitials` to `ChatMobileHeader`
+### 3. ChatDesktopHeader — Add settings gear
+- **File:** `apps/web/src/features/chat/components/ChatDesktopHeader.tsx`
+- Add a Settings icon button next to the Dashboard link
 
-### 3. ChatSidebar — Change CTA text
-- **File:** `apps/web/src/features/chat/components/ChatSidebar.tsx`
-- Change "New Chat" → "Start New Session"
-
-### 4. ChatComposer — Update placeholder + add suggestion chips
+### 4. ChatComposer — Improve proportions
 - **File:** `apps/web/src/features/chat/components/ChatComposer.tsx`
-- Update default placeholder to "Ask your AI trainer anything..."
-- Add suggestion chips section below composer (visible in active chat, not empty state)
-- Chips: context-aware suggestions like "How much water?", "Pre-workout snacks", "Credits"
+- Reduce attach button visual weight (make it smaller/more subtle)
+- Ensure send button has consistent size/styling matching Stitch
 
-### 5. ChatScreen — Add quick action cards in mobile view
-- **File:** `apps/web/src/features/chat/components/ChatQuickActions.tsx` (new component)
-- Two cards: "Meal Ideas" and "Past Trends" with icons
-- Shown in mobile view below messages, above composer
-- Only visible when there are messages (active chat, not empty state)
-
-### 6. MobileDrawer — Fix z-index for close overlay
-- **File:** `apps/web/src/features/chat/components/MobileDrawer.tsx`
-- Ensure the backdrop overlay has correct z-index and doesn't conflict with sidebar content
-- The overlay `z-40` but sidebar content is `z-50`, need to ensure click propagation is correct
+### 5. ChatEmptyState — Improve content distribution
+- **File:** `apps/web/src/features/chat/components/ChatEmptyState.tsx`
+- Increase max-width of starter grid from `max-w-2xl` to `max-w-3xl` to fill more horizontal space on desktop
 
 ## Convention Compliance
 - All components use shadcn/ui + Tailwind semantic tokens

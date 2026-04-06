@@ -48,13 +48,13 @@ export function ChatComposer({
     <footer className="relative shrink-0 bg-m3-surface-lowest/50 p-4 backdrop-blur-md sm:p-6">
       <div className="mx-auto max-w-4xl">
         <div className="relative rounded-2xl border border-white/5 bg-m3-surface-high shadow-2xl transition-all focus-within:border-m3-primary/30 focus-within:ring-2 focus-within:ring-m3-primary/20">
-          <div className="flex items-end gap-2 p-3">
+          <div className="flex items-end gap-1.5 p-2 sm:p-3">
             <button
               type="button"
-              className="p-2 text-m3-outline transition-colors hover:text-white"
+              className="p-1.5 text-m3-outline/50 transition-colors hover:text-m3-outline"
               aria-label="Attach file"
             >
-              <Paperclip className="size-5" />
+              <Paperclip className="size-4" />
             </button>
 
             <Textarea
@@ -64,12 +64,12 @@ export function ChatComposer({
               placeholder={placeholder}
               disabled={disabled || isSending}
               rows={1}
-              className="max-h-32 min-h-[44px] flex-1 resize-none border-none bg-transparent py-2 font-medium text-m3-on-surface placeholder:text-m3-outline/60 focus-visible:ring-0"
+              className="max-h-32 min-h-[40px] flex-1 resize-none border-none bg-transparent py-2 text-sm font-medium text-m3-on-surface placeholder:text-m3-outline/60 focus-visible:ring-0 sm:min-h-[44px] sm:text-base"
             />
 
             <button
               type="button"
-              className="flex size-10 items-center justify-center rounded-xl bg-m3-primary-container text-m3-on-primary-container transition-transform active:scale-90 disabled:opacity-50"
+              className="flex size-9 items-center justify-center rounded-xl bg-m3-primary text-m3-on-primary transition-all active:scale-90 disabled:opacity-40 sm:size-10"
               onClick={submit}
               disabled={!canSend}
               aria-label="Send message"

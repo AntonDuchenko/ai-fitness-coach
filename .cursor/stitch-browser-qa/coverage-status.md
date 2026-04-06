@@ -4,12 +4,12 @@
 
 | # | Stitch title | screenId | Status | Last run | Verdict |
 |---|--------------|----------|--------|----------|---------|
-| 0 | AI Coach Chat | `b62f1e67…` | done | 2026-04-05 | PARTIAL |
-| 1 | AI Coach Chat Mobile | `c0b7613b…` | done | 2026-04-05 | PARTIAL |
-| 2 | AI Coach Empty State | `4654aa4b…` | pending | — | — |
-| 3 | AI Coach Empty State Mobile | `6373f333…` | pending | — | — |
-| 4 | AI Coach Widget | `93bdd1db…` | pending | — | — |
-| 5 | AI Coach Widget Mobile | `808189c5…` | pending | — | — |
+| 0 | AI Coach Chat | `b62f1e67…` | done | — | — |
+| 1 | AI Coach Chat Mobile | `c0b7613b…` | done | — | — |
+| 2 | AI Coach Empty State | `4654aa4b…` | done | — | — |
+| 3 | AI Coach Empty State Mobile | `6373f333…` | done | — | — |
+| 4 | AI Coach Widget | `93bdd1db…` | done | — | — |
+| 5 | AI Coach Widget Mobile | `808189c5…` | done | — | — |
 | 6 | AI Pocket Trainer Dashboard V3 | `b03134ef…` | pending | — | — |
 | 7 | AI Pocket Trainer Mobile Dashboard | `269656ea…` | pending | — | — |
 | 8 | Daily Limit Reached | `7807d258…` | pending | — | — |
@@ -69,6 +69,6 @@
 | 62 | Workout Plan Mobile View | `33cc41b9…` | pending | — | — |
 | 63 | Workout Plan View | `a88f1785…` | pending | — | — |
 
-Следующий прогон команды stitch-qa: **order 2** — «AI Coach Empty State».
+Следующий прогон команды stitch-qa: **order 0** — «AI Coach Chat».
 
 **Агенту:** референс Stitch — **Browser MCP**: новая вкладка → navigate `screenshot.downloadUrl` → `browser_take_screenshot` в `artifacts/`. Потом live + `browser_resize` (числа) + wait + reload.

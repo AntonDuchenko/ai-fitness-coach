@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Bot, LayoutDashboard, Zap } from "lucide-react";
+import { Bot, LayoutDashboard, Settings, Zap } from "lucide-react";
 import Link from "next/link";
 
 interface ChatDesktopHeaderProps {
@@ -53,6 +53,13 @@ export function ChatDesktopHeader({
             </span>
           </div>
         ) : null}
+        <button
+          type="button"
+          className="rounded-full p-2 text-m3-outline transition-all hover:bg-white/5 active:opacity-70"
+          aria-label="Settings"
+        >
+          <Settings className="size-5" />
+        </button>
         <Link
           href="/dashboard"
           className="rounded-full p-2 text-m3-outline transition-all hover:bg-white/5 active:opacity-70"

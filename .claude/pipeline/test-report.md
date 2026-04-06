@@ -1,4 +1,4 @@
-# Test Report — Chat UI Fixes
+# Test Report — Design QA Fixes
 
 ## Verdict: PASSED
 
@@ -6,11 +6,10 @@
 
 | Rule | Status |
 |------|--------|
-| Component size (<150 lines) | PASS (all modified files) |
+| Component size (<150 lines) | PASS (max 130 lines - AiCoachCard) |
 | Business logic in hooks | PASS |
 | shadcn/ui components used | PASS |
 | Semantic design tokens (no hardcoded hex) | PASS |
-| Error/loading/empty states | PASS (N/A) |
 | Accessibility (ARIA, semantic HTML) | PASS |
 | TypeScript strict (no `any`) | PASS |
 
@@ -18,16 +17,15 @@
 
 | QA Issue | Fix Applied | Status |
 |----------|-------------|--------|
-| Mobile header Bot icon → user avatar | userInitials prop added | FIXED |
-| Header title shows thread name instead of "AI Coach" | Fixed to "AI Coach" | FIXED |
-| Sidebar CTA "New Chat" vs "Start New Session" | Text updated | FIXED |
-| Composer placeholder mismatch | Updated to match design | FIXED |
-| Missing suggestion chips under composer | Added with showSuggestions prop | FIXED |
-| Missing quick action cards (mobile) | New ChatQuickActions component | FIXED |
-| Mobile drawer close overlay z-index | Restructured DOM, added Escape key | FIXED |
+| AI Coach Widget: missing FREE TIER badge | Added green pill badge | FIXED |
+| AI Coach Widget: horizontal chips → vertical | Changed to flex-col + rounded-lg | FIXED |
+| AI Coach Widget: CTA not full-width | Made w-full with ArrowRight icon | FIXED |
+| AI Coach Widget: usage counter beside CTA | Moved below CTA with progress bar | FIXED |
+| Chat Mobile: subtitle "Online Mentor" | Changed to dynamic credits display | FIXED |
+| Chat Mobile: missing settings gear | Added Settings icon button | FIXED |
+| Chat Desktop: missing settings gear | Added Settings icon button | FIXED |
+| Chat Composer: proportions mismatch | Reduced attach size, improved spacing | FIXED |
+| Chat Empty State: right-side empty space | Widened grid to max-w-3xl | FIXED |
 
 ## Build Verification
-- `pnpm build`: PASS
-
-## Pre-existing Issues (not in scope)
-- ChatMessageList.tsx is 154 lines (4 over limit) — pre-existing, not modified
+- `tsc --noEmit`: PASS (0 errors)

@@ -55,7 +55,7 @@ export function ChatEmptyState({ onPick, disabled }: ChatEmptyStateProps) {
       </p>
 
       {/* Starter Prompt Grid */}
-      <div className="grid w-full max-w-2xl grid-cols-2 gap-4">
+      <div className="grid w-full max-w-3xl grid-cols-2 gap-4">
         {STARTERS.map(({ icon: Icon, label, subtitle, colorClass }) => (
           <button
             key={label}

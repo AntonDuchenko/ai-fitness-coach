@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Bot, MessageSquare } from "lucide-react";
+import { ArrowRight, Bot, MessageSquare } from "lucide-react";
 import Link from "next/link";
 
 interface AiCoachCardProps {
@@ -46,7 +46,7 @@ export function AiCoachCard({
   return (
     <Card className="flex flex-col justify-between border-0 rounded-2xl border-t-4 border-primary/40">
       <CardContent className="flex flex-1 flex-col p-8">
-        <div className="mb-8 flex items-center gap-4">
+        <div className="mb-6 flex items-center gap-4">
           <div className="relative">
             <div className="flex size-16 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary">
               <Bot className="size-8" aria-hidden />
@@ -60,6 +60,14 @@ export function AiCoachCard({
             </p>
           </div>
         </div>
+
+        {!isPremium && (
+          <div className="mb-6">
+            <span className="inline-block rounded-full bg-success px-3 py-1 text-xs font-bold uppercase tracking-wide text-success-foreground">
+              Free Tier
+            </span>
+          </div>
+        )}
 
         {lastMessage ? (
           <div className="relative mb-8 rounded-2xl border border-border bg-background/50 p-6">
@@ -78,33 +86,41 @@ export function AiCoachCard({
           </div>
         )}
 
-        <div className="mb-8 flex flex-wrap gap-3">
+        <div className="mb-6 flex flex-col gap-2">
           {QUICK_PROMPTS.map((prompt) => (
             <Link
               key={prompt}
               href="/chat"
-              className="rounded-full border border-border bg-muted/50 px-5 py-2.5 text-xs font-bold text-muted-foreground transition-all hover:border-primary/30 hover:bg-primary/10 hover:text-foreground"
+              className="rounded-lg border border-border bg-muted/50 px-4 py-2.5 text-xs font-bold text-muted-foreground transition-all hover:border-primary/30 hover:bg-primary/10 hover:text-foreground"
             >
               {prompt}
             </Link>
           ))}
         </div>
 
-        <div className="mt-auto flex items-center justify-between">
-          <Button size="lg" className="gap-3 shadow-lg shadow-primary/20" asChild>
+        <div className="mt-auto space-y-3">
+          <Button size="lg" className="w-full gap-3 shadow-lg shadow-primary/20" asChild>
             <Link href="/chat">
-              <MessageSquare className="size-5" aria-hidden />
               Open Coach Chat
+              <ArrowRight className="size-5" aria-hidden />
             </Link>
           </Button>
           {!isPremium && (
-            <div className="text-right">
-              <p className="text-sm font-bold text-foreground">
-                {messagesUsed} / {dailyLimit}
-              </p>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                Messages today
-              </p>
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
+                <span className="font-bold uppercase tracking-widest">
+                  Messages today
+                </span>
+                <span className="font-bold text-foreground">
+                  {messagesUsed} / {dailyLimit}
+                </span>
+              </div>
+              <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+                <div
+                  className="h-full rounded-full bg-primary transition-all"
+                  style={{ width: `${Math.min((messagesUsed / dailyLimit) * 100, 100)}%` }}
+                />
+              </div>
             </div>
           )}
         </div>

@@ -55,61 +55,91 @@
       "order": 2,
       "stitch_screen_id": "4654aa4bc95f4591952d1659642730e6",
       "stitch_title": "AI Coach Empty State",
-      "status": "pending",
+      "status": "done",
       "app_mapping": {
-        "ui_kind": "unknown",
-        "primary_url": "",
-        "open_steps": [],
-        "codebase_hits": []
+        "ui_kind": "full_page",
+        "primary_url": "http://localhost:3000/chat",
+        "open_steps": [
+          "Sign in if redirected to /login (QA account)",
+          "Open /chat and click Start New Session to reveal empty state"
+        ],
+        "codebase_hits": [
+          "apps/web/src/app/chat/page.tsx",
+          "apps/web/src/features/chat/components/ChatScreen.tsx",
+          "apps/web/src/features/chat/components/ChatEmptyState.tsx"
+        ]
       },
-      "last_run_at": null,
-      "last_verdict": null,
-      "notes": ""
+      "last_run_at": "2026-04-06T06:58:38.206Z",
+      "last_verdict": "PARTIAL",
+      "notes": "Pixel diff 14.42% @ threshold 0.1; core empty-state layout matches Stitch, but content/state noise from conversation history and header/composer deltas remain."
     },
     {
       "order": 3,
       "stitch_screen_id": "6373f333037a440b8c3fe80deed4c17c",
       "stitch_title": "AI Coach Empty State Mobile",
-      "status": "pending",
+      "status": "done",
       "app_mapping": {
-        "ui_kind": "unknown",
-        "primary_url": "",
-        "open_steps": [],
-        "codebase_hits": []
+        "ui_kind": "full_page",
+        "primary_url": "http://localhost:3000/chat",
+        "open_steps": [
+          "Sign in if redirected to /login (QA account)",
+          "browser_resize 390×893 (below lg); reload /chat if needed",
+          "Open menu → Start New Session to reveal empty state"
+        ],
+        "codebase_hits": [
+          "apps/web/src/app/chat/page.tsx",
+          "apps/web/src/features/chat/components/ChatScreen.tsx",
+          "apps/web/src/features/chat/components/ChatEmptyState.tsx",
+          "apps/web/src/features/chat/components/ChatMobileHeader.tsx",
+          "apps/web/src/features/chat/components/MobileDrawer.tsx"
+        ]
       },
-      "last_run_at": null,
-      "last_verdict": null,
-      "notes": ""
+      "last_run_at": "2026-04-06T10:15:00.000Z",
+      "last_verdict": "PARTIAL",
+      "notes": "Pixelmatch ~37.6% @0.1 after resizing Stitch ref width to match live (391×906); Stitch mock includes bottom tab bar not present on live /chat mobile; IA of empty hero + 2×2 starters broadly aligned."
     },
     {
       "order": 4,
       "stitch_screen_id": "93bdd1dbee6c4316a6e9b920a5f80e0a",
       "stitch_title": "AI Coach Widget",
-      "status": "pending",
+      "status": "done",
       "app_mapping": {
-        "ui_kind": "unknown",
-        "primary_url": "",
-        "open_steps": [],
-        "codebase_hits": []
+        "ui_kind": "embedded",
+        "primary_url": "http://localhost:3000/dashboard",
+        "open_steps": [
+          "Sign in if redirected to /login (QA account)",
+          "Open /dashboard; locate AI Coach card in main grid (desktop sidebar visible at lg+)"
+        ],
+        "codebase_hits": [
+          "apps/web/src/features/dashboard/components/AiCoachCard.tsx",
+          "apps/web/src/features/dashboard/components/DashboardContent.tsx"
+        ]
       },
-      "last_run_at": null,
-      "last_verdict": null,
-      "notes": ""
+      "last_run_at": "2026-04-06T16:05:00.000Z",
+      "last_verdict": "PARTIAL",
+      "notes": "Pixelmatch 14.38% @0.1 full viewport 1106×906; Stitch ref shows full dashboard mock—AI Coach card pattern aligns, surrounding dashboard differs. Live screenshot via Playwright (MCP screenshot timed out)."
     },
     {
       "order": 5,
       "stitch_screen_id": "808189c557d0495499de8dc474db3ad3",
       "stitch_title": "AI Coach Widget Mobile",
-      "status": "pending",
+      "status": "done",
       "app_mapping": {
-        "ui_kind": "unknown",
-        "primary_url": "",
-        "open_steps": [],
-        "codebase_hits": []
+        "ui_kind": "embedded",
+        "primary_url": "http://localhost:3000/dashboard",
+        "open_steps": [
+          "Sign in if redirected to /login (QA account)",
+          "Open /dashboard with mobile viewport (390x844) and locate AI Coach card in dashboard feed"
+        ],
+        "codebase_hits": [
+          "apps/web/src/features/dashboard/components/AiCoachCard.tsx",
+          "apps/web/src/features/dashboard/components/DashboardContent.tsx",
+          "apps/web/src/app/dashboard/page.tsx"
+        ]
       },
-      "last_run_at": null,
-      "last_verdict": null,
-      "notes": ""
+      "last_run_at": "2026-04-06T07:27:53Z",
+      "last_verdict": "PARTIAL",
+      "notes": "Pixelmatch 26.94% @0.1 (475x906). Widget pattern is aligned, but Stitch mock includes bottom-tab/mobile composition and static hero state while live dashboard is data-driven and scroll position differs."
     },
     {
       "order": 6,

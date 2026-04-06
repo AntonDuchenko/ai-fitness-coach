@@ -1,6 +1,6 @@
 # Pipeline Summary
 
-## Task: Chat UI Fixes — Fix Chat UI discrepancies vs Stitch design (desktop + mobile)
+## Task: Fix design divergences from Stitch QA reports
 ## Final Status: SUCCESS
 
 ## Timeline
@@ -23,16 +23,19 @@
 | Accessibility | PASS |
 | TypeScript strict (no `any`) | PASS |
 
-## Files Created/Modified
-- `apps/web/src/features/chat/components/ChatMobileHeader.tsx` — Bot icon → user initials avatar
-- `apps/web/src/features/chat/components/ChatScreen.tsx` — fixed title to "AI Coach", added QuickActions, wired suggestions
-- `apps/web/src/features/chat/components/ChatSidebar.tsx` — CTA "New Chat" → "Start New Session"
-- `apps/web/src/features/chat/components/ChatComposer.tsx` — placeholder updated, suggestion chips added
-- `apps/web/src/features/chat/components/ChatQuickActions.tsx` — **NEW** mobile quick action cards
-- `apps/web/src/features/chat/components/MobileDrawer.tsx` — z-index fix, Escape key support
+## Files Modified
+- `apps/web/src/features/dashboard/components/AiCoachCard.tsx` — Added FREE TIER badge, vertical chip layout, full-width CTA with arrow icon, usage progress bar below CTA
+- `apps/web/src/features/chat/components/ChatMobileHeader.tsx` — Subtitle shows credits instead of "Online Mentor", added settings gear, removed redundant credits chip
+- `apps/web/src/features/chat/components/ChatDesktopHeader.tsx` — Added settings gear icon
+- `apps/web/src/features/chat/components/ChatComposer.tsx` — Reduced attach button visual weight, improved mobile/desktop proportions
+- `apps/web/src/features/chat/components/ChatEmptyState.tsx` — Widened starter grid (max-w-2xl → max-w-3xl) to fill more horizontal space
 
 ## Key Decisions
-- Header title hardcoded to "AI Coach" per Stitch design (was showing dynamic thread title)
-- Quick action cards only visible on mobile (`lg:hidden`) matching Stitch mobile design
-- Suggestion chips shown only in active conversations (not empty state)
-- MobileDrawer restructured with wrapper div for proper z-index stacking
+- Mobile header: credits text replaces "Online Mentor" subtitle (matches Stitch "3/5 Daily Credits"); separate chip removed to avoid duplication
+- AI Coach widget: progress bar added for usage visualization (enhances Stitch "3/5" counter concept)
+- Bottom tab bar from Stitch mobile mock NOT implemented — it's a global app shell feature beyond scope of these fixes
+
+## Not in Scope (from QA reports)
+- Bottom tab navigation bar (Mobile report #1, Major) — architectural decision, not a component-level fix
+- Dashboard sidebar/header content differences (Widget report) — different data/IA, not design bugs
+- Different neighboring widgets on dashboard — live dashboard has actual app data vs mock data

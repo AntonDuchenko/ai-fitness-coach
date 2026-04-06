@@ -1,4 +1,4 @@
-# Review Report — Chat UI Fixes
+# Review Report — Design QA Fixes
 
 ## Verdict: APPROVED
 
@@ -10,22 +10,20 @@
 | 2 | Business logic in hooks/services | PASS |
 | 3 | shadcn/ui used | PASS |
 | 4 | Semantic tokens (no hardcoded hex) | PASS |
-| 5 | Error/loading/empty states | PASS (N/A) |
-| 6 | Accessibility | PASS |
+| 5 | Error/loading/empty states | PASS (N/A — presentational changes only) |
+| 6 | Accessibility (ARIA) | PASS |
 | 7 | TypeScript strict (no `any`) | PASS |
-| 8 | `cn()` for conditional classes | PASS (fixed) |
-| 9 | `"use client"` where needed | PASS (fixed) |
-| 10 | Build passes | PASS |
+| 8 | No unused imports | PASS |
+| 9 | Changes address QA report issues | PASS |
 
-## Issues Found & Fixed
-- ChatQuickActions: template literal → `cn()` for class merging
-- MobileDrawer: added missing `"use client"` directive
+## Issues Found & Fixed (iteration 1)
+- Duplicate usage display in ChatMobileHeader — removed separate chip, kept subtitle
+- Added `isLimitReached` styling to subtitle text color
+- Cleaned up unused Zap import
 
 ## Files Changed
-- `ChatMobileHeader.tsx` — Bot icon replaced with user initials avatar
-- `ChatDesktopHeader.tsx` — no changes needed (already correct structure)
-- `ChatScreen.tsx` — fixed title to "AI Coach", added QuickActions, wired suggestions
-- `ChatSidebar.tsx` — CTA text updated
-- `ChatComposer.tsx` — placeholder + suggestion chips
-- `ChatQuickActions.tsx` — new component for mobile quick actions
-- `MobileDrawer.tsx` — z-index fix + Escape key support
+- `AiCoachCard.tsx` — FREE TIER badge, vertical chips, full-width CTA with arrow, usage progress bar
+- `ChatMobileHeader.tsx` — subtitle shows credits, added settings gear, removed redundant chip
+- `ChatDesktopHeader.tsx` — added settings gear icon
+- `ChatComposer.tsx` — reduced attach button weight, improved proportions
+- `ChatEmptyState.tsx` — widened starter grid (max-w-3xl)
