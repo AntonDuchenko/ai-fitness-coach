@@ -11,10 +11,11 @@ export class TokenService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {
-    this.refreshSecret = this.configService.get<string>(
-      "jwt.refreshSecret",
-      "default-refresh-secret-change-me",
-    );
+    const refreshSecret = this.configService.get<string>("jwt.refreshSecret");
+    if (!refreshSecret) {
+      throw new Error("JWT_REFRESH_SECRET is not configured");
+    }
+    this.refreshSecret = refreshSecret;
     this.refreshExpiresIn = this.configService.get<string>(
       "jwt.refreshExpiresIn",
       "30d",

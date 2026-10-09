@@ -24,68 +24,63 @@ export class ContextService {
     userId: string,
     conversationId?: string,
   ): Promise<AiContext> {
-    const cacheKey = conversationId ? `${userId}:${conversationId}` : userId;
-    const cached = this.cache.get(cacheKey);
+    // Only user-level data is cached. Conversation history changes on every
+    // message, so it is always read fresh — caching it made the model lose
+    // its own previous replies for the whole TTL.
+    const [userContext, conversationHistory] = await Promise.all([
+      this.getUserContext(userId),
+      this.prisma.chatMessage.findMany({
+        where: conversationId ? { userId, conversationId } : { userId },
+        orderBy: { createdAt: "desc" },
+        take: 20,
+      }),
+    ]);
+
+    return {
+      ...userContext,
+      conversationHistory: this.optimizeHistory(conversationHistory.reverse()),
+    };
+  }
+
+  private async getUserContext(
+    userId: string,
+  ): Promise<Omit<AiContext, "conversationHistory">> {
+    const cached = this.cache.get(userId);
     if (cached && cached.expiresAt > Date.now()) {
       this.logger.debug(`Cache hit for user ${userId}`);
       return cached.data;
     }
 
-    const messageWhere: { userId: string; conversationId?: string } = {
-      userId,
-    };
-    if (conversationId) {
-      messageWhere.conversationId = conversationId;
-    }
+    const [profile, workoutPlan, nutritionPlan, recentWorkouts] =
+      await Promise.all([
+        this.prisma.userProfile.findUnique({ where: { userId } }),
+        this.workoutsService.getCurrentPlan(userId),
+        this.nutritionService.getCurrentPlan(userId),
+        this.prisma.workoutLog.findMany({
+          where: { userId },
+          orderBy: { completedAt: "desc" },
+          take: 5,
+          select: {
+            workoutName: true,
+            exercises: true,
+            completedAt: true,
+            duration: true,
+            rating: true,
+          },
+        }),
+      ]);
 
-    const [
+    const data = {
       profile,
-      conversationHistory,
-      currentWorkoutPlan,
-      currentNutritionPlan,
-      recentWorkouts,
-    ] = await Promise.all([
-      this.prisma.userProfile.findUnique({ where: { userId } }),
-      this.prisma.chatMessage.findMany({
-        where: messageWhere,
-        orderBy: { createdAt: "desc" },
-        take: 20,
-      }),
-      this.workoutsService.getCurrentPlan(userId),
-      this.nutritionService.getCurrentPlan(userId),
-      this.prisma.workoutLog.findMany({
-        where: { userId },
-        orderBy: { completedAt: "desc" },
-        take: 5,
-        select: {
-          workoutName: true,
-          exercises: true,
-          completedAt: true,
-          duration: true,
-          rating: true,
-        },
-      }),
-    ]);
-
-    const optimizedHistory = this.optimizeHistory(
-      conversationHistory.reverse(),
-    );
-
-    const context: AiContext = {
-      profile,
-      conversationHistory: optimizedHistory,
-      workoutPlan: currentWorkoutPlan,
-      nutritionPlan: currentNutritionPlan,
+      workoutPlan,
+      nutritionPlan,
       recentWorkouts,
       language: "auto",
     };
 
-    this.cache.set(cacheKey, {
-      data: context,
-      expiresAt: Date.now() + CACHE_TTL_MS,
-    });
+    this.cache.set(userId, { data, expiresAt: Date.now() + CACHE_TTL_MS });
 
-    return context;
+    return data;
   }
 
   buildSystemPrompt(context: AiContext): string {

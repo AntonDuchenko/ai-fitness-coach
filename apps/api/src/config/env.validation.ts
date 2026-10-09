@@ -13,7 +13,11 @@ const envSchema = z.object({
 
   // JWT
   JWT_SECRET: z.string().min(8, "JWT_SECRET must be at least 8 characters"),
-  JWT_EXPIRES_IN: z.string().default("7d"),
+  JWT_EXPIRES_IN: z.string().default("15m"),
+  JWT_REFRESH_SECRET: z
+    .string()
+    .min(8, "JWT_REFRESH_SECRET must be at least 8 characters"),
+  JWT_REFRESH_EXPIRES_IN: z.string().default("30d"),
 
   // AI Provider
   OPENAI_API_KEY: z.string().min(1, "OPENAI_API_KEY is required"),
@@ -29,10 +33,18 @@ const envSchema = z.object({
   STRIPE_PRICE_ID_ANNUAL: z.string().optional(),
 });
 
+const refinedEnvSchema = envSchema.refine(
+  (env) => env.JWT_SECRET !== env.JWT_REFRESH_SECRET,
+  {
+    message: "JWT_REFRESH_SECRET must differ from JWT_SECRET",
+    path: ["JWT_REFRESH_SECRET"],
+  },
+);
+
 export type Env = z.infer<typeof envSchema>;
 
 export function validate(config: Record<string, unknown>): Env {
-  const result = envSchema.safeParse(config);
+  const result = refinedEnvSchema.safeParse(config);
 
   if (!result.success) {
     const formatted = z.prettifyError(result.error);

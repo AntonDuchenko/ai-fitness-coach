@@ -29,20 +29,44 @@ export class ChatService {
     conversationId?: string,
   ): Promise<SendMessageResponseDto> {
     const user = await this.usersService.findById(userId);
+    const isPremium = user?.isPremium ?? false;
 
-    if (!user?.isPremium) {
-      const todayCount = await this.checkAndResetDailyLimit(userId);
-      if (todayCount >= FREE_TIER_DAILY_LIMIT) {
-        throw new ForbiddenPremiumException(
-          "Daily message limit reached. Upgrade to Premium for unlimited messages.",
-        );
-      }
+    if (!isPremium) {
+      await this.reserveFreeMessage(userId);
     }
 
+    try {
+      return await this.generateReply(
+        userId,
+        message,
+        conversationId,
+        isPremium,
+      );
+    } catch (error) {
+      if (!isPremium) {
+        await this.releaseFreeMessage(userId);
+      }
+      throw error;
+    }
+  }
+
+  private async generateReply(
+    userId: string,
+    message: string,
+    conversationId: string | undefined,
+    isPremium: boolean,
+  ): Promise<SendMessageResponseDto> {
     const conversation = await this.resolveConversation(
       userId,
       message,
       conversationId,
+    );
+
+    // Built before the new message is saved, so the history does not already
+    // contain it — it is appended explicitly below.
+    const context = await this.contextService.buildContext(
+      userId,
+      conversation.id,
     );
 
     const userMsg = await this.saveMessage(
@@ -52,10 +76,6 @@ export class ChatService {
       conversation.id,
     );
 
-    const context = await this.contextService.buildContext(
-      userId,
-      conversation.id,
-    );
     const systemPrompt = this.contextService.buildSystemPrompt(context);
     const model = this.selectModel(message);
 
@@ -81,8 +101,15 @@ export class ChatService {
       { model },
     );
 
-    await this.updateUsageTracking(userId);
-    this.contextService.invalidateCache(userId);
+    await this.prisma.conversation.update({
+      where: { id: conversation.id },
+      data: { updatedAt: new Date() },
+    });
+
+    // Free-tier messages are counted up front in reserveFreeMessage.
+    if (isPremium) {
+      await this.updateUsageTracking(userId);
+    }
 
     return new SendMessageResponseDto(
       conversation.id,
@@ -242,24 +269,44 @@ I ran into an issue generating your personalized plans. Don't worry — you can 
   }
 
   private async checkAndResetDailyLimit(userId: string): Promise<number> {
-    const user = await this.usersService.findById(userId);
-    if (!user) return 0;
-
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const resetAt = new Date(user.messagesResetAt);
-    resetAt.setHours(0, 0, 0, 0);
+    const { count: wasReset } = await this.prisma.user.updateMany({
+      where: { id: userId, messagesResetAt: { lt: today } },
+      data: { messagesToday: 0, messagesResetAt: new Date() },
+    });
+    if (wasReset > 0) return 0;
 
-    if (resetAt < today) {
-      await this.prisma.user.update({
-        where: { id: userId },
-        data: { messagesToday: 0, messagesResetAt: new Date() },
-      });
-      return 0;
+    const user = await this.usersService.findById(userId);
+    return user?.messagesToday ?? 0;
+  }
+
+  /**
+   * Atomically claims one free-tier message. The conditional increment runs
+   * in a single UPDATE, so concurrent requests cannot all pass a stale
+   * "count < limit" check and exceed the daily quota.
+   */
+  private async reserveFreeMessage(userId: string): Promise<void> {
+    await this.checkAndResetDailyLimit(userId);
+
+    const { count } = await this.prisma.user.updateMany({
+      where: { id: userId, messagesToday: { lt: FREE_TIER_DAILY_LIMIT } },
+      data: { messagesToday: { increment: 1 } },
+    });
+
+    if (count === 0) {
+      throw new ForbiddenPremiumException(
+        "Daily message limit reached. Upgrade to Premium for unlimited messages.",
+      );
     }
+  }
 
-    return user.messagesToday;
+  private async releaseFreeMessage(userId: string): Promise<void> {
+    await this.prisma.user.updateMany({
+      where: { id: userId, messagesToday: { gt: 0 } },
+      data: { messagesToday: { decrement: 1 } },
+    });
   }
 
   private selectModel(message: string): string {

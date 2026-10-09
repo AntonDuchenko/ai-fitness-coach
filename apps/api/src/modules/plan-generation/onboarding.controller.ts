@@ -1,5 +1,6 @@
 import {
   Body,
+  ConflictException,
   Controller,
   Get,
   HttpCode,
@@ -48,11 +49,20 @@ export class OnboardingController {
     status: 201,
     description: "Profile created, plan generation queued",
   })
+  @ApiResponse({ status: 409, description: "Onboarding already completed" })
   @ApiUnauthorizedResponse({ description: "Invalid or missing token" })
   async createProfile(
     @Request() req: { user: { id: string } },
     @Body() dto: CreateProfileDto,
   ): Promise<{ profile: ProfileResponseDto; jobId: string }> {
+    // Re-posting the profile re-runs AI plan generation, which is otherwise a
+    // premium-only action (POST /workouts/plan/regenerate). Edits after
+    // onboarding go through PATCH /users/profile.
+    const user = await this.usersService.findById(req.user.id);
+    if (user?.profile?.onboardingCompleted) {
+      throw new ConflictException("Onboarding already completed");
+    }
+
     const profile = await this.usersService.createProfile(req.user.id, dto);
 
     let jobId: string;

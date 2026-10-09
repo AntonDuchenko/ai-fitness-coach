@@ -15,6 +15,11 @@ import { StripeHealthResponseDto } from "./dto/stripe-health-response.dto";
 import { SubscriptionResponseDto } from "./dto/subscription-response.dto";
 import { StripeService } from "./stripe.service";
 
+const PREMIUM_STATUSES = new Set<Stripe.Subscription.Status>([
+  "active",
+  "trialing",
+]);
+
 @Injectable()
 export class PaymentsService {
   private readonly logger = new Logger(PaymentsService.name);
@@ -78,6 +83,14 @@ export class PaymentsService {
       throw new NotFoundException("User not found");
     }
 
+    const allowedPriceIds = [
+      this.stripeService.getPriceIdMonthly(),
+      this.stripeService.getPriceIdAnnual(),
+    ].filter(Boolean);
+    if (!allowedPriceIds.includes(priceId)) {
+      throw new BadRequestException("Unknown subscription plan");
+    }
+
     const stripe = this.stripeService.getClient();
     const frontendUrl = this.configService.get<string>(
       "app.frontendUrl",
@@ -125,22 +138,26 @@ export class PaymentsService {
       throw new BadRequestException("Webhook signature verification failed");
     }
 
+    // An event row that exists but was never marked processed means a previous
+    // delivery failed mid-way; Stripe's retry must be processed, not skipped.
     const existing = await this.prisma.stripeEvent.findUnique({
       where: { eventId: event.id },
     });
-    if (existing) {
+    if (existing?.processed) {
       this.logger.log(`Duplicate event ${event.id}, skipping`);
       return { received: true };
     }
 
-    await this.prisma.stripeEvent.create({
-      data: {
-        eventId: event.id,
-        type: event.type,
-        data: JSON.parse(JSON.stringify(event.data)),
-        processed: false,
-      },
-    });
+    if (!existing) {
+      await this.prisma.stripeEvent.create({
+        data: {
+          eventId: event.id,
+          type: event.type,
+          data: JSON.parse(JSON.stringify(event.data)),
+          processed: false,
+        },
+      });
+    }
 
     try {
       switch (event.type) {
@@ -250,7 +267,7 @@ export class PaymentsService {
       where: { stripeCustomerId: customerId },
       data: {
         subscriptionStatus: subscription.status,
-        isPremium: subscription.status === "active",
+        isPremium: PREMIUM_STATUSES.has(subscription.status),
       },
     });
 

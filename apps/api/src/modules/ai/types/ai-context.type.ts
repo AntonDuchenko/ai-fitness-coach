@@ -16,6 +16,6 @@ export interface AiContext {
 }
 
 export interface CachedContext {
-  data: AiContext;
+  data: Omit<AiContext, "conversationHistory">;
   expiresAt: number;
 }
